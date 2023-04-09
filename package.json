@@ -1,0 +1,16 @@
+{
+    "name": "coding-rails",
+    "version": "1.0.0",
+    "license": "MIT",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "dev": "lerna run --parallel dev"
+    },
+    "devDependencies": {
+        "lerna": "^6.6.1",
+        "typescript": "^5.0.2"
+    }
+}
