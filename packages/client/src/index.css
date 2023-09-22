@@ -15,6 +15,10 @@
 @import "styles/accordion.css";
 @import "styles/analysis.css";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
     font-family: "Poppins", sans-serif;
     margin: 0px;
