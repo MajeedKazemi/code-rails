@@ -26,6 +26,7 @@ export const Login = () => {
 
                 if (!response.ok) {
                     console.error("login failed");
+                    document.querySelector("#login-error-text")?.classList.remove("hidden");
                 } else {
                     const data = await response.json();
 
@@ -53,6 +54,9 @@ export const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
+            <div id="login-error-text" className="text-red-600 m-2 hidden">
+                Your username or password is incorrect. Please try again.
+            </div>
             <Button icon="login">
                 {`${isSubmitting ? "Signing In" : "Sign In"}`}
             </Button>
