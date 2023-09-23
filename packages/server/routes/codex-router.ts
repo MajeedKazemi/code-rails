@@ -33,7 +33,7 @@ codexRouter.post("/generate", verifyUser, async (req, res, next) => {
             }${description.trim()}\n`,
         ].join("\n");
 
-        const result = await openai.createCompletion({
+        const result = await openai.completions.create({
             model: "code-davinci-002",
             prompt: prompt,
             temperature: 0.1,
@@ -42,8 +42,8 @@ codexRouter.post("/generate", verifyUser, async (req, res, next) => {
             user: userId,
         });
 
-        if (result.data.choices && result.data.choices?.length > 0) {
-            const code = result.data.choices[0].text?.trim();
+        if (result.choices && result.choices?.length > 0) {
+            const code = result.choices[0].text?.trim();
 
             res.json({
                 code: code ? `# Instructions: ${description}\n` + code : "",
