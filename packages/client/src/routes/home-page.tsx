@@ -59,7 +59,7 @@ export const HomePage = () => {
                                     <div className="vertical-space-between">
                                         <Login />
                                         <div>
-                                            Need an account?
+                                            Need an account?{" "}
                                             <Button
                                                 type="link"
                                                 onClick={() => {
