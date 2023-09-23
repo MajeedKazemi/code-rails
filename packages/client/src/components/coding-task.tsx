@@ -52,6 +52,16 @@ export const CodingTask = (props: CodingTaskProps) => {
             });
     };
 
+    const handleTaskFeedback = () => {
+        const feedbackContainer = document.querySelector("#feedback-container")
+        const submitContainer = document.querySelector("#submit-container")
+
+        if (feedbackContainer && submitContainer) {
+            feedbackContainer.classList.remove("hidden")
+            submitContainer.classList.add("hidden")
+        }
+    };
+
     const handleSubmitTask = () => {
         apiUserSubmitTask(
             context?.token,
@@ -191,23 +201,23 @@ export const CodingTask = (props: CodingTaskProps) => {
                 </div>
 
                 <div className="task-submission-buttons-container">
-                    <div className="submit-container">
+                    <div id="submit-container">
                         <div className="submit-attention">
                             <b>ATTENTION</b>
                             <br />
                             <br />
-                            You can only submit <b>ONCE</b>. You will <b>NOT</b>{" "}
-                            receive feedback. So please double-check your
+                            You can only submit <b>ONCE</b>. So please double-check your
                             solution before submitting.
                         </div>
                         <br />
+                        
                         <Button
                             class={blink ? "btn-attention" : ""}
-                            onClick={handleSubmitTask}
+                            onClick={handleTaskFeedback}
                             type="block"
                             disabled={!canSubmit}
                         >
-                            Submit and Start Next Task
+                            Submit for Feedback
                         </Button>
 
                         {reachedTimeLimit ? (
@@ -219,6 +229,17 @@ export const CodingTask = (props: CodingTaskProps) => {
                                 </span>
                             </div>
                         ) : null}
+                    </div>
+
+                    <div id="feedback-container" className="hidden">
+                        <Button
+                            class={blink ? "btn-attention" : ""}
+                            onClick={handleSubmitTask}
+                            type="block"
+                            disabled={!canSubmit}
+                        >
+                            Start Next Task
+                        </Button>
                     </div>
                 </div>
             </section>
