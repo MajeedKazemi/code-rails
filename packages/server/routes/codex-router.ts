@@ -1,7 +1,7 @@
 import express from "express";
 
 import { IUser } from "../models/user";
-import { openai } from "../utils/codex";
+import { openai } from "../utils/openai";
 import { verifyUser } from "../utils/strategy";
 
 export const codexRouter = express.Router();
