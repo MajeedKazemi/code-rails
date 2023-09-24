@@ -255,6 +255,28 @@ export const apiGenerateCodex = (
         }),
     });
 
+export const apiGenerateFeedback = (
+    token: string | null | undefined,
+    description: string,
+    currentCode: string,
+    solution: string,
+    samples: Array<Array<string>>
+) =>
+    fetch(env.API_URL + "/api/feedback/generate", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            description,
+            currentCode,
+            solution,
+            samples
+        }),
+    });
+
 export const apiLogEvents = (
     token: string | null | undefined,
     taskId: string,

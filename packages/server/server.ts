@@ -12,6 +12,7 @@ import passport from "passport";
 import { codexRouter } from "./routes/codex-router";
 import { loginRouter } from "./routes/login-router";
 import { tasksRouter } from "./routes/tasks-router";
+import { feedbackRouter } from "./routes/feedback-router";
 import { initLanguageService } from "./sockets/intellisense";
 import { initPythonShell } from "./sockets/python-shell";
 import env from "./utils/env";
@@ -63,6 +64,7 @@ mongoose
         app.use("/api/auth/", loginRouter);
         app.use("/api/tasks/", tasksRouter);
         app.use("/api/codex/", codexRouter);
+        app.use("/api/feedback/", feedbackRouter);
 
         const server = app.listen(
             env.PORT_PREFIX + env.NODE_APP_INSTANCE,
