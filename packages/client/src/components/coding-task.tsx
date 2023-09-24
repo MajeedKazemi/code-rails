@@ -7,6 +7,7 @@ import { getLogObject } from "../utils/logger";
 import { convertTime } from "../utils/shared";
 import { Button } from "./button";
 import { Editor } from "./editor";
+import { Feedback } from "./feedback";
 
 interface CodingTaskProps {
     taskId: string;
@@ -231,7 +232,14 @@ export const CodingTask = (props: CodingTaskProps) => {
                         ) : null}
                     </div>
 
-                    <div id="feedback-container" className="hidden">
+                    <div id="feedback-container" className="border rounded-lg hidden">
+                        <Feedback 
+                            editor={editorRef.current}
+                            taskDescription={props.description}
+                            solution={props.solution}
+                            samples={props.output}
+                        />
+                        
                         <Button
                             class={blink ? "btn-attention" : ""}
                             onClick={handleSubmitTask}
