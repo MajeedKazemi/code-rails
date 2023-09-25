@@ -17,7 +17,7 @@ export const Feedback = (props: FeedbackProps) => {
     const generateFeedback = async () => {
         try {
             console.log("Generating Feedback")
-            const resp = await apiGenerateFeedback(
+            await apiGenerateFeedback(
                 context?.token,
                 props.taskDescription,
                 "", // Current User Code
