@@ -7,6 +7,7 @@ import { Input } from "./input";
 
 export const Login = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showError, setShowError] = useState(false);
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -26,11 +27,12 @@ export const Login = () => {
 
                 if (!response.ok) {
                     console.error("login failed");
-                    document.querySelector("#login-error-text")?.classList.remove("hidden");
+                    setShowError(true);
                 } else {
                     const data = await response.json();
 
                     setContext({ token: data.token, user: data.user });
+                    setShowError(false);
                 }
             })
             .catch((error) => {
@@ -54,9 +56,9 @@ export const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <div id="login-error-text" className="text-red-600 m-2 hidden">
+            {showError && <div id="login-error-text" className="text-red-600 m-2">
                 Your username or password is incorrect. Please try again.
-            </div>
+            </div>}
             <Button icon="login">
                 {`${isSubmitting ? "Signing In" : "Sign In"}`}
             </Button>
