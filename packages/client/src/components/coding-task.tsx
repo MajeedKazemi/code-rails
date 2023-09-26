@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 
-import { apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
+import { apiGenerateFeedback, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
 import { AuthContext } from "../context";
 import { TaskType } from "../utils/constants";
 import { getLogObject } from "../utils/logger";
@@ -53,6 +53,26 @@ export const CodingTask = (props: CodingTaskProps) => {
             });
     };
 
+    const generateFeedback = async () => {
+        try {
+            console.log("Generating Feedback")
+            await apiGenerateFeedback(
+                context?.token,
+                props.description,
+                "", // Current User Code
+                props.solution,
+                props.output
+            ).then(async (resp) => {
+                await resp.json().then((feedback) => {
+                    // console.log(feedback.feedback);
+                    document.querySelector("#feedback-text")!.innerHTML = feedback.feedback;
+                });
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     const handleTaskFeedback = () => {
         const feedbackContainer = document.querySelector("#feedback-container")
         const submitContainer = document.querySelector("#submit-container")
@@ -61,6 +81,8 @@ export const CodingTask = (props: CodingTaskProps) => {
             feedbackContainer.classList.remove("hidden")
             submitContainer.classList.add("hidden")
         }
+        
+        generateFeedback();
     };
 
     const handleSubmitTask = () => {
@@ -233,12 +255,7 @@ export const CodingTask = (props: CodingTaskProps) => {
                     </div>
 
                     <div id="feedback-container" className="border rounded-lg hidden">
-                        <Feedback 
-                            editor={editorRef.current}
-                            taskDescription={props.description}
-                            solution={props.solution}
-                            samples={props.output}
-                        />
+                        <Feedback />
                         
                         <Button
                             class={blink ? "btn-attention" : ""}
