@@ -17,6 +17,7 @@ export const Login = () => {
     const formSubmitHandler = (e: any) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setShowError(false);
 
         const genericErrorMessage =
             "Something went wrong! Please try again later.";
@@ -32,7 +33,6 @@ export const Login = () => {
                     const data = await response.json();
 
                     setContext({ token: data.token, user: data.user });
-                    setShowError(false);
                 }
             })
             .catch((error) => {
