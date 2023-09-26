@@ -61,7 +61,7 @@ export const CodingTask = (props: CodingTaskProps) => {
             await apiGenerateFeedback(
                 context?.token,
                 props.description,
-                "", // Current User Code
+                userCode,
                 props.solution,
                 props.output
             ).then(async (resp) => {
