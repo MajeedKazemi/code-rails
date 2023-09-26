@@ -7,6 +7,7 @@ import { Input } from "./input";
 
 export const Login = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showError, setShowError] = useState(false);
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -16,6 +17,7 @@ export const Login = () => {
     const formSubmitHandler = (e: any) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setShowError(false);
 
         const genericErrorMessage =
             "Something went wrong! Please try again later.";
@@ -26,6 +28,7 @@ export const Login = () => {
 
                 if (!response.ok) {
                     console.error("login failed");
+                    setShowError(true);
                 } else {
                     const data = await response.json();
 
@@ -53,6 +56,9 @@ export const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
+            {showError && <div className="text-red-600 m-2">
+                Your username or password is incorrect. Please try again.
+            </div>}
             <Button icon="login">
                 {`${isSubmitting ? "Signing In" : "Sign In"}`}
             </Button>
