@@ -30,6 +30,8 @@ export const CodingTask = (props: CodingTaskProps) => {
     const [started, setStarted] = useState(false);
     const [completed, setCompleted] = useState(false);
 
+    const [showFeedback, setShowFeedback] = useState(false);
+
     const [startTime, setStartTime] = useState(Date.now());
     const [elapsedTime, setElapsedTime] = useState(0);
     const [reachedTimeLimit, setReachedTimeLimit] = useState(false);
@@ -74,14 +76,7 @@ export const CodingTask = (props: CodingTaskProps) => {
     };
 
     const handleTaskFeedback = () => {
-        const feedbackContainer = document.querySelector("#feedback-container")
-        const submitContainer = document.querySelector("#submit-container")
-
-        if (feedbackContainer && submitContainer) {
-            feedbackContainer.classList.remove("hidden")
-            submitContainer.classList.add("hidden")
-        }
-        
+        setShowFeedback(true);
         generateFeedback();
     };
 
@@ -224,7 +219,7 @@ export const CodingTask = (props: CodingTaskProps) => {
                 </div>
 
                 <div className="task-submission-buttons-container">
-                    <div id="submit-container">
+                    {!showFeedback && <div id="submit-container">
                         <div className="submit-attention">
                             <b>ATTENTION</b>
                             <br />
@@ -252,9 +247,9 @@ export const CodingTask = (props: CodingTaskProps) => {
                                 </span>
                             </div>
                         ) : null}
-                    </div>
+                    </div>}
 
-                    <div id="feedback-container" className="border rounded-lg hidden">
+                    {showFeedback && <div id="feedback-container" className="border rounded-lg">
                         <Feedback />
                         
                         <Button
@@ -265,7 +260,7 @@ export const CodingTask = (props: CodingTaskProps) => {
                         >
                             Start Next Task
                         </Button>
-                    </div>
+                    </div>}
                 </div>
             </section>
 
