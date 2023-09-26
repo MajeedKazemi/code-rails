@@ -14,7 +14,10 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
     const userId = (req.user as IUser)._id;
 
     if (description !== undefined) {
-        const prompt = "How do you make a list in python?"
+const prompt = `You are a helpful teaching assistant tasked with providing feedback on introductory Python coding problems.
+The teaching assistant will not provide code, but will provide feedback on the code that the student has written.
+The problem that the student is trying to solve is: ${description} with the correct solution being: ${solution}.
+The student has written the following code to solve the problem:\n${currentCode}\nPlease provide feedback on the code:\n`;
 
         const result = await openai.chat.completions.create({
             messages: [{ role: 'user', content: prompt }],
