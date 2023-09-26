@@ -56,7 +56,7 @@ export const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            {showError && <div id="login-error-text" className="text-red-600 m-2">
+            {showError && <div className="text-red-600 m-2">
                 Your username or password is incorrect. Please try again.
             </div>}
             <Button icon="login">
