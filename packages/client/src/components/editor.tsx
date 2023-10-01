@@ -254,9 +254,9 @@ export const Editor = forwardRef((props: EditorProps, ref) => {
 
     return (
         <Fragment>
-            <section className="task-workspace">
-                <div className="editor" ref={monacoEl}></div>
-                <div className="editor-buttons-container">
+            <section className="flex flex-col">
+                <div className="editor flex-auto" ref={monacoEl}></div>
+                <div className="editor-buttons-container flex-auto">
                     <button
                         className={`editor-button ${
                             running ? "stop-button" : "run-button"
@@ -315,7 +315,7 @@ export const Editor = forwardRef((props: EditorProps, ref) => {
                         </button>
                     </div>
                 </div>
-                <div className="output">
+                <div className="output flex-auto">
                     {output.map((i, index) => (
                         <p
                             className={

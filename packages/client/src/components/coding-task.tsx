@@ -175,7 +175,7 @@ export const CodingTask = (props: CodingTaskProps) => {
     }
 
     return (
-        <div className="coding-task-container">
+        <div className="coding-task-container gap-4">
             <section className="task-info">
                 <div className="task-description-container">
                     <span className="task-title">Task Description:</span>
