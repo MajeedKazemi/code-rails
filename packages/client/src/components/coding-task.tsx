@@ -177,7 +177,7 @@ export const CodingTask = (props: CodingTaskProps) => {
     return (
         <div className="flex flex-col p-4 gap-4 min-h-full">
             <div className="flex gap-4 flex-grow">
-                <section className="task-info">
+                <section className="flex-auto task-info max-w-lg">
                     <div className="task-description-container">
                         <span className="task-title">Task Description:</span>
                         <span className="task-subtitle">

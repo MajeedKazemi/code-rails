@@ -1,5 +1,4 @@
 .editor {
-    width: 45vw;
     height: calc(55% - 2px);
     border: solid 1px #ccc;
     border-radius: 6px;
@@ -14,7 +13,6 @@
     height: calc(45% - 88px);
     border-radius: 6px;
     position: relative;
-    width: 45vw;
     padding: 12px 0 12px 0;
 }
 

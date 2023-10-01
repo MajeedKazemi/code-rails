@@ -254,7 +254,7 @@ export const Editor = forwardRef((props: EditorProps, ref) => {
 
     return (
         <Fragment>
-            <section className="flex flex-col">
+            <section className="flex flex-col flex-auto">
                 <div className="editor flex-auto" ref={monacoEl}></div>
                 <div className="editor-buttons-container flex-auto">
                     <button
