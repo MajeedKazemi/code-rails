@@ -175,105 +175,107 @@ export const CodingTask = (props: CodingTaskProps) => {
     }
 
     return (
-        <div className="flex p-4 gap-4 min-h-full">
-            <section className="task-info">
-                <div className="task-description-container">
-                    <span className="task-title">Task Description:</span>
-                    <span className="task-subtitle">
-                        <p
-                            dangerouslySetInnerHTML={{
-                                __html: props.description,
-                            }}
-                        ></p>
-                    </span>
+        <div className="flex flex-col p-4 gap-4 min-h-full">
+            <div className="flex gap-4 flex-grow">
+                <section className="task-info">
+                    <div className="task-description-container">
+                        <span className="task-title">Task Description:</span>
+                        <span className="task-subtitle">
+                            <p
+                                dangerouslySetInnerHTML={{
+                                    __html: props.description,
+                                }}
+                            ></p>
+                        </span>
 
-                    <span className="task-sample-output-header">Sample:</span>
-                    {props.output.map((lines, i) => {
-                        return (
-                            <div
-                                key={`sample-out-key-${i}`}
-                                className="task-sample-output"
-                            >
-                                <span>
-                                    {lines.map((line, j) => {
-                                        return (
-                                            <p
-                                                key={`sample-line-key-${j}`}
-                                                dangerouslySetInnerHTML={{
-                                                    __html: line,
-                                                }}
-                                            ></p>
-                                        );
-                                    })}
-                                </span>
-                            </div>
-                        );
-                    })}
+                        <span className="task-sample-output-header">Sample:</span>
+                        {props.output.map((lines, i) => {
+                            return (
+                                <div
+                                    key={`sample-out-key-${i}`}
+                                    className="task-sample-output"
+                                >
+                                    <span>
+                                        {lines.map((line, j) => {
+                                            return (
+                                                <p
+                                                    key={`sample-line-key-${j}`}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: line,
+                                                    }}
+                                                ></p>
+                                            );
+                                        })}
+                                    </span>
+                                </div>
+                            );
+                        })}
 
-                    {feedback ? (
-                        <div className="task-feedback-container">
-                            <span className="feedback-header">Feedback:</span>
-                            <span className="feedback-content">{feedback}</span>
-                        </div>
-                    ) : null}
-                </div>
-
-                <div className="task-submission-buttons-container">
-                    {!showFeedback && <div>
-                        <div className="submit-attention">
-                            <b>ATTENTION</b>
-                            <br />
-                            <br />
-                            You can only submit <b>ONCE</b>. So please double-check your
-                            solution before submitting.
-                        </div>
-                        <br />
-                        
-                        <Button
-                            class={blink ? "btn-attention" : ""}
-                            onClick={handleTaskFeedback}
-                            type="block"
-                            disabled={!canSubmit}
-                        >
-                            Submit for Feedback
-                        </Button>
-
-                        {reachedTimeLimit ? (
-                            <div className="submit-urgent-message">
-                                <span>Please submit the code sooner!</span>
-
-                                <span className="time-indicator">
-                                    {convertTime(elapsedTime / 1000)}
-                                </span>
+                        {feedback ? (
+                            <div className="task-feedback-container">
+                                <span className="feedback-header">Feedback:</span>
+                                <span className="feedback-content">{feedback}</span>
                             </div>
                         ) : null}
-                    </div>}
+                    </div>
 
-                    {showFeedback && <div className="flex flex-col gap-2">
-                        <div className="border rounded-xl">
-                            <Feedback 
-                                feedback={autoGeneratedFeedback}
-                            />
-                        </div>
-                        <Button
-                            class={blink ? "btn-attention" : ""}
-                            onClick={handleSubmitTask}
-                            type="block"
-                            disabled={!canSubmit}
-                        >
-                            Start Next Task
-                        </Button>
-                    </div>}
-                </div>
-            </section>
+                    <div className="task-submission-buttons-container">
+                        {!showFeedback && <div>
+                            <div className="submit-attention">
+                                <b>ATTENTION</b>
+                                <br />
+                                <br />
+                                You can only submit <b>ONCE</b>. So please double-check your
+                                solution before submitting.
+                            </div>
+                            <br />
+                            
+                            <Button
+                                class={blink ? "btn-attention" : ""}
+                                onClick={handleTaskFeedback}
+                                type="block"
+                                disabled={!canSubmit}
+                            >
+                                Submit for Feedback
+                            </Button>
 
-            <Editor
-                ref={editorRef}
-                showCodex={props.showCodex}
-                taskId={props.taskId}
-                starterCode={props.starterCode ? props.starterCode : ""}
-                updateCode={setUserCode}
-            />
+                            {reachedTimeLimit ? (
+                                <div className="submit-urgent-message">
+                                    <span>Please submit the code sooner!</span>
+
+                                    <span className="time-indicator">
+                                        {convertTime(elapsedTime / 1000)}
+                                    </span>
+                                </div>
+                            ) : null}
+                        </div>}
+
+                        {showFeedback && <div className="flex flex-col gap-2">
+                            <div className="border rounded-xl">
+                                <Feedback 
+                                    feedback={autoGeneratedFeedback}
+                                />
+                            </div>
+                            <Button
+                                class={blink ? "btn-attention" : ""}
+                                onClick={handleSubmitTask}
+                                type="block"
+                                disabled={!canSubmit}
+                            >
+                                Start Next Task
+                            </Button>
+                        </div>}
+                    </div>
+                </section>
+
+                <Editor
+                    ref={editorRef}
+                    showCodex={props.showCodex}
+                    taskId={props.taskId}
+                    starterCode={props.starterCode ? props.starterCode : ""}
+                    updateCode={setUserCode}
+                />
+            </div>
         </div>
     );
 };
