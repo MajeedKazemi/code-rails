@@ -32,6 +32,8 @@ const corsOptions = {
     credentials: true,
 };
 
+mongoose.set("strictQuery", true);
+
 mongoose
     .connect(env.MONGODB_URI)
     .then((db) => {
@@ -58,6 +60,7 @@ mongoose
         app.use(
             bodyParser.urlencoded({
                 limit: "10mb",
+                extended: true,
             })
         );
 
