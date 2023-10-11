@@ -79,12 +79,21 @@ please indicate if the code is correct enough or incorrect by returning "correct
 
         if (result.choices && result.choices?.length > 0) {
             console.log("Returning response");
-            const feedback = result.choices[0].message.content;
 
-            res.json({
-                feedback: feedback,
-                success: true,
-            });
+            switch (result.choices[0].message.content) {
+                case "correct":
+                    res.json({
+                        feedback: true,
+                        success: true,
+                    });
+                    break;
+                default:
+                    res.json({
+                        feedback: false,
+                        success: true,
+                    });
+                    break;
+            }
         } else {
             res.json({
                 success: false,
