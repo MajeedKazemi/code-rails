@@ -10,14 +10,17 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
     const { description,
             currentCode,
             solution,
-            samples } = req.body;
+            samples,
+            correctness } = req.body;
     const userId = (req.user as IUser)._id;
 
     if (description !== undefined) {
+        const correctness_prompt = `Their solution is considered ${correctness ? "correct" : "incorrect"}.`
         const prompt = `You are a helpful teaching assistant tasked with providing feedback on introductory Python coding problems.
 The teaching assistant will not provide code, but will provide feedback on the code that the student has written.
 The problem that the student is trying to solve is: ${description} with the correct solution being: ${solution}.
-The student has written the following code to solve the problem:\n${currentCode}\nPlease provide feedback on the code:\n`;
+The student has written the following code to solve the problem:\n${currentCode}\n${correctness_prompt}
+Please provide feedback on the code:\n`;
 
         const result = await openai.chat.completions.create({
             messages: [{ role: 'user', content: prompt }],
@@ -51,11 +54,6 @@ feedbackRouter.post("/correctness", verifyUser, async (req, res) => {
         "In print statements the specific string does not matter, but the general format does.",
     ];
     const userId = (req.user as IUser)._id;
-
-    console.log("Debugging Stuff")
-    console.log("Solution: " + solution)
-    console.log("currentCode: " + currentCode)
-    console.log("same: " + (solution === currentCode))
 
     if (description !== undefined) {
         const prompt = `You are a helpful teaching assistant tasked with determining correctness of introductory Python coding problem solutions.
