@@ -29,7 +29,7 @@ export const formatPythonCode = (code: string): Promise<string> =>
             if (code === 0) {
                 resolve(formattedCode);
             } else {
-                reject(`clang-format exited with code ${code}`);
+                reject(`Ruff exited with code ${code}`);
             }
         });
     });
