@@ -87,8 +87,8 @@ export const CodingTask = (props: CodingTaskProps) => {
                 props.solution,
                 props.output
             )
-            const feedback = await resp.json();
-            return feedback.feedback;
+            const correctness = await resp.json();
+            return correctness.correct;
         } catch (e) {
             console.log(e);
             return false;

@@ -81,13 +81,13 @@ please indicate if the code is correct enough or incorrect by returning "correct
             switch (result.choices[0].message.content) {
                 case "correct":
                     res.json({
-                        feedback: true,
+                        correct: true,
                         success: true,
                     });
                     break;
                 default:
                     res.json({
-                        feedback: false,
+                        correct: false,
                         success: true,
                     });
                     break;
