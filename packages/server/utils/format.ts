@@ -9,7 +9,7 @@ export const removeComments = (code: string) =>
 export const formatPythonCode = (code: string): Promise<string> =>
     new Promise((resolve, reject) => {
         const ruffFormat = spawn("ruff", [
-            "--stdin-filename", "temp.py", "--fix", "--quiet", "check",
+            "--stdin-filename", "temp.py", "--fix", "--quiet", "--exit-zero", "--select", "ALL", "check",
         ]);
 
         ruffFormat.stdin.write(code);
