@@ -8,21 +8,24 @@ export const removeComments = (code: string) =>
 
 export const formatPythonCode = (code: string): Promise<string> =>
     new Promise((resolve, reject) => {
-        const blackFormat = spawn("black", [
-            "--code", code,
+        const ruffFormat = spawn("ruff", [
+            "--stdin-filename", "temp.py", "--fix", "--quiet", "check",
         ]);
+
+        ruffFormat.stdin.write(code);
+        ruffFormat.stdin.end();
         
         let formattedCode = "";
         
-        blackFormat.stdout.on("data", (data) => {
+        ruffFormat.stdout.on("data", (data) => {
             formattedCode += data.toString();
         });
         
-        blackFormat.stderr.on("data", (data) => {
+        ruffFormat.stderr.on("data", (data) => {
             reject(data.toString());
         });
         
-        blackFormat.on("close", (code: number) => {
+        ruffFormat.on("close", (code: number) => {
             if (code === 0) {
                 resolve(formattedCode);
             } else {
