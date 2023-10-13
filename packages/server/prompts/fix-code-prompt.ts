@@ -1,4 +1,4 @@
-import { ChatCompletionRequestMessage } from "openai";
+import OpenAI from "openai";
 import { diffFixedCodeParser, rawFixedCodeParser } from "../utils/parsers";
 
 
@@ -9,7 +9,7 @@ import { diffFixedCodeParser, rawFixedCodeParser } from "../utils/parsers";
 // 4. generate [pseudo-code] from the [fixed-code] for the user to read.
 // produces [fixed-code] as c code
 export const mainFixCode = (behavior: string, code: string) => {
-    const messages: Array<ChatCompletionRequestMessage> = [
+    const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
         {
             role: "system",
             content:
@@ -82,7 +82,7 @@ export const mainDiffFixedCode = (
     labeledFixedCode: string,
     behavior: string
 ) => {
-    const messages: Array<ChatCompletionRequestMessage> = [
+    const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
         {
             role: "system",
             content:
