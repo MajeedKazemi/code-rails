@@ -179,6 +179,27 @@ export const CodingTasks = [
         "wv0",
         "Watch the following tutorial to learn how to properly use Coding Steps to learn about Python and write code."
     ),
+    // TODO: Delete Fibonacci Task
+    new AuthoringTask(
+        "Temp1",
+        "Write a function that take in an integer n and returns the first n terms of the fibonacci sequence.",
+        [["Placeholder"]],
+        `def generate_fibonacci(n):
+if n <= 0:
+    return []
+elif n == 1:
+    return [0]
+
+fib_sequence = [0, 1]
+while len(fib_sequence) < n:
+    next_number = fib_sequence[-1] + fib_sequence[-2]
+    fib_sequence.append(next_number)
+
+return fib_sequence[:n]`,
+        60 * 3,
+        TaskTopic.basics,
+        TaskStage.train
+    ),
     // print string
     new AuthoringTask(
         "1a",
