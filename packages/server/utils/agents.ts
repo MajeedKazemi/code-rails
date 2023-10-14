@@ -9,7 +9,9 @@ export const rawFixedCodeParser = (r: string) => {
         obj.rawFixedCode = r.replace("\n[STOP-end-fixed-code-STOP]", "");
     }
 
-    return obj;
+    obj.rawFixedCode = obj.rawFixedCode.replace("[fixed-code]:", "").trim();
+
+    return obj.rawFixedCode;
 };
 
 export const diffFixedCodeParser = (txt: string) => {
