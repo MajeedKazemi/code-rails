@@ -1,5 +1,3 @@
-import { FixCodeResponse } from "./fix-code";
-
 interface FeedbackProps {
     feedback: any;
 }
@@ -7,12 +5,28 @@ interface FeedbackProps {
 export const Feedback = (props: FeedbackProps) => {
     if (props.feedback.explanation) {
         return(
-            <div className="border rounded-xl">
-                <FixCodeResponse
-                    explanation={props.feedback.explanation}
-                    lines={props.feedback.lines}
-                />
+            // <div className="border rounded-xl max-h-96 overflow-y-auto p-4">
+            <div className="border rounded-xl bg-indigo-900">
+                <div className="rounded-t-xl bg-indigo-600 text-white p-2 flex gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                    </svg>
+                    Hover over <p className="text-red-500">red</p> lines to see suggestions
+                </div>
+                <div className="p-2 font-mono max-h-96 overflow-y-auto">
+                    {props.feedback.lines.map((line: any, index: number) => {
+                        return(
+                            <div className={`text-white min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
+                                {line.code || " "}
+                            </div>
+                        )
+                    })}
+                </div>
             </div>
+                /* <div>
+                    {props.feedback.explanation}
+                </div> */
+            // </div>
         )
     } else {
         return(
