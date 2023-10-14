@@ -27,7 +27,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
         cleanedCode.substring(0, 2500)
     );
 
-    console.log("Generating Fixed Code...");
+    console.log("Generating Fixed Code..."); // TODO: Investigate replacing with the given solution
     const rawFixedCode = await openai.chat.completions.create({
         messages: fixCodePrompt.messages,
         model: fixCodePrompt.model,
