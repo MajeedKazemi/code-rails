@@ -3,10 +3,13 @@ import express from "express";
 import { IUser } from "../models/user";
 import { openai } from "../utils/openai";
 import { verifyUser } from "../utils/strategy";
+import { formatPythonCode, removeComments } from "../utils/format";
+import { mainFixCode } from "../prompts/fix-code-prompt";
 
 export const feedbackRouter = express.Router();
 
 feedbackRouter.post("/generate", verifyUser, async (req, res) => {
+    console.log("Generating feedback");
     const { description,
             currentCode,
             solution,
@@ -14,7 +17,40 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
             correctness } = req.body;
     const userId = (req.user as IUser)._id;
 
-    if (description !== undefined) {
+    console.log("Current Code:\n", currentCode);
+    
+    const cleanedCode = await formatPythonCode(removeComments(currentCode.trim()));
+
+    const fixCodePrompt = mainFixCode(
+        description.substring(0, 500),
+        cleanedCode.substring(0, 2500)
+    );
+
+    const rawFixedCode = await openai.chat.completions.create({
+        messages: fixCodePrompt.messages,
+        model: fixCodePrompt.model,
+        temperature: fixCodePrompt.temperature,
+        stop: fixCodePrompt.stop,
+        user: userId,
+    });
+    
+    if (rawFixedCode.choices[0].message.content === null) {
+        res.json({
+            success: false,
+        });
+        return;
+    }
+
+    const fixedCode: string = fixCodePrompt.parser(rawFixedCode.choices[0].message.content);
+    
+    console.log("Cleaned Code:\n", cleanedCode);
+
+    res.json({
+        feedback: fixedCode,
+        success: true,
+    });
+
+    if (false) { // (description !== undefined) {
         const correctness_prompt = `Their solution is considered ${correctness ? "correct" : "incorrect"}.`
         const prompt = `You are a helpful teaching assistant tasked with providing feedback on introductory Python coding problems.
 The teaching assistant will not provide code, but will provide feedback on the code that the student has written.
