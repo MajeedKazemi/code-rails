@@ -1,3 +1,5 @@
+import { diffLines } from "diff";
+
 export const rawFixedCodeParser = (r: string) => {
     const obj: any = {
         rawFixedCode: r,
@@ -63,4 +65,91 @@ export const diffFixedCodeParser = (txt: string) => {
     });
 
     return obj;
+};
+
+export const labelOriginalCode = (newCode: string, oldCode: string) => {
+    const diff = diffLines(oldCode, newCode);
+    let annotatedCode = "";
+
+    for (const part of diff) {
+        if (part.added) {
+            const lines = part.value.split("\n");
+
+            for (const line of lines) {
+                if (line.trim() !== "") {
+                    annotatedCode += `${line} // [modified]\n`;
+                }
+            }
+        } else if (part.removed) {
+            const lines = part.value.split("\n");
+
+            for (const line of lines) {
+                if (line.trim() !== "" && line.trim() !== "\n") {
+                    // count spaces before the line
+
+                    annotatedCode += `${keepSpacesBeforeLine(
+                        line
+                    )}// [added]\n`;
+                } else {
+                    // console.log("line is empty");
+                }
+            }
+        } else {
+            annotatedCode += part.value; // no change, copy line as is
+        }
+    }
+
+    // go through each line of annotatedCode
+    // if a line has // [added] and the line after it is // [modified] -> delete the // [added] part
+    let finalAnnotatedCode = "";
+    let lines = annotatedCode.split("\n");
+    for (const [index, line] of lines.entries()) {
+        if (
+            index + 1 < lines.length &&
+            line.includes("// [added]") &&
+            lines[index + 1].includes("// [modified]")
+        ) {
+            // do nothing
+            // console.log("");
+        } else {
+            finalAnnotatedCode += line + "\n";
+        }
+    }
+
+    return finalAnnotatedCode.trim();
+};
+
+export const labelFixedCode = (oldCode: string, newCode: string) => {
+    const diff = diffLines(oldCode, newCode);
+    let annotatedCode = "";
+
+    for (const part of diff) {
+        if (part.added) {
+            const lines = part.value.split("\n");
+            lines.forEach((line) => {
+                if (line.trim() !== "") {
+                    annotatedCode += `${line} // [fixed]\n`;
+                }
+            });
+        } else if (part.removed) {
+            // do nothing for removed lines
+        } else {
+            annotatedCode += part.value; // no change, copy line as is
+        }
+    }
+
+    return annotatedCode;
+};
+
+const keepSpacesBeforeLine = (line: string) => {
+    let spaces = 0;
+    for (const char of line) {
+        if (char === " ") {
+            spaces++;
+        } else {
+            break;
+        }
+    }
+
+    return " ".repeat(spaces);
 };
