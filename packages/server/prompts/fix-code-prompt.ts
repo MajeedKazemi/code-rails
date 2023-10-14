@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { diffFixedCodeParser, rawFixedCodeParser } from "../utils/parsers";
+import { diffFixedCodeParser, rawFixedCodeParser } from "../utils/agents";
 
 
 // the process:
