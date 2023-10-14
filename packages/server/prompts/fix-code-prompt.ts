@@ -226,17 +226,3 @@ ${labeledFixedCode}
 ${resTxt}`,
     };
 };
-
-// export const verifyIntendedBehavior = (code: string) => {
-//     return {
-//         prompt: `
-// [code]:
-// ${code}
-// [prompt]: below, write a concise summary of what the above [code] does in "plain English" (include inputs/output if is a function)
-// [description]:`,
-//         stop: ["\n"],
-//         model: "text-davinci-003",
-//         temperature: 0.3,
-//         max_tokens: 512,
-//     };
-// };
