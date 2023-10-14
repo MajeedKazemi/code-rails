@@ -7,7 +7,7 @@ import { Input } from "./input";
 
 export const Login = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -17,10 +17,10 @@ export const Login = () => {
     const formSubmitHandler = (e: any) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setShowError(false);
+        setErrorMessage("");
 
-        const genericErrorMessage =
-            "Something went wrong! Please try again later.";
+        const loginErrorMessage = "Your username or password is incorrect. Please try again.";
+        const genericErrorMessage = "Something went wrong. Please try again.";
 
         authLogin(username, password)
             .then(async (response) => {
@@ -28,7 +28,7 @@ export const Login = () => {
 
                 if (!response.ok) {
                     console.error("login failed");
-                    setShowError(true);
+                    setErrorMessage(loginErrorMessage);
                 } else {
                     const data = await response.json();
 
@@ -36,6 +36,7 @@ export const Login = () => {
                 }
             })
             .catch((error) => {
+                setErrorMessage(genericErrorMessage);
                 setIsSubmitting(false);
                 setContext({ token: null, user: null });
             });
@@ -56,8 +57,8 @@ export const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            {showError && <div className="text-red-600 m-2">
-                Your username or password is incorrect. Please try again.
+            {errorMessage && <div className="text-red-600 m-2">
+                {errorMessage}
             </div>}
             <Button icon="login">
                 {`${isSubmitting ? "Signing In" : "Sign In"}`}
