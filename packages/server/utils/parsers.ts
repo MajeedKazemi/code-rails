@@ -3,10 +3,10 @@ export const rawFixedCodeParser = (r: string) => {
         rawFixedCode: r,
     };
 
-    // remove [end-fixed-code] from the end of the file
+    // remove [STOP-end-fixed-code-STOP] from the end of the file
 
-    if (r.endsWith("\n[end-fixed-code]")) {
-        obj.rawFixedCode = r.replace("\n[end-fixed-code]", "");
+    if (r.endsWith("\n[STOP-end-fixed-code-STOP]")) {
+        obj.rawFixedCode = r.replace("\n[STOP-end-fixed-code-STOP]", "");
     }
 
     return obj;
