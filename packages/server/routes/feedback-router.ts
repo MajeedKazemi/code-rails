@@ -101,7 +101,8 @@ Keep in mind that the student's code does not need to be an exact match to the s
 The goal is for them to demonstrate that they can solve the problem, so we do not care if they make a small string typo or use a different variable name.
 Ignore HTML tags.
 You should favour marking things as correct rather than incorrect.
-please indicate if the code is correct enough or incorrect by returning "correct" or "incorrect"`;
+please indicate if the code is correct enough or incorrect by returning "correct" or "incorrect"
+Do not say anthing else`;
 
         let result;
         while ((result?.choices[0].message.content !== "correct") && (result?.choices[0].message.content !== "incorrect")) {
