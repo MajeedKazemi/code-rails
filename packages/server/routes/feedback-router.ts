@@ -84,6 +84,12 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 });
 
 feedbackRouter.post("/correctness", verifyUser, async (req, res) => {
+    // TODO: Reenable this
+    res.json({
+        correct: false,
+        success: true,
+    });
+    return;
     const { description,
             currentCode,
             solution,
