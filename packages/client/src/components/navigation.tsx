@@ -28,7 +28,7 @@ export const NavigationBar = (props: NavigationBarProps) => {
                         src={logo}
                         alt="lines depicting steps "
                     ></img>
-                    <h1 className="logo-type">Coding Steps</h1>
+                    <h1 className="logo-type">Code Rails</h1>
                 </div>
             </Link>
             {context?.user?.firstName && (
