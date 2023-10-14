@@ -13,47 +13,40 @@ export const mainFixCode = (behavior: string, code: string) => {
         {
             role: "system",
             content:
-                "generate the fixed code in c programming of the provided code based on the intended behavior. try to use the same structure of the provided [code]. focus on segmentation faults, logical errors, memory leaks, and other common errors. you can use the [intended-behavior] to help you understand the intended behavior of the code.",
+                "generate the fixed code in python programming of the provided code based on the intended behavior. try to use the same structure of the provided [code]. focus on syntax errors, logical errors, and other common errors. you can use the [intended-behavior] to help you understand the intended behavior of the code.",
         },
         {
             role: "user",
             content: `[code]:
-void fib(int **arr, int count) {
-    *arr = malloc(count * sizeof(int));
-    
-    if (count == 0) {
-        *arr[0] = 0;
-    } else if (count == 1) {
-        *arr[0] = 0;
-        *arr[1] = 1;
-    }
+def generate_fibonacci(n):
+    if n < 0:
+        return []
+    elif n == 1:
+        return [0]
 
-    for (int i = 2; i < count; i++) {
-        *arr[i] = *arr[i - 1] + *arr[i - 2];
-    }
+    fib_sequence = [0, 1]
+    while len(fib_sequence) <= n:
+        next_number = fib_sequence[-1] - fib_sequence[-2]
+        fib_sequence.append(next_number)
 
-    return arr;
-}
+    return fib_sequence[:n]
 [intended-behavior]: take in an int n, and generates the first n elements of the Fibonacci sequence.`,
         },
         {
             role: "assistant",
             content: `[fixed-code]:
-void fib(int **arr, int count) {
-    *arr = malloc(count * sizeof(int));
+def generate_fibonacci(n):
+    if n <= 0:
+        return []
+    elif n == 1:
+        return [0]
 
-    if (count > 0) {
-        (*arr)[0] = 0;
-    }
+    fib_sequence = [0, 1]
+    while len(fib_sequence) < n:
+        next_number = fib_sequence[-1] + fib_sequence[-2]
+        fib_sequence.append(next_number)
 
-    if (count > 1) {
-        (*arr)[1] = 1;
-    }
-    
-    for (int i = 2; i < count; i++) {
-        (*arr)[i] = (*arr)[i - 1] + (*arr)[i - 2];
-    }
-}
+    return fib_sequence[:n]
 [STOP-end-fixed-code-STOP]`,
         },
         {
