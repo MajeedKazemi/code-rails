@@ -1,3 +1,5 @@
+import { Tooltip } from "react-tooltip";
+
 interface FeedbackProps {
     feedback: any;
 }
@@ -16,8 +18,13 @@ export const Feedback = (props: FeedbackProps) => {
                 <div className="p-2 font-mono max-h-96 overflow-y-auto whitespace-pre-wrap divide-y divide-indigo-900">
                     {props.feedback.lines.map((line: any, index: number) => {
                         return(
-                            <div className={`text-white min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
-                                {line.code || " "}
+                            <div>
+                                <div id={`line_${index}`} className={`text-white min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
+                                    {line.code || " "}
+                                </div>
+                                <Tooltip className="z-40 bg-red-300 text-red-500" anchorSelect={`#line_${index}`} place="right">
+                                    {line.explanation}
+                                </Tooltip>
                             </div>
                         )
                     })}
