@@ -13,7 +13,7 @@ export const Feedback = (props: FeedbackProps) => {
                     </svg>
                     Hover over <p className="text-red-500">red</p> lines to see suggestions
                 </div>
-                <div className="p-2 font-mono max-h-96 overflow-y-auto">
+                <div className="p-2 font-mono max-h-96 overflow-y-auto whitespace-pre-wrap divide-y divide-indigo-900">
                     {props.feedback.lines.map((line: any, index: number) => {
                         return(
                             <div className={`text-white min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
@@ -31,7 +31,7 @@ export const Feedback = (props: FeedbackProps) => {
     } else {
         return(
             <div className="border rounded-xl">
-                <div className="max-h-96 overflow-y-auto m-4">
+                <div className="max-h-96 m-4">
                     <p><strong>Feedback:</strong></p>
                     <p id="feedback-text">
                         <p className="flex flex-row gap-2">
