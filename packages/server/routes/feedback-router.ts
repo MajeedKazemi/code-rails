@@ -17,9 +17,6 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
             correctness } = req.body;
     const userId = (req.user as IUser)._id;
 
-    console.log("Original Code:\n", currentCode);
-    
-    console.log("Formatting Code...");
     const cleanedCode = await formatPythonCode(removeComments(currentCode.trim()));
 
     const fixCodePrompt = mainFixCode(
@@ -27,7 +24,6 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
         cleanedCode.substring(0, 2500)
     );
 
-    console.log("Generating Fixed Code..."); // TODO: Investigate replacing with the given solution
     const rawFixedCode = await openai.chat.completions.create({
         messages: fixCodePrompt.messages,
         model: fixCodePrompt.model,
@@ -46,16 +42,12 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 
     const fixedCode: string = fixCodePrompt.parser(rawFixedCode.choices[0].message.content);
     
-    console.log("Fixed Code:\n", fixedCode);
-
-    console.log("Annotating Code...");
     const explainDiffPrompt = mainDiffFixedCode(
         labelOriginalCode(cleanedCode, fixedCode),
         labelFixedCode(cleanedCode, fixedCode),
         description.substring(0, 500)
     );
 
-    console.log("Generating Code Explanation...");
     const rawExplainedCode = await openai.chat.completions.create({
         messages: explainDiffPrompt.messages,
         model: explainDiffPrompt.model,
@@ -74,8 +66,6 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
     }
 
     const explainedCode: object = explainDiffPrompt.parser(rawExplainedCode.choices[0].message.content);
-
-    console.log("Explained Code:\n", explainedCode)
 
     res.json({
         feedback: explainedCode,
