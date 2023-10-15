@@ -22,7 +22,7 @@ export const Feedback = (props: FeedbackProps) => {
                                 <div id={`line_${index}`} className={`text-white min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
                                     {line.code}
                                 </div>
-                                <Tooltip className="z-40" anchorSelect={`#line_${index}`} place="right">
+                                <Tooltip className="z-40 max-w-lg" anchorSelect={`#line_${index}`} place="right">
                                     {line.explanation}
                                 </Tooltip>
                             </div>
