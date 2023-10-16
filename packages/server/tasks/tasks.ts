@@ -185,10 +185,10 @@ export const CodingTasks = [
         "Write a function that take in an integer n and returns the first n terms of the fibonacci sequence.",
         [["Placeholder"]],
         `def generate_fibonacci(n):
-if n <= 0:
-    return []
-elif n == 1:
-    return [0]
+    if n <= 0:
+        return []
+    elif n == 1:
+        return [0]
 
 fib_sequence = [0, 1]
 while len(fib_sequence) < n:
