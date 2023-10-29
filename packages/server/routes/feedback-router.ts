@@ -4,7 +4,7 @@ import { IUser } from "../models/user";
 import { openai } from "../utils/openai";
 import { verifyUser } from "../utils/strategy";
 import { formatPythonCode, removeComments } from "../utils/format";
-import { mainDiffOrgCode, mainFixCode } from "../prompts/fix-code-prompt";
+import { mainDiffOrgCode, mainDiffFixedCode, mainFixCode } from "../prompts/fix-code-prompt";
 import { labelFixedCode, labelOriginalCode } from "../utils/agents";
 
 export const feedbackRouter = express.Router();
