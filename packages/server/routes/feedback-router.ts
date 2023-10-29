@@ -4,7 +4,7 @@ import { IUser } from "../models/user";
 import { openai } from "../utils/openai";
 import { verifyUser } from "../utils/strategy";
 import { formatPythonCode, removeComments } from "../utils/format";
-import { mainDiffOrgCode, mainDiffFixedCode, mainFixCode } from "../prompts/fix-code-prompt";
+import { annotateFixedCodePrompt, annotateOriginalCodePrompt, fixCodePrompt } from "../prompts/fix-code-prompt";
 import { labelFixedCode, labelOriginalCode } from "../utils/agents";
 
 export const feedbackRouter = express.Router();
@@ -19,16 +19,16 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 
     const cleanedCode = await formatPythonCode(removeComments(currentCode.trim()));
 
-    const fixCodePrompt = mainFixCode(
+    const formattedFixCodePrompt = fixCodePrompt(
         description.substring(0, 500),
         cleanedCode.substring(0, 2500)
     );
 
     const rawFixedCode = await openai.chat.completions.create({
-        messages: fixCodePrompt.messages,
-        model: fixCodePrompt.model,
-        temperature: fixCodePrompt.temperature,
-        stop: fixCodePrompt.stop,
+        messages: formattedFixCodePrompt.messages,
+        model: formattedFixCodePrompt.model,
+        temperature: formattedFixCodePrompt.temperature,
+        stop: formattedFixCodePrompt.stop,
         user: userId,
     });
     
@@ -40,19 +40,19 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
         return;
     }
 
-    const fixedCode: string = fixCodePrompt.parser(rawFixedCode.choices[0].message.content);
+    const fixedCode: string = formattedFixCodePrompt.parser(rawFixedCode.choices[0].message.content);
 
-    const explainDiffPrompt = mainDiffOrgCode(
+    const explainOriginalDiffPrompt = annotateOriginalCodePrompt(
         labelOriginalCode(cleanedCode, fixedCode),
         labelFixedCode(cleanedCode, fixedCode),
         description.substring(0, 500)
     );
 
     const rawExplainedCode = await openai.chat.completions.create({
-        messages: explainDiffPrompt.messages,
-        model: explainDiffPrompt.model,
-        temperature: explainDiffPrompt.temperature,
-        stop: explainDiffPrompt.stop,
+        messages: explainOriginalDiffPrompt.messages,
+        model: explainOriginalDiffPrompt.model,
+        temperature: explainOriginalDiffPrompt.temperature,
+        stop: explainOriginalDiffPrompt.stop,
         user: userId,
     });
 
@@ -65,7 +65,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
         return;
     }
 
-    const explainedCode: object = explainDiffPrompt.parser(rawExplainedCode.choices[0].message.content);
+    const explainedCode: object = explainOriginalDiffPrompt.parser(rawExplainedCode.choices[0].message.content);
 
     res.json({
         feedback: explainedCode,

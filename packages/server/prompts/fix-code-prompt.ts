@@ -8,7 +8,7 @@ import { diffFixedCodeParser, rawFixedCodeParser } from "../utils/agents";
 // 3. generate [diff-code] by comparing the [fixed-code] to the original [code], and tagging each line with [fixed] if it was changed
 // 4. generate [pseudo-code] from the [fixed-code] for the user to read.
 // produces [fixed-code] as c code
-export const mainFixCode = (behavior: string, code: string) => {
+export const fixCodePrompt = (behavior: string, code: string) => {
     const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
         {
             role: "system",
@@ -70,7 +70,7 @@ ${code}
 };
 
 // receives a code, behavior, and fixed code, and annotates the original code lines that were fixed
-export const mainDiffOrgCode = (
+export const annotateOriginalCodePrompt = (
     labeledOriginalCode: string,
     labeledFixedCode: string,
     behavior: string
@@ -229,7 +229,7 @@ ${resTxt}`,
 };
 
 // receives a code, behavior, and fixed code, and annotates the fixed code lines with reasons for changes
-export const mainDiffFixedCode = (
+export const annotateFixedCodePrompt = (
     labeledOriginalCode: string,
     labeledFixedCode: string,
     behavior: string
