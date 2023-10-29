@@ -261,7 +261,8 @@ export const apiGenerateFeedback = (
     currentCode: string,
     solution: string,
     samples: Array<Array<string>>,
-    correctness: boolean
+    correctness: boolean,
+    iteration: number
 ) =>
     fetch(env.API_URL + "/api/feedback/generate", {
         method: "POST",
@@ -275,7 +276,8 @@ export const apiGenerateFeedback = (
             currentCode,
             solution,
             samples,
-            correctness
+            correctness,
+            iteration
         }),
     });
 

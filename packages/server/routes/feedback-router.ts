@@ -14,7 +14,8 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
             currentCode,
             solution,
             samples,
-            correctness } = req.body;
+            correctness,
+            iteration } = req.body;
     const userId = (req.user as IUser)._id;
 
     const cleanedCode = await formatPythonCode(removeComments(currentCode.trim()));
@@ -42,17 +43,23 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 
     const fixedCode: string = formattedFixCodePrompt.parser(rawFixedCode.choices[0].message.content);
 
-    const explainOriginalDiffPrompt = annotateOriginalCodePrompt(
-        labelOriginalCode(cleanedCode, fixedCode),
-        labelFixedCode(cleanedCode, fixedCode),
-        description.substring(0, 500)
-    );
+    const explainDiffPrompt = iteration < 3 ?
+        annotateOriginalCodePrompt(
+            labelOriginalCode(cleanedCode, fixedCode),
+            labelFixedCode(cleanedCode, fixedCode),
+            description.substring(0, 500)
+        ) : 
+        annotateFixedCodePrompt(
+            labelOriginalCode(cleanedCode, fixedCode),
+            labelFixedCode(cleanedCode, fixedCode),
+            description.substring(0, 500)
+        )
 
     const rawExplainedCode = await openai.chat.completions.create({
-        messages: explainOriginalDiffPrompt.messages,
-        model: explainOriginalDiffPrompt.model,
-        temperature: explainOriginalDiffPrompt.temperature,
-        stop: explainOriginalDiffPrompt.stop,
+        messages: explainDiffPrompt.messages,
+        model: explainDiffPrompt.model,
+        temperature: explainDiffPrompt.temperature,
+        stop: explainDiffPrompt.stop,
         user: userId,
     });
 
@@ -65,7 +72,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
         return;
     }
 
-    const explainedCode: object = explainOriginalDiffPrompt.parser(rawExplainedCode.choices[0].message.content);
+    const explainedCode: object = explainDiffPrompt.parser(rawExplainedCode.choices[0].message.content);
 
     res.json({
         feedback: explainedCode,
@@ -105,8 +112,6 @@ Do not say anthing else`;
         }
 
         if (result.choices && result.choices?.length > 0) {
-            console.log("Returning response");
-
             switch (result.choices[0].message.content) {
                 case "correct":
                     res.json({

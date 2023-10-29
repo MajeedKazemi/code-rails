@@ -8,13 +8,22 @@ interface FeedbackProps {
 export const Feedback = (props: FeedbackProps) => {
     const Heading = () => {
         const headingClasses = "rounded-t-xl bg-indigo-600 text-white p-2 flex gap-1";
-        if (props.iteration > 1) {
+        if (props.iteration > 2) {
             return(
                 <div className={headingClasses}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
                     </svg>
-                    Hover over <p className="text-red-500">red</p> lines to see suggestions
+                    <p>Hover over <span className="text-red-500 whitespace-normal">red</span> lines in the fixed code to see suggestions</p>
+                </div>
+            )
+        } else if (props.iteration > 1) {
+            return(
+                <div className={headingClasses}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                    </svg>
+                    <p>Hover over <span className="text-red-500">red</span> lines in your code to see suggestions</p>
                 </div>
             )
         } else {
