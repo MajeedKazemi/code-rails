@@ -70,7 +70,7 @@ export const Feedback = (props: FeedbackProps) => {
         return(
             <div className="border rounded-xl bg-indigo-900">
                 <Header />
-                <Body />
+                {Body()}
             </div>
         )
     } else {
