@@ -60,7 +60,7 @@ ${code}
     return {
         messages,
         stop: ["[STOP-end-fixed-code-STOP]"],
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         temperature: 0.05,
         max_tokens: 2000,
         parser: (resTxt: string) => rawFixedCodeParser(resTxt),
@@ -70,7 +70,7 @@ ${code}
 };
 
 // receives a code, behavior, and fixed code, and annotates the lines that were fixed
-export const mainDiffFixedCode = (
+export const mainDiffOrgCode = (
     labeledOriginalCode: string,
     labeledFixedCode: string,
     behavior: string

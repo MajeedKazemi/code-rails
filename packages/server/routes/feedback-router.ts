@@ -4,7 +4,7 @@ import { IUser } from "../models/user";
 import { openai } from "../utils/openai";
 import { verifyUser } from "../utils/strategy";
 import { formatPythonCode, removeComments } from "../utils/format";
-import { mainDiffFixedCode, mainFixCode } from "../prompts/fix-code-prompt";
+import { mainDiffOrgCode, mainFixCode } from "../prompts/fix-code-prompt";
 import { labelFixedCode, labelOriginalCode } from "../utils/agents";
 
 export const feedbackRouter = express.Router();
@@ -42,7 +42,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 
     const fixedCode: string = fixCodePrompt.parser(rawFixedCode.choices[0].message.content);
 
-    const explainDiffPrompt = mainDiffFixedCode(
+    const explainDiffPrompt = mainDiffOrgCode(
         labelOriginalCode(cleanedCode, fixedCode),
         labelFixedCode(cleanedCode, fixedCode),
         description.substring(0, 500)
