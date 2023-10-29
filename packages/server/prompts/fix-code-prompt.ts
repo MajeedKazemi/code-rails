@@ -69,17 +69,18 @@ ${code}
     };
 };
 
-// receives a code, behavior, and fixed code, and annotates the lines that were fixed
+// receives a code, behavior, and fixed code, and annotates the original code lines that were fixed
 export const mainDiffOrgCode = (
     labeledOriginalCode: string,
     labeledFixedCode: string,
     behavior: string
 ) => {
+    const systemMessage = "show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]";
+
     const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
         {
             role: "system",
-            content:
-                "show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]",
+            content: systemMessage,
         },
         {
             role: "user",
@@ -116,7 +117,7 @@ int **split_array(const int *s, int length) {
     // [added]
 }
 [end-original-code]
-show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]`,
+${systemMessage}`,
         },
         {
             role: "assistant",
@@ -173,7 +174,7 @@ void fib(int **arr, int count) {
     return arr; // [modified]
 }
 [end-original-code]
-show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]`,
+${systemMessage}`,
         },
         {
             role: "assistant",
@@ -206,7 +207,7 @@ ${labeledFixedCode}
 [original-code]:
 ${labeledOriginalCode}
 [end-original-code]
-show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]`,
+${systemMessage}`,
         },
     ];
 
@@ -233,11 +234,12 @@ export const mainDiffFixedCode = (
     labeledFixedCode: string,
     behavior: string
 ) => {
+    const systemMessage = "show all the lines of [fixed-code] (do not show any of the lines from [original-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]";
+
     const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
         {
             role: "system",
-            content:
-                "show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]",
+            content: systemMessage,
         },
         {
             role: "user",
@@ -274,7 +276,7 @@ int **split_array(const int *s, int length) {
     // [added]
 }
 [end-original-code]
-show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]`,
+${systemMessage}`,
         },
         {
             role: "assistant",
@@ -331,7 +333,7 @@ void fib(int **arr, int count) {
     return arr; // [modified]
 }
 [end-original-code]
-show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]`,
+${systemMessage}`,
         },
         {
             role: "assistant",
@@ -364,7 +366,7 @@ ${labeledFixedCode}
 [original-code]:
 ${labeledOriginalCode}
 [end-original-code]
-show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]`,
+${systemMessage}`,
         },
     ];
 
