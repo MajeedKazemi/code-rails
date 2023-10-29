@@ -60,7 +60,7 @@ ${code}
     return {
         messages,
         stop: ["[STOP-end-fixed-code-STOP]"],
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         temperature: 0.05,
         max_tokens: 2000,
         parser: (resTxt: string) => rawFixedCodeParser(resTxt),
@@ -213,7 +213,7 @@ show all the lines of [original-code] (do not show any of the lines from [fixed-
     return {
         messages,
         stop: ["[STOP-end-diff-fixed-code-STOP]"],
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         temperature: 0.05,
         max_tokens: 1024,
         parser: (resTxt: string) => diffFixedCodeParser(resTxt),
