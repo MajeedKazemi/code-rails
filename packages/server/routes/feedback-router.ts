@@ -41,7 +41,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
     }
 
     const fixedCode: string = fixCodePrompt.parser(rawFixedCode.choices[0].message.content);
-    
+
     const explainDiffPrompt = mainDiffFixedCode(
         labelOriginalCode(cleanedCode, fixedCode),
         labelFixedCode(cleanedCode, fixedCode),
@@ -55,8 +55,8 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
         stop: explainDiffPrompt.stop,
         user: userId,
     });
-    
-    // if (rawExplainedCode.choices && rawExplainedCode.choices?.length > 0) {
+
+
     if (rawExplainedCode.choices[0].message.content === null) {
         console.log("Code Explanation Generation Failed...")
         res.json({
