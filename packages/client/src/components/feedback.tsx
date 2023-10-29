@@ -6,7 +6,7 @@ interface FeedbackProps {
 }
 
 export const Feedback = (props: FeedbackProps) => {
-    const Heading = () => {
+    const Header = () => {
         const headingClasses = "rounded-t-xl bg-indigo-600 text-white p-2 flex gap-1";
         if (props.iteration > 2) {
             return(
@@ -45,7 +45,7 @@ export const Feedback = (props: FeedbackProps) => {
                 <div className={bodyClasses + " divide-y divide-indigo-900"}>
                     {props.feedback.lines.map((line: any, index: number) => {
                         return(
-                            <div>
+                            <div key={`feedback_line_${index}`}>
                                 <div id={`line_${index}`} className={`min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
                                     {line.code}
                                 </div>
@@ -69,7 +69,7 @@ export const Feedback = (props: FeedbackProps) => {
     if (props.feedback.explanation) {
         return(
             <div className="border rounded-xl bg-indigo-900">
-                <Heading />
+                <Header />
                 <Body />
             </div>
         )
