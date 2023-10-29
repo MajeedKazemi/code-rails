@@ -57,7 +57,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 
     const rawExplainedCode = await openai.chat.completions.create({
         messages: explainDiffPrompt.messages,
-        model: explainDiffPrompt.model,
+        model: iteration > 1 ? explainDiffPrompt.model : "gpt-3.5-turbo",
         temperature: explainDiffPrompt.temperature,
         stop: explainDiffPrompt.stop,
         user: userId,
