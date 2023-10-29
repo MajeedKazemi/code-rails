@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { diffFixedCodeParser, rawFixedCodeParser } from "../utils/agents";
+import { diffOriginalCodeParser, diffFixedCodeParser, rawFixedCodeParser } from "../utils/agents";
 
 
 // the process:
@@ -217,7 +217,7 @@ ${systemMessage}`,
         model: "gpt-4",
         temperature: 0.05,
         max_tokens: 1024,
-        parser: (resTxt: string) => diffFixedCodeParser(resTxt),
+        parser: (resTxt: string) => diffOriginalCodeParser(resTxt),
         raw: (resTxt: string) => `[code]:
 ${labeledOriginalCode}
 [intended-behavior]: ${behavior}
@@ -280,7 +280,7 @@ ${systemMessage}`,
         },
         {
             role: "assistant",
-            content: `[explained-original-code]:
+            content: `[explained-fixed-code]:
 int **split_array(const int *s, int length) {
     int **arr = malloc(sizeof(int *) * 2); // [added-reason]: allocate memory for the array of pointers
 
@@ -294,7 +294,7 @@ int **split_array(const int *s, int length) {
         } // [added-reason]: if the index is odd, copy the element to the second array
     } // [added-reason]: return the array of pointers
 }
-[end-explained-original-code]
+[end-explained-fixed-code]
 [high-level-explanation-of-changes]: The code was modified to allocate memory for two arrays - one for the even indices and one for the odd indices - and iterate through the input array and copy the elements to the respective arrays. The size of the arrays was calculated to be the length of the input array divided by two for the first array, and the length of the input array divided by two plus the remainder of the division (length % 2) for the second array.
 [STOP-end-diff-fixed-code-STOP]`,
         },
@@ -337,7 +337,7 @@ ${systemMessage}`,
         },
         {
             role: "assistant",
-            content: `[explained-original-code]:
+            content: `[explained-fixed-code]:
 void fib(int **arr, int count) {
     *arr = malloc(count * sizeof(int));
 
@@ -352,7 +352,7 @@ void fib(int **arr, int count) {
     }
     // [modified-reason]: the function should not return the array \`arr\`, but instead update the array \`arr\` in place. no return statement is needed.
 }
-[end-explained-original-code]
+[end-explained-fixed-code]
 [high-level-explanation-of-changes]: your original code has a logical issue in which it does not assign the first and second elements of the array to 0 and 1, respectively, if the count of elements was not 0 or 1. This is because your original code does not check if the count is greater than 0 or 1 before assigning the elements. To fix this, add checks to make sure the count is greater than 0 and 1 before assigning the array elements to 0 and 1, respectively. Additionally, operator precedence should be fixed when accessing \`arr\` by using parentheses around the dereferenced array, before accessing the element of the array. Finally, the function should not return the array \`arr\`, but instead update the array \`arr\` in place. 
 [STOP-end-diff-fixed-code-STOP]`,
         },
