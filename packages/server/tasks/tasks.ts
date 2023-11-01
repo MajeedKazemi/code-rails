@@ -64,7 +64,8 @@ export class AuthoringTask extends Task {
         solution: string,
         timeLimit: number,
         topic: TaskTopic,
-        stage: TaskStage
+        stage: TaskStage,
+        notes: Array<string> = []
     ) {
         super(id, description, TaskType.Authoring);
 
@@ -181,13 +182,18 @@ export const CodingTasks = [
     ),
     // print string
     new AuthoringTask(
-        "1a",
+        "1",
         "Write a program that will display the following message: <b>I'm Wall-E!</b>",
         [["output: <b>I'm Wall-E!</b>"]],
         [`print("I'm Wall-E!")`].join("\n"),
         60 * 3,
         TaskTopic.basics,
-        TaskStage.train
+        TaskStage.train,
+        [
+            "the goal is to see if students can write a simple print message",
+            'it is ok if the message is something else other than "I\'m Wall-E!"',
+            "it is ok if there are multiple print statements.",
+        ]
     ),
     // print another string
     new ModifyingTask(
@@ -203,13 +209,18 @@ export const CodingTasks = [
 
     // print the value of a variable
     new AuthoringTask(
-        "2a",
+        "2",
         "Write a program that first, creates a variable called <i>name</i> and sets its value to <b>Wall-E</b>. Then, display the value of the variable.",
         [["output: <b>Wall-E</b>"]],
         [`name = "Wall-E"`, `print(name)`].join("\n"),
         60 * 4,
         TaskTopic.basics,
-        TaskStage.train
+        TaskStage.train,
+        [
+            "the goal is to create a variable and print its value",
+            "it is ok if the message is something else other than the one indicated in the task description.",
+            "the variable name can be anything as long as it is used in the print statement",
+        ]
     ),
     // rename the variable
     new ModifyingTask(
@@ -225,13 +236,18 @@ export const CodingTasks = [
 
     // join a string variable with a literal
     new AuthoringTask(
-        "3a",
+        "3",
         "Write a program that creates a variable called <i>name</i> and sets its value to <b>Wall-E</b>. Then, display the message <b>My name is <i>name</i></b>.",
         [[`output: <b>My name is Wall-E</b>`]],
         [`name = "Wall-E"`, `print("My name is " + name)`].join("\n"),
         60 * 5,
         TaskTopic.basics,
-        TaskStage.train
+        TaskStage.train,
+        [
+            "the goal is to concatenate a string variable with a literal",
+            "it is ok if the variable names or string literals are different",
+            "using f-strings is also ok",
+        ]
     ),
     // join the variable with another literal
     new ModifyingTask(
@@ -249,7 +265,7 @@ export const CodingTasks = [
 
     // join a string variable with a literal
     new AuthoringTask(
-        "3ia",
+        "4",
         "Write a program that creates a variable called <i>name</i> and sets its value to <b>ro</b>. Then, update the <i>name</i> variable by adding the value <b>bot</b> to it's previous value. Finally, display the message <b>Created: <i>name</i></b>.",
         [[`output: <b>Created: robot</b>`]],
         [`name = "ro"`, `name += "bot"`, `print("Created: " + name)`].join(
@@ -261,7 +277,7 @@ export const CodingTasks = [
     ),
     // join the variable with another literal
     new ModifyingTask(
-        "3ib",
+        "4b",
         "Modify the given program so that instead of adding <b>bot</b> to the <i>name</i> variable at once, it adds the characters b, o, and t one at a time. Print the value of the variable <i>name</i> after adding each of the characters. Finally, display the message <b>Created: <i>name</i></b>.",
         [`name = "ro"`, `name += "bot"`, `print("Created: " + name)`].join(
             "\n"
@@ -289,7 +305,7 @@ export const CodingTasks = [
 
     // get input from user -> store variable -> and add a string to it
     new AuthoringTask(
-        "4a",
+        "5",
         "Write a program that asks the user for their name and then stores their name into a variable called <i>name</i>. Finally, display the message <b>Hello, <i>name</i>!</b>.",
         [
             [
@@ -313,7 +329,7 @@ export const CodingTasks = [
     ),
     // ask the user for another name -> store it -> and add it to the message
     new ModifyingTask(
-        "4b",
+        "5b",
         "Modify the following program so that it also asks the user for their family name and stores it into <i>family_name</i>. Then, display the message <b>Hello, <i>name</i> <i>family_name</i>!</b>.",
         [
             `name = input("What is your name? ")`,
@@ -347,7 +363,7 @@ export const CodingTasks = [
 
     // join two string variables
     new AuthoringTask(
-        "5a",
+        "6",
         "Write a program that first, creates a variable called <i>food1</i> and set its value to <b>nuts</b>. Then, creates another variable called <i>food2</i> sets it to <b>bolts</b>. Afterwards, create a third variable called <i>robot_food</i> and sets it to the value of <b><i>food1</i> and <i>food2</i></b>. Finally, display the message <b>I like <i>robot_food</i>.</b>. <br/>Note: pay attention to the space between and after the <b>and</b>.",
         [[`output: <b>I like nuts and bolts</b>`]],
         [
@@ -362,7 +378,7 @@ export const CodingTasks = [
     ),
     // add another variable to be displayed + change the literal
     new ModifyingTask(
-        "5b",
+        "6b",
         "Modify the following program so that it includes a third food (called <i>food3</i>) set to <b>screws</b>. Then modify <i>robot_food</i> to be the value of <b><i>food1</i>, <i>food2</i> and <i>food3</i></b>. Finally display the message <b>I like <i>robot_food</i>.</b>.",
         [
             `food1 = "nuts"`,
@@ -387,7 +403,7 @@ export const CodingTasks = [
 
     // numbers -> add -> print
     new AuthoringTask(
-        "6a",
+        "7",
         "Write a program that sets <i>num1</i> to 20, and<i>num2</i> to 5. Then set another variable called <i>add</i> to the addition of num1 and num2, <i>sub</i> to their subtraction, <i>mult</i> to their multiplication, and <i>div</i> to their division. Finally, display each of the <i>add</i>, <i>sub</i>, <i>mult</i> and <i>div</i> variables.",
         [
             ["output: <b>25</b>"],
@@ -413,7 +429,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "6b",
+        "7b",
         "Modify the following program so that it sets a new variable called <i>some_num</i> to the addition of all <i>add</i>, <i>sub</i>, <i>mult</i> and <i>div</i>. Then, in another line, update <i>some_num</i> by multiplying it by 2. Finally, display the value of <i>some_num</i>.",
         [
             `num1 = 20`,
@@ -544,7 +560,7 @@ export const CodingTasks = [
 
     // random number -> print
     new AuthoringTask(
-        "7a",
+        "8",
         "Write a program that generates a random number between 1 and 10 and sets it to a variable called <i>num</i>. Then, display the value of <i>num</i>.",
         [["output: <b>3</b>"], ["output: <b>5</b>"], ["output: <b>7</b>"]],
         [`import random`, `num = random.randint(1, 10)`, `print(num)`].join(
@@ -555,7 +571,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "7b",
+        "8b",
         "Modify the following program so it generates a second random number between 50 and 100 and sets it to another variable named <i>num2</i>. Then, display the value of <i>num2</i> below the value of <i>num</i>.",
         [`import random`, `num = random.randint(1, 10)`, `print(num)`].join(
             "\n"
@@ -579,7 +595,7 @@ export const CodingTasks = [
 
     // number + text -> cast
     new AuthoringTask(
-        "8a",
+        "9",
         "Write a program that first, sets the variable <i>num</i> to a random number between 1 and 10. Then create another variable called <i>message</i> and set it to the message <b>num is: <i>num</i></b>. Then, display the value of <i>message</i>.",
         [
             ["output: <b>num is: 3</b>"],
@@ -597,7 +613,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "8b",
+        "9b",
         "Modify the following program by creating a second variable called <i>num2</i> and setting it to the number 5. Then change <i>message</i> to display the following message: <b>num is: <i>num</i> and num2 is: <i>num2</i></b>.",
         [
             `import random`,
@@ -624,7 +640,7 @@ export const CodingTasks = [
 
     // number + text -> cast
     new AuthoringTask(
-        "8ia",
+        "10",
         "Write a program that first, sets <i>num1</i> to 12, and <i>num2</i> to 21. Then sets a variable named <i>message</i> to the value <b>num1 times num2 = <i>the multiplication of num1 and num2</i></b>. Finally, print <i>message</i>.",
         [["output: <b>num1 times num2 = 252</b>"]],
         [
@@ -638,7 +654,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "8ib",
+        "10b",
         "Modify the value of <i>message</i> so that it displays the value of <i>num1</i> times <i>num2</i> like the following example. <br/> <b>Note: </b> the values of <i>num1</i> and <i>num2</i> can be anything and your code should work regardless of their values.",
         [
             `num1 = 12`,
@@ -660,7 +676,7 @@ export const CodingTasks = [
 
     // convert input to int
     new AuthoringTask(
-        "9a",
+        "11",
         "Write a program that asks the user for two numbers and then displays the sum of them.",
         [
             [
@@ -688,7 +704,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "9b",
+        "11b",
         "Modify the following program so that after displaying the sum of <i>num1</i> and <i>num2</i>, it would ask for another number from the user and then display the sum of all three numbers.",
         [
             `num1 = int(input("Enter a number: "))`,
@@ -721,7 +737,7 @@ export const CodingTasks = [
 
     // convert input to int + accumulator
     new AuthoringTask(
-        "9ia",
+        "12",
         "Write a program that asks the user for four numbers and then displays the sum of them. Note that your program should ONLY use ONE variable called <i>total</i>. The display message when asking the user to enter a new number should also include the value of <i>total</i> so far. At the end, it should display the value of total like this: <b>Total: <i>total</i></b>.",
         [
             [
@@ -749,7 +765,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "9ib",
+        "12b",
         "Modify the following program by including a variable called <i>count</i> that would be incremented whenever a new number is entered. The display message when asking the user to enter a new number should also include the <i>count</i> of numbers entered so far. Finally, it should display the total and the count like this: <b>The sum is: <i>total</i> from <i>count</i> entries.</b>.",
         [
             `total = 0`,
@@ -792,7 +808,7 @@ export const CodingTasks = [
 
     // using if and ==
     new AuthoringTask(
-        "10a",
+        "13",
         "Write a program that first, generates a random number between 1 and 6 and assigns it to a variable called <i>roll</i> and then display <i>roll</i>. Finally, display the message <b>rolled six</b> only if <i>roll</i> is equal to six.",
         [
             ["output: <b>4</b>"],
@@ -811,7 +827,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "10b",
+        "13b",
         "Modify the following program so that it generates a second random number between 1 and 6 and sets it to another variable named <i>roll2</i>. Display both variables and finally, display the message <b>rolled the same</b> only if both rolls were equal to each other.",
         [
             `import random`,
@@ -844,7 +860,7 @@ export const CodingTasks = [
 
     // using `and` and > + multiple statements in the if statement
     new AuthoringTask(
-        "11a",
+        "14",
         "Write a program that first, generates two random numbers between 1 and 6 and check if both of the variables are greater than 3 (either 4, 5, or 6). If both are greater than 3, then first display their values and then in another line, display the message: <b>both rolled greater than 3</b>",
         [["output: <b>both rolled greater than 3</b>"]],
         [
@@ -861,7 +877,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "11b",
+        "14b",
         "Modify the following program so that it would generate a third random number called <i>grade</i> between 25 and 100. Then check if <i>roll1</i> and <i>roll2</i> are greater than 3 in addition to <i>grade</i> being greater than 50. If yes, display the values of each of the three variables and display the message <b>All three above half</b>.",
         [
             `import random`,
@@ -891,7 +907,7 @@ export const CodingTasks = [
 
     // ask -> convert using int -> check -> if + else
     new AuthoringTask(
-        "12a",
+        "15",
         "Write a program that asks the user to enter a number between 10 and 100. Then, check if the number is greater than 75. If it is, display the message <b>Greater than 75</b>; otherwise, display the message <b>Less than 75</b>. Note that only one of these messages should be displayed.",
         [
             [
@@ -917,7 +933,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "12b",
+        "15b",
         "Modify the following program so that it asks for a second number as well. Check if the first number is greater than the second. If it is, display the message <b>First number is greater</b>; otherwise, display the message <b>Second number is greater</b>. Note that only one of these messages should be displayed.",
         [
             `num = int(input("enter a number between 10 and 100: "))`,
@@ -1116,7 +1132,7 @@ export const CodingTasks = [
 
     // if - elif - else usage
     new AuthoringTask(
-        "13a",
+        "16",
         "Write a program that asks the user to enter a number between 0 and 100 and set it to a variable called <i>score</i>. Additionally, create a variable called <i>grade</i> and set it to an empty text. Then check if the <i>score</i> is less than 50, if it is, then set <i>grade</i> to the letter <b>C</b>, if it's between 50 and 75, set <i>grade</i> to <b>B</b>, otherwise, set <i>grade</i> to <b>A</b>. Then display the message <b>Grade: <i>grade</i></b>.",
         [
             [
@@ -1146,7 +1162,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "13b",
+        "16b",
         "Modify the following program so that if the score is less than 20 set <i>grade</i> to <b>F</b>, if it's between 20 and 40 set <i>grade</i> to <b>E</b>, if it's between 40 and 60 set <i>grade</i> to <b>D</b>, if it's between 60 and 80 set <i>grade</i> to <b>C</b>, if it's between 80 and 90 set <i>grade</i> to <b>B</b>, otherwise, sets <i>grade</i> to <b>A</b>.",
         [
             `score = int(input("enter a number between 0 and 100: "))`,
@@ -1194,7 +1210,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "14a",
+        "17",
         "Write a program that creates a variable called <i>coin</i>. Then use a random number generator to generate a number between 1 and 2. If the number is 1, set <i>coin</i> to <b>heads</b>, otherwise, set it to <b>tails</b>. Then display the message <b>Coin:</b> followed by the value of <i>coin</i>.",
         [["output: <b>Coin: heads</b>"], ["output: <b>Coin: tails</b>"]],
         [
@@ -1213,7 +1229,7 @@ export const CodingTasks = [
     ),
 
     new ModifyingTask(
-        "14b",
+        "17b",
         `Modify the program so that it would generate a random number between 1 and 7, and then display one of the days in the week based on the number generated.`,
         [
             `import random`,
@@ -1255,7 +1271,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "15a",
+        "18",
         "Write a program that gets two numbers from the user and then asks for an operator (from one of the following choices: +, -, *, and /). Then it should check which operator the user has entered, and then perform the appropriate operation. For example if the user enters + then it should add the two numbers and display the result.",
         [
             [
@@ -1286,7 +1302,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "15b",
+        "18b",
         "Modify the program so that it would ask a third number. And then perform the appropriate operation between the three numbers for + and *. If the user enters a different operator, then display an error message: <b>Error: Invalid operator</b>.",
         [
             `num1 = int(input("enter the first number: "))`,
@@ -1341,7 +1357,7 @@ export const CodingTasks = [
 
     // using % and remaineder and checking divisibility
     new AuthoringTask(
-        "16a",
+        "19",
         "Ask the user to enter a number and store it in a variable called <i>num</i>. Check if it is even or odd. If it is odd, display the message <b>The number <i>num</i> is odd</b> otherwise display the message <b>The number <i>num</i> is even</b>. <br/> <b>Hint:</b> a number is even if the remainder of the division of the number by 2 is 0 (or in other words, it's divisble by two).",
         [
             [
@@ -1368,7 +1384,7 @@ export const CodingTasks = [
     ),
 
     new ModifyingTask(
-        "16b",
+        "19b",
         "Modify the program so that it asks for another number called <i>divisor</i> then, checks if the entered number is divisible by the divisor. If it is, display the message <b>The number <i>num</i> is divisible by <i>divisor</i></b> otherwise display the message <b>The number <i>num</i> is not divisible by <i>divisor</i></b>.",
         [
             `num = int(input("enter a number: "))`,
@@ -1401,7 +1417,7 @@ export const CodingTasks = [
 
     // nested if
     new AuthoringTask(
-        "16ia",
+        "20",
         "Set two variables called <i>num1</i> and <i>num2</i> to a random number between 1 and 1000 and a third variable called <i>result</i> to 0. Ask the user to enter one of the two options: <b>greater</b>, or <b>smaller</b> and then check which one the user has entered. (display an error message: <b>Invalid Option</b> if the user didn't enter any of the two). If the user enters <b>greater</b>, then check if the <i>num1</i> is greater than <i>num2</i>. If it is, set <i>result</i> to <i>num1</i> and otherwise, set <i>result</i> to <i>num2</i>. However, if the user enters <b>smaller</b>, then check if the <i>num1</i> is smaller than <i>num2</i>. If it is, set <i>result</i> to <i>num1</i> and otherwise, set <i>result</i> to <i>num2</i>. Finally, if the user did not enter an invalid input, display the message: <b>You entered <i>option</i> and the result is <i>result</i></b>",
         [
             [
@@ -1443,7 +1459,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "16ib",
+        "20b",
         "Modify the code by adding a third option called <b>equal</b> that would check if the two numbers are equal or not. If they are, then display the message <b>The numbers are equal</b> otherwise, display three messages (each in a line): the value of <i>num1</i>, the value of <i>num2</i>, and the message <b>The numbers are not equal</b>.",
         [
             `import random`,
@@ -1518,7 +1534,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "17a",
+        "21",
         "display <b>Hello</b> 10 times using a loop.",
         [
             [
@@ -1535,7 +1551,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "17b",
+        "21b",
         "Modify the code so that it would instead repeat the following program for 5 times: display <b>Hello</b> then display <b>World!</b>. Then finally, display <b>Bye Bye</b> only once afterwards.",
         [`for i in range(10):`, `    print("Hello")`].join("\n"),
         [
@@ -1807,7 +1823,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "18a",
+        "22",
         "Set a variable called <i>num</i> to 0 and then create a loop that would add the number 5 to <i>num</i> for <b>25 times</b> and display the value of the variable as it increases inside the loop.",
         [
             [
@@ -1829,7 +1845,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "18b",
+        "22b",
         "Modify the program so that it includes another variable that is initially set to 125. Then the loop would reduce its value by 5 for 25 times. Display the value of both variables everytime their value changes in the loop.",
         [
             `num = 0`,
@@ -1863,7 +1879,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "19a",
+        "23",
         "Set a variable called <i>text</i> to the text <b>w</b>. Then create a loop that would repeatedly add the letter <b>e</b> to the <i>text</i> for 5 times and displaying the text every time. After the loop, add an exclamation mark <b>!</b> to the <i>text</i> variable and then display its value.",
         [
             [
@@ -1888,7 +1904,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "19b",
+        "23b",
         "Add another loop to the program (after the first loop) that would add the the text <b>*</b> for 3 times to the <i>text</i> variable and display the text every time. Finally, after the loop, add a dot <b>.</b> to the <i>text</i> variable and display its value.",
         [
             `text = "w"`,
@@ -1929,7 +1945,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "19ia",
+        "24",
         "Set a variable called <i>fruits</i> to the text <b>I like these fruits: </b>. Then create a loop that would repeatedly do the following things for 5 times: first, ask the user to enter a fruit name and then adding what the user entered to the fruits (separated with a space). After the loop, display the value of the <i>fruits</i> variable.",
         [
             [
@@ -1953,7 +1969,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "19ib",
+        "24b",
         "Change the program so that when it is done with the first loop, it would then create another variable called <i>movies</i> and set it to <b>I like these movies: </b> and then use another loop that would repeat for 5 times to ask the user for their favorite movies and then add them to a the variable <i>movies</i> one by one. After the second loop, display the value of the <i>movies</i> variable.",
         [
             `fruits = "I like these fruits: "`,
@@ -1990,7 +2006,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "20a",
+        "25",
         "Display all the numbers from 1 to 100 line by line using a loop.",
         [
             [
@@ -2007,7 +2023,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "20b",
+        "25b",
         "Modify the following program so that it would display all the numbers from 250 to 300 line by line and after each line (inside the loop), it would also display the number multiplied by 2.",
         [`for i in range(1, 101):`, `    print(i)`].join("\n"),
         [
@@ -2030,7 +2046,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "20ia",
+        "26",
         "Ask the user to enter a number, then display all the numbers from 1 to the number entered line by line.",
         [
             [
@@ -2053,7 +2069,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "20ib",
+        "26b",
         "Modify the following program so that it would ask two numbers, then display all the numbers from the first number to the second number line by line.",
         [
             `number = int(input("Enter a number: "))`,
@@ -2087,7 +2103,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "21a",
+        "27",
         "Write a program that would ask the user to enter a number, then use a loop to calculate the total sum of all numbers from 1 to the given number (including the given number). Finally, display the total.",
         [
             [
@@ -2108,7 +2124,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "21b",
+        "27b",
         "Modify the program so that it would ask the user for two numbers and then use a loop to calculate the total sum of all numbers between the first and the second one (including both first and second numbers). (<b>Note</b> that the second number should always be greater than the first number). So for example, if the user enters 3 and 8, it should calculate the sum of 3, 4, 5, 6, 7, and 8. Within the loop, also display the value of the total as it increases every time. Then finally, display the total.",
         [
             `num = int(input("enter a number: "))`,
@@ -2146,7 +2162,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "21ia",
+        "28",
         "Write a program that would calculate the sum of all even numbers between 1 to a number asked from the user (including that number). Finally, display the sum. <br/><b>Hint:</b> a number is even when the remainder of its division by 2 is 0.",
         [
             [
@@ -2168,7 +2184,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "21ib",
+        "28b",
         "Modify the loop so that it would also calculate the sum of all odd numbers between 1 to the given number at the same time. Then display two messages, first the sum of all even numbers, then the sum of all odd numbers. <br/><b>Hint:</b> a number is even when the remainder of its division by 2 is 0, and odd when the remainder of its division by 2 is 1.",
         [
             `num = int(input("enter a number: "))`,
@@ -2203,7 +2219,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "22a",
+        "29",
         "Write a program that uses a <b>while</b> loop to repeatedly ask the user to enter a password (as a number) and check if the password is equal to 123. If it is, display the message <b>Password is correct</b>. If it is not, display the message <b>Password is incorrect</b> and ask the user to re-enter the password. The program should stop when the user enters the number 123. Finally, after the user gets the correct password, display the message <b>Password is correct</b>.",
         [
             [
@@ -2227,7 +2243,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "22b",
+        "29b",
         "Modify the program by changing the password from 123 to 7512 and also count the number of incorrect attempts (each time the user enters the password incorrectly). Finally display the incorrect attempts at the end of the loop.",
         [
             `num = int(input("Enter the password: "))`,
@@ -2266,7 +2282,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "23a",
+        "30",
         "Write a program that repeatedly does the following until the user enters the number <b>0</b>: ask the user for a number, and then add it up to a variable called <b>total</b>. If the user enters <b>0</b>, display the total at the end (only once).",
         [
             [
@@ -2292,7 +2308,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "23b",
+        "30b",
         "Modify the program so that it calculates the average of all numbers entered by the user. <br/> <b>Note</b>: the average is the sum of all numbers entered, divided by the count of numbers entered. <br/><b>Hint:</b> use another variable to count the number of numbers entered by the user.",
         [
             `total = 0`,
@@ -2329,7 +2345,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "23ia",
+        "31",
         "Write a program that asks the user to enter a number between 1 and 100 and then display the difference of that number with the value <b>50</b>. The difference between two numbers is always a positive number. <br/> <b>Note</b>: you can use the <b>abs( )</b> function to calculate the positive value of any number.",
         [
             [
@@ -2352,7 +2368,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "23ib",
+        "31b",
         "Modify the program so that asks the user for two numbers and then display the difference between each of the numbers. Again, note that the difference between two numbers is always a positive number.",
         [
             `num = int(input("enter a number between 1 and 100: "))`,
@@ -2385,7 +2401,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "24a",
+        "32",
         "Write a guess a number game: the program will first set the variable <i>picked_number</i> to a random number between 1 and 1000. Then it should *repeatedly* do the following until the user guesses the number (if it's equal to <i>picked_number</i>): If the user guesses a number that is too high, the program should display the message <b>The number is too high</b>. If the user guesses a number that is too low, the program should display the message <b>The number is too low</b>. Finally, if the user guesses the number, the while loop should stop repeating and the program should display the message <b>You guessed the number!</b>.",
         [
             [
@@ -2416,7 +2432,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "24b",
+        "32b",
         "Modify the program so that it would count the number of incorrect attempts the user has made and display it at the end. Additionally, on every guess it should check if the difference between the guessed number and the picked number is less than 50. If it is, the program should display another message <b>You are close!</b>. <br/><b>Note</b>: you can use the <b>abs( )</b> function to calculate the positive value of any number.",
         [
             `picked_number = random.randint(1, 1000)`,
@@ -2464,7 +2480,7 @@ export const CodingTasks = [
 
     // using break
     new AuthoringTask(
-        "24ia",
+        "33",
         "Write a program that would use a while loop to repeatedly ask the user to guess a number until the user enters the number <b>0</b>. Inside the loop, check if the number is divisble by both 2 and 3, if it is, then display the message <b>The number is divisble by 2 and 3</b> and then break out of the loop. At the end of the loop it should simply display the message <b>Finished loop</b>",
         [
             [
@@ -2500,7 +2516,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "24ib",
+        "33b",
         "Modify the program by adding another if statement inside the while loop to check if the number is divisible by 5, if it is then display the message <b>The number is divisble by 5</b> and then break out of the loop. The program should also include another variable called <i>did_break</i> that is set to <b>False</b> and then set to <b>True</b> if one of the breaks are triggered. At the end, display the message <b>breaked the loop</b> only if the variable <i>did_break</i> is equal to <b>True</b>.",
         [
             `num = int(input("enter a number: "))`,
@@ -2553,7 +2569,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "25a",
+        "34",
         "Write a program that asks the user to enter a number between 1 and 100. The program should then repeatedly decrease the number by 1 until it reaches 0 and display the number each time.",
         [
             [
@@ -2577,7 +2593,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "25b",
+        "34b",
         "Modify the program so that it would first ask the user to enter a number greater than 100 and then use the loop to continuously decreases the number <b>by 10</b> every time while the number is greater than 100. At this point the number should be equal or less than 100, use <b>another</b> loop to continuously decrease the number by 3 every time while the number is greater than zero.",
         [
             `num = int(input("enter a number: "))`,
@@ -2617,7 +2633,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "26a",
+        "35",
         "Write a program that generates a number between 1 and 999999. Then, it displays the number of digits in the number by repeatedly dividing the number by 10 until the number becomes less than 10 and counting the number of times it was divided. For example, 1874 ÷ 10 = 187 (first) -> 187 ÷ 10 = 18 (second) -> 18 ÷ 10 = 1 (third) -> 1 ÷ 10 = 0 (fourth). Therefore, 1874 has four digits.",
         [
             [
@@ -2644,7 +2660,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "26b",
+        "35b",
         "Modify the program so that it displays each digit of the number from the right to the left as the number is being divided by 10. To obtain the digit, the program should use the modulus operator (<b>%</b>) to obtain the remainder of the division.",
         [
             `num = random.randint(1, 999999)`,
@@ -2688,7 +2704,7 @@ export const CodingTasks = [
 
     // nested loops
     new AuthoringTask(
-        "26ia",
+        "36",
         "Write a program that includes a for loop that uses the variable <i>i</i> to go from 0 to 1 (including 1). Then inside the loop, have another loop that uses the variable <i>j</i> to go from 0 to 1 (including 1). The program should display the value of <i>i</i> and <i>j</i> every time like the provided sample.",
         [
             [
@@ -2708,7 +2724,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "26ib",
+        "36b",
         "Modify the program so that the first loop would go from 0 to 10 (instead of 0 to 1) and the second loop to go from 0 to 2 instead (including 2). It should also display the message <b>i changed to <i>i</i></b> whenever the value of <i>i</i> (in the outer loop) changes.",
         [
             `for i in range(0, 2):`,
@@ -2744,7 +2760,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "27a",
+        "37",
         "Write a program that repeatedly generates a random number between 0 and 100 until the random number that it generates becomes equal to 50 (and then stop). Then display the number of attempts it took to generate the number.",
         [
             ["output: <b>It took 27 attempts.</b>"],
@@ -2764,7 +2780,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "27b",
+        "37b",
         "Modify the program so that it stops when when the random number becomes equal to any of hte numbers 25, 50, or 75. It should also display which number it stopped on after displaying the number of attempts after the loop.",
         [
             `import random`,
@@ -2801,7 +2817,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "28a",
+        "38",
         "Repeatedly roll a dice for 1000 times. At the end, display the total times it rolled six.",
         [
             ["output: <b>It rolled six for 165 times.</b>"],
@@ -2820,7 +2836,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "28b",
+        "38b",
         "Modify the program so that it counts the number of times it rolled each of the six faces (using six variables) and then finally display the value of all six variables.",
         [
             `times = 0`,
@@ -3038,7 +3054,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "29a",
+        "39",
         "Create a list with these values: 1, 5, 9, 13, 17, 21. Then, display the first item in the list by accessing the list using the appropriate indicies. Then, display the length of the list.<br/> <b>Hint: </b>you should use a special function that returns the length of a list.",
         [["output: <b>First item: 1</b>", "output: <b>Length: 6</b>"]],
         [
@@ -3051,7 +3067,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "29b",
+        "39b",
         "Modify the program so that it displays the last item in the list by accessing the list using the appropriate index. You have to calculate the index of the last item of the list using the length of the list (ask your self what is the relationship between the index of the last item of a list and the length of a list.<br/> <b>Note:</b>You must use the <b>len</b> function to determine the length of the list.",
         [
             `list = [1, 5, 9, 13, 17, 21]`,
@@ -3077,7 +3093,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "30a",
+        "40",
         `Write a program that creates a list with the following textual values: "math", "history", "programming", and "art". Then use a while loop and an index variable to display all of the items in the list one by one.`,
         [
             [
@@ -3099,7 +3115,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "30b",
+        "40b",
         "Modify the program so that it displays the items in the list in reverse order.",
         [
             `list = ["math", "history", "programming", "art"]`,
@@ -3129,7 +3145,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "31a",
+        "41",
         `Write a program that creates an empty list and then, inside a for loop that repeats for 10 times, ask the user to enter a number and then add it to the end of the list. At the end, display the length of the list.`,
         [
             [
@@ -3155,7 +3171,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "31b",
+        "41b",
         "Rename the list to <i>grades</i> and create another empty list called <i>students</i> before the loop. Then, inside the loop, first ask the user to enter a student name (as a text/string) and then add the student name into the <i>students</i> list. Then, ask the user to enter a grade (as a number/integer) and then add the grade into the <i>grades</i> list. Finally, after the loop, display the length of both lists.",
         [
             `list = []`,
@@ -3196,7 +3212,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "32a",
+        "42",
         `Create an empty list called <i>grades</i>. Then, repeatedly add a random number between 50 to 100 to the list, for a random number of times (between 15 and 25). Finally, use another loop to display all the items in the grades list.<br/> <b>Note:</b> your program should use the for loop with the range function, not a while loop.`,
         [
             [
@@ -3219,7 +3235,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "32b",
+        "42b",
         "Modify the code so that it defines a second list called <i>grades2</i> and uses another loop to repeatedly add a random number between 1 to 10 to the <i>grades2</i> list for a random number of times (between 100 to 500). In summary, your code should define two lists with random values and random lengths, then display the contents of both lists.",
         [
             `grades = []`,
@@ -3264,7 +3280,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "33a",
+        "43",
         `Create a list called <i>numbers</i>, and then use a for loop that repeats for 5 times to repeatedly ask the user to enter a number (as an integer) and add it to the list. Then use another loop to go through the items of the <i>numbers</i> list and find the largest number. Finally, display the value of the largest number. (Note: you can NOT use the <i>max</i> function.)`,
         [
             [
@@ -3294,7 +3310,7 @@ export const CodingTasks = [
         TaskStage.train
     ),
     new ModifyingTask(
-        "33b",
+        "43b",
         "Modify the program so that it also finds the smallest number in the list and displays it at the end. (Note: you can NOT use the <i>min</i> or <i>max</i> function.)",
         [
             `numbers = []`,
@@ -3341,7 +3357,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "34a",
+        "44",
         `Repeatedly ask the user to enter a movie name and add it to a list called <i>movies</i> until the user enters <b>stop</b>. At the end just display how many movies the user has entered.<br/><b>Note:</b> The list should not contain the word <b>stop</b>.`,
         [
             [
@@ -3368,7 +3384,7 @@ export const CodingTasks = [
     ),
 
     new ModifyingTask(
-        "34b",
+        "44b",
         "Create another list called <i>ratings</i> and for each movie that is entered (that is not equal to <b>stop</b>), ask the user to enter a rating from 0 to 10 (as an integer) and add the number to the <i>ratings</i> list. At the end, display the number of movies and the number of ratings <br/>Note: they should have the same number of elements and stop should not be included in the movies.",
         [
             `movies = []`,
@@ -3411,7 +3427,7 @@ export const CodingTasks = [
     ),
 
     new AuthoringTask(
-        "35a",
+        "45",
         `Create an empty list called <i>numbers</i> and then use a for loop that repeats for a random number of times between 50 to 75 to update the list by adding a random number between 0 to 100. Then use another loop to find the largest number in the list. Finally, display the largest number after the second loop has finished.`,
         [[`output: <b>Largest number: 92</b>`]],
         [
@@ -3430,7 +3446,7 @@ export const CodingTasks = [
     ),
 
     new ModifyingTask(
-        "35b",
+        "45b",
         "Create another variable called <i>smallest</i> and use the second for loop to find the smallest number in the list in addition to the largest. At the end, display both the largest and the smallest numbers.",
         [
             `numbers = []`,
