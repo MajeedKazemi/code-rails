@@ -1,8 +1,8 @@
-import { ChatCompletionRequestMessage } from "openai";
+import OpenAI from "openai";
 
 const feedbackL1Prompt = {
     prime: (intendedBehavior: string, studentCode: string, notes: string[]) => {
-        const system: ChatCompletionRequestMessage = {
+        const system: OpenAI.Chat.ChatCompletionMessage = {
             role: "system",
             content: `You are a programming tutor. I am a novice student that is learning how to write Python code for the first time. I might have difficulties understanding the syntax and logic as well as many other basic computational thinking and meta cognitive skills.
 
@@ -19,7 +19,7 @@ Then provide [hints-to-fix-student-code] using the following bullet point templa
 at the end of each hint's bullet points add one of the following tags: [[fix]], [[add]], [[change]], [[remove]]`,
         };
 
-        const inputExample: ChatCompletionRequestMessage = {
+        const inputExample: OpenAI.Chat.ChatCompletionMessage = {
             role: "user",
             content: `[intended-behavior]: Set two variables called num1 and num2 to a random number between 1 and 1000 and a third variable called result to 0. Ask the user to enter one of the two options: greater, or smaller and then check which one the user has entered. (display an error message: Invalid Option if the user didn't enter any of the two). If the user enters greater, then check if the num1 is greater than num2. If it is, set result to num1 and otherwise, set result to num2. However, if the user enters smaller, then check if the num1 is smaller than num2. If it is, set result to num1 and otherwise, set result to num2. Finally, if the user did not enter an invalid input, display the message: You entered option and the result is result.
 
@@ -35,7 +35,7 @@ if num 1 > num 2:
 [end-student-code]`,
         };
 
-        const outputExample: ChatCompletionRequestMessage = {
+        const outputExample: OpenAI.Chat.ChatCompletionMessage = {
             role: "assistant",
             content: `[fixed-student-code]:
 import random
