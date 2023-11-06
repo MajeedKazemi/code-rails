@@ -21,7 +21,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
     const cleanedCode = await formatPythonCode(removeComments(currentCode.trim()));
 
     let prompt;
-    if (iteration === 0) {
+    if (iteration === 1) {
         prompt = feedbackL1Prompt(
             description.substring(0, 500),
             cleanedCode.substring(0, 2500),
