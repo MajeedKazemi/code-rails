@@ -40,7 +40,30 @@ export const Feedback = (props: FeedbackProps) => {
 
     const Body = () => {
         const bodyClasses = "text-white p-2 max-h-96 overflow-y-auto whitespace-pre-wrap";
-        if (props.iteration > 1) {
+        if (props.feedback.type === "text") {
+            return(
+                <ul className={bodyClasses + " divide-y divide-indigo-900"}>
+                    {props.feedback.lines.map((line: any, index: number) => {
+                        let bg_color;
+                        switch (line.type) {
+                            case "add":
+                                bg_color = "bg-green-500"
+                                break;
+                            case "remove":
+                                bg_color = "bg-red-500"
+                                break;
+                            default:
+                                bg_color = "bg-orange-500"
+                        }
+                        return(
+                            <li className={bg_color}>
+                                {line.explanation}
+                            </li>
+                        )
+                    })}
+                </ul>
+            )
+        } else {
             return(
                 <div className={bodyClasses + " divide-y divide-indigo-900"}>
                     {props.feedback.lines.map((line: any, index: number) => {
@@ -57,16 +80,10 @@ export const Feedback = (props: FeedbackProps) => {
                     })}
                 </div>
             )
-        } else {
-            return(
-                <div className={bodyClasses}>
-                    {props.feedback.explanation}
-                </div>
-            )
         }
     };
 
-    if (props.feedback.explanation) {
+    if (props.feedback.type) {
         return(
             <div className="border rounded-xl bg-indigo-900">
                 <Header />

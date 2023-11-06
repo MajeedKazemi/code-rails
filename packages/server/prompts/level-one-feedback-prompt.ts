@@ -8,15 +8,15 @@ export const feedbackL1Prompt = (intendedBehavior: string, studentCode: string, 
 
 Look at the [intended-behavior] and [student-code] to first generate the [fixed-student-code]. The [fixed-student-code] should not go above and beyond to check every possible input. Just focus on making it work or achieving the [intended-behavior].
 
-Then provide [hints-to-fix-student-code] using the following bullet point template with tags at the end of each hint's bullet points: [[fix]], [[add]], [[change]], [[remove]].
+Then provide [hints-to-fix-student-code] using the following bullet point template with tags at the beginning of each hint's bullet points: [[fix]], [[add]], [[remove]].
 
 # Template:
 [hints-to-fix-student-code]:
-- hint bullet point. write python keywords like this: \`keyword\` [[tag]]
-- text... [[tag]]
-- text... [[tag]]
+[[tag]] hint bullet point. write python keywords like this: \`keyword\`
+[[tag]] text...
+[[tag]] text...
 
-at the end of each hint's bullet points add one of the following tags: [[fix]], [[add]], [[change]], [[remove]]`,
+at the beginning of each hint's bullet points add one of the following tags: [[fix]], [[add]], [[remove]]`,
         },
         {
             role: "user",
@@ -61,13 +61,13 @@ print("You entered " + comparison + " and the result is " + str(result))
 [end-fixed-student-code]
 
 [hints-to-fix-student-code]:
-- missing \`import\` statement for the \`random\` module [[add]]
-- typo in \`random.randit(a), (b)\`. should be \`random.randint(a, b)\` instead. [[fix]]
-- variable names can't have spaces, so \`num 1\` and \`num 2\` should be \`num1\` and \`num2\`, respectively. [[fix]]
-- use double equals \`==\` to check \`if Comparision\` is equal to \`"greater"\`. [[fix]]
-- you do not need \`num 3\` for this task. [[remove]]
-- you forgot to handle the case where the user enters \`"smaller"\` (you can use \`elif\` for that) and didn't check for invalid input cases (using \`else\`). [[add]]
-- In the final print statement, you need to convert numbers to string using \`str()\` before concatenation with the \`+\` operator. [[add]]
+[[add]] missing \`import\` statement for the \`random\` module.
+[[fix]] typo in \`random.randit(a), (b)\`. should be \`random.randint(a, b)\` instead.
+[[fix]] variable names can't have spaces, so \`num 1\` and \`num 2\` should be \`num1\` and \`num2\`, respectively.
+[[fix]] use double equals \`==\` to check \`if Comparision\` is equal to \`"greater"\`.
+[[remove]] you do not need \`num 3\` for this task.
+[[add]] you forgot to handle the case where the user enters \`"smaller"\` (you can use \`elif\` for that) and didn't check for invalid input cases (using \`else\`).
+[[add]] In the final print statement, you need to convert numbers to string using \`str()\` before concatenation with the \`+\` operator.
 [end-hints-to-fix-student-code]`,
         },
         {
@@ -81,9 +81,31 @@ ${studentCode}
 
     return {
         messages,
-        stop: ["[end-student-code]"],
+        stop: [],
         model: "gpt-4",
-        temperature: 0.05,
+        temperature: 0.5,
         max_tokens: 1024,
+        parser: (resTxt: string) => l1FeedbackParser(resTxt, studentCode),
     };
+};
+
+const l1FeedbackParser = (txt: string, code: string) => {
+    const obj: any = {
+        lines: Array<{type: string, explanation: string}>,
+        type: "text"
+    };
+
+    const matches = txt.matchAll(/\[\[([^[\]]*)\]\] (.+)/g);
+    obj.lines = [];
+    for (const match of matches) {
+        const keyword = match[1];
+        const hintText = match[2];
+
+        obj.lines.push({
+            type: keyword,
+            explanation: hintText,
+        });
+    };
+
+    return obj;
 };

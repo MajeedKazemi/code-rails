@@ -4,8 +4,8 @@ import { IUser } from "../models/user";
 import { openai } from "../utils/openai";
 import { verifyUser } from "../utils/strategy";
 import { formatPythonCode, removeComments } from "../utils/format";
-import { annotateFixedCodePrompt, annotateOriginalCodePrompt, fixCodePrompt } from "../prompts/fix-code-prompt";
-import { labelFixedCode, labelOriginalCode } from "../utils/agents";
+import { feedbackL1Prompt } from "../prompts/level-one-feedback-prompt";
+import { feedbackL2Prompt } from "../prompts/level-two-feedback-prompt";
 
 export const feedbackRouter = express.Router();
 
@@ -20,62 +20,43 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 
     const cleanedCode = await formatPythonCode(removeComments(currentCode.trim()));
 
-    const formattedFixCodePrompt = fixCodePrompt(
-        description.substring(0, 500),
-        cleanedCode.substring(0, 2500)
-    );
+    let prompt;
+    if (iteration === 0) {
+        prompt = feedbackL1Prompt(
+            description.substring(0, 500),
+            cleanedCode.substring(0, 2500),
+            []
+        );
+    } else {
+        prompt = feedbackL2Prompt(
+            description.substring(0, 500),
+            cleanedCode.substring(0, 2500),
+            []
+        );
+    }
 
-    const rawFixedCode = await openai.chat.completions.create({
-        messages: formattedFixCodePrompt.messages,
-        model: formattedFixCodePrompt.model,
-        temperature: formattedFixCodePrompt.temperature,
-        stop: formattedFixCodePrompt.stop,
+    console.log("Generating Feedback...")
+    const rawFeedback = await openai.chat.completions.create({
+        messages: prompt.messages,
+        model: prompt.model,
+        temperature: prompt.temperature,
+        stop: prompt.stop,
         user: userId,
     });
-    
-    if (rawFixedCode.choices[0].message.content === null) {
-        console.log("Fixed Code Generation Failed...")
+
+    if (rawFeedback.choices[0].message.content === null) {
+        console.log("Generation Failed...")
         res.json({
             success: false,
         });
         return;
     }
 
-    const fixedCode: string = formattedFixCodePrompt.parser(rawFixedCode.choices[0].message.content);
+    const feedback: string = prompt.parser(rawFeedback.choices[0].message.content);
 
-    const explainDiffPrompt = iteration < 3 ?
-        annotateOriginalCodePrompt(
-            labelOriginalCode(cleanedCode, fixedCode),
-            labelFixedCode(cleanedCode, fixedCode),
-            description.substring(0, 500)
-        ) : 
-        annotateFixedCodePrompt(
-            labelOriginalCode(cleanedCode, fixedCode),
-            labelFixedCode(cleanedCode, fixedCode),
-            description.substring(0, 500)
-        )
-
-    const rawExplainedCode = await openai.chat.completions.create({
-        messages: explainDiffPrompt.messages,
-        model: iteration > 1 ? explainDiffPrompt.model : "gpt-3.5-turbo",
-        temperature: explainDiffPrompt.temperature,
-        stop: explainDiffPrompt.stop,
-        user: userId,
-    });
-
-
-    if (rawExplainedCode.choices[0].message.content === null) {
-        console.log("Code Explanation Generation Failed...")
-        res.json({
-            success: false,
-        });
-        return;
-    }
-
-    const explainedCode: object = explainDiffPrompt.parser(rawExplainedCode.choices[0].message.content);
-
+    console.log("Returning Feedback...")
     res.json({
-        feedback: explainedCode,
+        feedback: feedback,
         success: true,
     });
 });
