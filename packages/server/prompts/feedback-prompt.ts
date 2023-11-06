@@ -1,3 +1,4 @@
+import { error } from "console";
 import OpenAI from "openai";
 
 export const feedbackPrompt = (intendedBehavior: string, studentCode: string, notes: string[]) => {
@@ -8,7 +9,7 @@ export const feedbackPrompt = (intendedBehavior: string, studentCode: string, no
 
 Look at the [intended-behavior] and [student-code] to first generate the [fixed-student-code]. The [fixed-student-code] should not go above and beyond to check every possible input. Just focus on making it work or achieving the [intended-behavior].
 
-Then provide [hints-to-fix-student-code] using the following bullet point template with tags at the beginning of each hint's bullet points: 
+Then provide [hints-to-fix-student-code] for each line of code that needs to be adjusted in order to achieve [intended-behavior] using the following bullet point template with tags at the beginning of each hint's bullet points: 
 [[L1]], [[L3-5]] indicates the associated line number(s) in the student's code.
 [[missing]] indicates that the student is missing something, so there is no associated line.
 
@@ -19,8 +20,8 @@ Then provide [hints-to-fix-student-code] using the following bullet point templa
 [[missing]] text...
 
 at the beginning of each hint's bullet points add one of the following tags: [[L3]], [[L2-6]], [[missing]]
-where the number(s) following "L" indicate the line number(s) in the student's code that the hint is referring to.
-If the hint is not referring to a specific line, then use the [[missing]] tag instead.`,
+where the number(s) following "L" indicate the line number(s) in [student-code] that the hint is referring to.
+If the hint is not referring to a specific line in [student-code], then use the [[missing]] tag instead.`,
         },
         {
             role: "user",
@@ -89,10 +90,32 @@ ${studentCode}
         model: "gpt-4",
         temperature: 0.05,
         max_tokens: 1024,
-        parser: (resTxt: string) => feedbackParser(resTxt),
+        parser: (resTxt: string) => feedbackParser(resTxt, studentCode),
     };
 };
 
-const feedbackParser = (txt: string) => {
-    return txt
+const feedbackParser = (txt: string, code: string) => {
+    const obj: any = {
+        lines: Array<{code: string, explanation: Array<string>}>
+    };
+
+    obj.lines = code.split("\n").map((code: string) => {
+        return {
+            code,
+            explanation: [],
+        }
+    });
+    
+    const matches = txt.matchAll(/\[\[L(\d+)(?:-(\d+))?\]\] (.*)/g);
+    for (const match of matches) {
+        const startLineNumber = Number(match[1]);
+        const endLineNumber = Number(match[2]) || startLineNumber;
+        const hintText = match[3];
+      
+        for (let i = startLineNumber; i <= endLineNumber; i++) {
+            obj.lines[i-1].explanation.push(hintText);
+        }
+    }
+
+    return obj;
 };
