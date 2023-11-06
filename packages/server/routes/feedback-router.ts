@@ -20,9 +20,6 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 
     const cleanedCode = await formatPythonCode(removeComments(currentCode.trim()));
 
-    console.log(`Original Code:\n${currentCode}`)
-    console.log(`Cleaned Code:\n${cleanedCode}`)
-
     let prompt;
     if (iteration === 0) {
         prompt = feedbackL1Prompt(
@@ -55,13 +52,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
         return;
     }
 
-    console.log("Raw Feedback:")
-    console.log(rawFeedback.choices[0].message.content);
-
     const feedback: string = prompt.parser(rawFeedback.choices[0].message.content);
-
-    console.log("Parsed Feedback:")
-    console.log(feedback);
 
     console.log("Returning Feedback...")
     res.json({

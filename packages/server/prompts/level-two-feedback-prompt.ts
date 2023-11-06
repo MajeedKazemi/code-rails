@@ -111,29 +111,16 @@ const feedbackParser = (txt: string) => {
     };
 
     const annotatedCode = txt.match(/\[annotated-student-code\](.*?)\[end-annotated-student-code\]/gs)
-    console.log("annotatedCode")
-    console.log(annotatedCode)
-    console.log("annotatedCode")
 
     if (!annotatedCode) {
         return obj;
     }
 
     const lines = annotatedCode[0].split('\n').slice(1, -1).join('\n');
-    // const matches = lines.matchAll(/([^\r\n]*?)\s*#\s*(\[\[([^[\]]*)\]\]:(.*))?/g);
     const matches = lines.matchAll(/([^\r\n]*?)\s*#\s*\[\[([^[\]]*)\]\](.*)/g);
-    // console.log("---matches---")
-    // console.log(lines.match(/([^\r\n]*?)\s*#\s*(\[\[([^[\]]*)\]\]:(.*))?/g))
-    // console.log("---matches---")
-    // console.log("---old matches---")
-    // console.log(lines.match(/([^\r\n]*?)\s*#\s*\[\[([^[\]]*)\]\](.*)/g))
-    // console.log("---old matches---")
 
     obj.lines = []
     for (const match of matches) {
-        console.log("--- Start Match ---")
-        console.log(match)
-        console.log("--- End Match ---")
         const code = match[1]
         const status = match[2]
         const explanation = match[3].trim()
