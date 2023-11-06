@@ -92,10 +92,46 @@ ${studentCode}
 
     return {
         messages,
-        stop: ["[end-annotated-student-code]"],
+        stop: [],
         model: "gpt-4",
         temperature: 0.5,
         max_tokens: 1024,
-        // parser: (resTxt: string) => feedbackParser(resTxt, studentCode),
+        parser: (resTxt: string) => feedbackParser(resTxt),
     };
+};
+
+const feedbackParser = (txt: string) => {
+    const obj: any = {
+        lines: Array<{
+            code: string,
+            status: string,
+            explanation: string
+        }>
+    };
+
+    const annotatedCode = txt.match(/\[annotated-student-code\](.*?)\[end-annotated-student-code\]/gs)
+    console.log(annotatedCode)
+
+    if (!annotatedCode) {
+        return obj;
+    }
+
+    const lines = annotatedCode[0].split('\n').slice(1, -1).join('\n');
+    const matches = lines.matchAll(/([^\r\n]*?)\s*#\s*\[\[([^[\]]*)\]\](.*)/g);
+
+    obj.lines = []
+    for (const match of matches) {
+        const code = match[1]
+        const status = match[2]
+        const explanation = match[3]
+
+        obj.lines.push({
+            code,
+            status,
+            explanation
+        })
+    }
+    console.log(obj.lines)
+
+    return obj;
 };
