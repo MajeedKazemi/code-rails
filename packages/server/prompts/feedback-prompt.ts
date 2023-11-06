@@ -10,7 +10,7 @@ export const feedbackPrompt = (intendedBehavior: string, studentCode: string, no
 Look at the [intended-behavior] and [student-code] to first generate the [fixed-student-code]. The [fixed-student-code] should not go above and beyond to check every possible input. Just focus on making it work or achieving the [intended-behavior].
 
 Then provide [hints-to-fix-student-code] for each line of code that needs to be adjusted in order to achieve [intended-behavior] using the following bullet point template with tags at the beginning of each hint's bullet points: 
-[[L1]], [[L3-5]] indicates the associated line number(s) in the student's code.
+[[L1]], [[L3-5]] indicates the associated line number(s) in [student-code].
 [[missing]] indicates that the student is missing something, so there is no associated line.
 
 # Template:
