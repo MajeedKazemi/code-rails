@@ -13,14 +13,14 @@ Then, look back at the [student-code] and annotate each line with [[correct]] an
 I will provide one example, but try to generalize to other cases.
 
 [annotated-student-code]:
-student_code_... # [[change]]: description about why it needs to be changed and how to change it. use keywords like this: \`keyword\`
-# [[add]]: description about what is missing and why.
+student_code_... # [[change]] description about why it needs to be changed and how to change it. use keywords like this: \`keyword\`
+# [[add]] description about what is missing and why.
 student_code_... # [[correct]]
-student_code_... # [[fix]]: description about what is wrong and how to fix it.
+student_code_... # [[fix]] description about what is wrong and how to fix it.
 student_code_... # [[correct]]
     student_code_... # [[correct]]
-# [[add]]: description about what is missing and why.
-student_code_... # [[remove]]: description about why it needs to be removed.
+# [[add]] description about what is missing and why.
+student_code_... # [[remove]] description about why it needs to be removed.
 [end-annotated-student-code]`,
         },
         {
@@ -66,19 +66,19 @@ print("You entered " + comparison + " and the result is " + str(result))
 [end-fixed-student-code]
 
 [annotated-student-code]:
-# [[add]]: import the \`random\` module
-num 1 = random.randit(1), (1000) # [[fix]]: The variable name should be \`num1\`, not \`num 1\`. Also, the function is \`randint()\`, not \`randit()\`. The correct syntax for creating a random integer between \`a\` and \`b\` is \`random.randint(a, b)\`.
-num 2 == random.randit(1), (1000) # [[fix]]: The variable name should be \`num2\`, not \`num 2\`. Also, the function is \`randint()\`, not \`randit()\`. The correct syntax for creating a random integer between \`a\` and \`b\` is \`random.randint(a, b)\`. Use \`=\` instead of \`==\` to assign a value to a variable.
-num 3 = random.randit(1), (1000) # [[remove]]: The variable \`num3\` is not needed for this task and can be removed.
+# [[add]] import the \`random\` module
+num 1 = random.randit(1), (1000) # [[fix]] The variable name should be \`num1\`, not \`num 1\`. Also, the function is \`randint()\`, not \`randit()\`. The correct syntax for creating a random integer between \`a\` and \`b\` is \`random.randint(a, b)\`.
+num 2 == random.randit(1), (1000) # [[fix]] The variable name should be \`num2\`, not \`num 2\`. Also, the function is \`randint()\`, not \`randit()\`. The correct syntax for creating a random integer between \`a\` and \`b\` is \`random.randint(a, b)\`. Use \`=\` instead of \`==\` to assign a value to a variable.
+num 3 = random.randit(1), (1000) # [[remove]] The variable \`num3\` is not needed for this task and can be removed.
 
-# [[add]]: Add a new line to create a variable called \`result\` and assign it the value \`0\`.
-Comparision = input(Greater or smaller?) # [[fix]]: the \`input\` prompt message should be inside quotes.
-if Comparision = "greater" # [[change]]: The comparison operator should be \`==\` (double equals) instead of \`=\` (single equals). Also, there should be a colon at the end of the line to indicate the start of a new block of code.
-if num 1 > num 2: # [[fix]]: There should be an indentation error at this line. The line should be indented to be inside the above \`if\` block.
-    print("You entered" + str(Comparision) + " and the result is " + num 1) # [[fix]]: The variable \`num1\` should be converted to a string using the \`str()\` function.
-# [[add]]: Add an \`elif\` block to handle the case where the user enters \`"smaller"\`.
-# [[add]]: Add an \`else\` block to handle the case where the user enters an invalid input.
-# [[add]]: Add a print statement to display the message that displays the value of \`comparison\` and \`result\` variables.
+# [[add]] Add a new line to create a variable called \`result\` and assign it the value \`0\`.
+Comparision = input(Greater or smaller?) # [[fix]] the \`input\` prompt message should be inside quotes.
+if Comparision = "greater" # [[change]] The comparison operator should be \`==\` (double equals) instead of \`=\` (single equals). Also, there should be a colon at the end of the line to indicate the start of a new block of code.
+if num 1 > num 2: # [[fix]] There should be an indentation error at this line. The line should be indented to be inside the above \`if\` block.
+    print("You entered" + str(Comparision) + " and the result is " + num 1) # [[fix]] The variable \`num1\` should be converted to a string using the \`str()\` function.
+# [[add]] Add an \`elif\` block to handle the case where the user enters \`"smaller"\`.
+# [[add]] Add an \`else\` block to handle the case where the user enters an invalid input.
+# [[add]] Add a print statement to display the message that displays the value of \`comparison\` and \`result\` variables.
 [end-annotated-student-code]`
         },
         {
@@ -111,17 +111,29 @@ const feedbackParser = (txt: string) => {
     };
 
     const annotatedCode = txt.match(/\[annotated-student-code\](.*?)\[end-annotated-student-code\]/gs)
+    console.log("annotatedCode")
     console.log(annotatedCode)
+    console.log("annotatedCode")
 
     if (!annotatedCode) {
         return obj;
     }
 
     const lines = annotatedCode[0].split('\n').slice(1, -1).join('\n');
+    // const matches = lines.matchAll(/([^\r\n]*?)\s*#\s*(\[\[([^[\]]*)\]\]:(.*))?/g);
     const matches = lines.matchAll(/([^\r\n]*?)\s*#\s*\[\[([^[\]]*)\]\](.*)/g);
+    // console.log("---matches---")
+    // console.log(lines.match(/([^\r\n]*?)\s*#\s*(\[\[([^[\]]*)\]\]:(.*))?/g))
+    // console.log("---matches---")
+    // console.log("---old matches---")
+    // console.log(lines.match(/([^\r\n]*?)\s*#\s*\[\[([^[\]]*)\]\](.*)/g))
+    // console.log("---old matches---")
 
     obj.lines = []
     for (const match of matches) {
+        console.log("--- Start Match ---")
+        console.log(match)
+        console.log("--- End Match ---")
         const code = match[1]
         const status = match[2]
         const explanation = match[3]
@@ -132,7 +144,6 @@ const feedbackParser = (txt: string) => {
             explanation
         })
     }
-    console.log(obj.lines)
 
     return obj;
 };
