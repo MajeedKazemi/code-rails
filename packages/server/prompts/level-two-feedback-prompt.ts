@@ -106,7 +106,8 @@ const feedbackParser = (txt: string) => {
             code: string,
             status: string,
             explanation: string
-        }>
+        }>,
+        type: "code"
     };
 
     const annotatedCode = txt.match(/\[annotated-student-code\](.*?)\[end-annotated-student-code\]/gs)
