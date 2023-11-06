@@ -8,17 +8,17 @@ export const feedbackL2Prompt = (intendedBehavior: string, studentCode: string, 
 
 Look at the [intended-behavior] and [student-code] to first generate the [fixed-student-code]. The [fixed-student-code] should not go above and beyond to check every possible input. Just focus on making it work or achieving the [intended-behavior].
 
-Then, look back at the [student-code] and annotate each line with [[correct]] and those that need to be edited with either [[change]], [[remove]], or [[fix]] and a description about why and how. If there are lines that are [[add]], add an empty line and just tag it with [[add]] and an explanation of it.
+Then, look back at the [student-code] and annotate each line that needs to be edited with either [[change]], [[remove]], or [[fix]] and a description about why and how. If there are lines that are [[add]], add an empty line and just tag it with [[add]] and an explanation of it.
 
 I will provide one example, but try to generalize to other cases.
 
 [annotated-student-code]:
 student_code_... # [[change]]: description about why it needs to be changed and how to change it. use keywords like this: \`keyword\`
 # [[add]]: description about what is missing and why.
-student_code_... # [[correct]]
+student_code_...
 student_code_... # [[fix]]: description about what is wrong and how to fix it.
-student_code_... # [[correct]]
-    student_code_... # [[correct]]
+student_code_...
+    student_code_...
 # [[add]]: description about what is missing and why.
 student_code_... # [[remove]]: description about why it needs to be removed.
 [end-annotated-student-code]`,
