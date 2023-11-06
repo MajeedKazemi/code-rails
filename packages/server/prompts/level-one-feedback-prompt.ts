@@ -91,7 +91,7 @@ ${studentCode}
 
 const l1FeedbackParser = (txt: string, code: string) => {
     const obj: any = {
-        lines: Array<{type: string, explanation: Array<string>}>,
+        lines: Array<{type: string, explanation: string}>,
         type: "text"
     };
 
