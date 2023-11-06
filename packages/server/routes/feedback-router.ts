@@ -5,6 +5,7 @@ import { openai } from "../utils/openai";
 import { verifyUser } from "../utils/strategy";
 import { formatPythonCode, removeComments } from "../utils/format";
 import { feedbackL1Prompt } from "../prompts/level-one-feedback-prompt";
+import { feedbackL2Prompt } from "../prompts/level-two-feedback-prompt";
 
 export const feedbackRouter = express.Router();
 
@@ -21,22 +22,32 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 
     console.log(`Original Code:\n${currentCode}`)
     console.log(`Cleaned Code:\n${cleanedCode}`)
-    const formattedL1Prompt = feedbackL1Prompt(
-        description.substring(0, 500),
-        cleanedCode.substring(0, 2500),
-        []
-    );
+
+    let prompt;
+    if (iteration === 0) {
+        prompt = feedbackL1Prompt(
+            description.substring(0, 500),
+            cleanedCode.substring(0, 2500),
+            []
+        );
+    } else {
+        prompt = feedbackL2Prompt(
+            description.substring(0, 500),
+            cleanedCode.substring(0, 2500),
+            []
+        );
+    }
 
     console.log("Generating Feedback...")
-    const rawL1Feedback = await openai.chat.completions.create({
-        messages: formattedL1Prompt.messages,
-        model: formattedL1Prompt.model,
-        temperature: formattedL1Prompt.temperature,
-        stop: formattedL1Prompt.stop,
+    const rawFeedback = await openai.chat.completions.create({
+        messages: prompt.messages,
+        model: prompt.model,
+        temperature: prompt.temperature,
+        stop: prompt.stop,
         user: userId,
     });
 
-    if (rawL1Feedback.choices[0].message.content === null) {
+    if (rawFeedback.choices[0].message.content === null) {
         console.log("Generation Failed...")
         res.json({
             success: false,
@@ -45,16 +56,16 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
     }
 
     console.log("Raw Feedback:")
-    console.log(rawL1Feedback.choices[0].message.content);
+    console.log(rawFeedback.choices[0].message.content);
 
-    const L1Feedback: string = formattedL1Prompt.parser(rawL1Feedback.choices[0].message.content);
+    const feedback: string = prompt.parser(rawFeedback.choices[0].message.content);
 
     console.log("Parsed Feedback:")
-    console.log(L1Feedback);
+    console.log(feedback);
 
     console.log("Returning Feedback...")
     res.json({
-        feedback: L1Feedback,
+        feedback: feedback,
         success: true,
     });
 });
