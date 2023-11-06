@@ -69,11 +69,11 @@ export const Feedback = (props: FeedbackProps) => {
                     {props.feedback.lines.map((line: any, index: number) => {
                         return(
                             <div key={`feedback_line_${index}`}>
-                                <div id={`line_${index}`} className={`min-h-[1.5rem] ${line.explanation.length > 0 ? "bg-red-500" : ""}`}>
+                                <div id={`line_${index}`} className={`min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
                                     {line.code}
                                 </div>
                                 <Tooltip className="z-40 max-w-lg" anchorSelect={`#line_${index}`} place="right">
-                                    {line.explanation.join("\n")}
+                                    {line.explanation}
                                 </Tooltip>
                             </div>
                         )
