@@ -136,7 +136,7 @@ const feedbackParser = (txt: string) => {
         console.log("--- End Match ---")
         const code = match[1]
         const status = match[2]
-        const explanation = match[3]
+        const explanation = match[3].trim()
 
         obj.lines.push({
             code,
