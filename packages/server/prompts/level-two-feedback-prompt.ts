@@ -1,8 +1,8 @@
 import OpenAI from "openai";
 
-const feedbackL2Prompt = {
-    prime: (intendedBehavior: string, studentCode: string, notes: string[]) => {
-        const system: OpenAI.Chat.ChatCompletionMessage = {
+export const feedbackL2Prompt = (intendedBehavior: string, studentCode: string, notes: string[]) => {
+    const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
+        {
             role: "system",
             content: `You are a programming tutor. I am a novice student that is learning how to write Python code for the first time. I might have difficulties understanding the syntax and logic as well as many other basic computational thinking and meta cognitive skills.
 
@@ -20,10 +20,10 @@ I will provide one example, but try to generalize to other cases.
 4.    student_code_... # [[correct]]
 5.        student_code_... # [[correct]]
 # [[add]]: description about what is missing and why.
-6.    student_code_... # [[remove]]: description about why it needs to be removed.`,
-        };
-
-        const inputExample: OpenAI.Chat.ChatCompletionMessage = {
+6.    student_code_... # [[remove]]: description about why it needs to be removed.
+[end-annotated-lined-student-code]`,
+        },
+        {
             role: "user",
             content: `[intended-behavior]: Set two variables called num1 and num2 to a random number between 1 and 1000 and a third variable called result to 0. Ask the user to enter one of the two options: greater, or smaller and then check which one the user has entered. (display an error message: Invalid Option if the user didn't enter any of the two). If the user enters greater, then check if the num1 is greater than num2. If it is, set result to num1 and otherwise, set result to num2. However, if the user enters smaller, then check if the num1 is smaller than num2. If it is, set result to num1 and otherwise, set result to num2. Finally, if the user did not enter an invalid input, display the message: You entered option and the result is result.
 
@@ -37,9 +37,8 @@ I will provide one example, but try to generalize to other cases.
 7.    if num 1 > num 2:
 8.        print("You entered" + str(Comparision) + " and the result is " + num 1)
 [end-lined-student-code]`,
-        };
-
-        const outputExample: OpenAI.Chat.ChatCompletionMessage = {
+        },
+        {
             role: "assistant",
             content: `[fixed-student-code]:
 import random
@@ -80,22 +79,23 @@ L.    # [[add]]: Add a new line to create a variable called \`result\` and assig
 L.    # [[add]]: Add an \`elif\` block to handle the case where the user enters \`"smaller"\`.
 L.    # [[add]]: Add an \`else\` block to handle the case where the user enters an invalid input.
 L.    # [[add]]: Add a print statement to display the message that displays the value of \`comparison\` and \`result\` variables.
-`,
-        };
-
-        return [
-            system,
-            inputExample,
-            outputExample,
-            {
-                role: "user",
-                content: `[intended-behavior]: ${intendedBehavior}
-
+[end-annotated-lined-student-code]`
+        },
+        {
+            role: "user",
+            content: `[intended-behavior]: ${intendedBehavior}
 [student-code]:
 ${studentCode}
-[end-student-code]`,
-            },
-        ];
-    },
-    stopTokens: ["end-hints-to-fix-student-code"],
+[end-student-code]`
+        }
+    ];
+
+    return {
+        messages,
+        stop: ["[end-student-code]"],
+        model: "gpt-4",
+        temperature: 0.5,
+        max_tokens: 1024,
+        // parser: (resTxt: string) => feedbackParser(resTxt, studentCode),
+    };
 };
