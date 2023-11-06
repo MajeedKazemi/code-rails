@@ -88,7 +88,7 @@ ${studentCode}
         messages,
         stop: ["[end-student-code]"],
         model: "gpt-4",
-        temperature: 0.05,
+        temperature: 0.5,
         max_tokens: 1024,
         parser: (resTxt: string) => feedbackParser(resTxt, studentCode),
     };

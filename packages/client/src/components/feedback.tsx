@@ -40,33 +40,50 @@ export const Feedback = (props: FeedbackProps) => {
 
     const Body = () => {
         const bodyClasses = "text-white p-2 max-h-96 overflow-y-auto whitespace-pre-wrap";
-        if (props.iteration > 1) {
+        if (props.feedback.type === "text") {
+            return(
+                <ul className={bodyClasses + " divide-y divide-indigo-900"}>
+                    {props.feedback.lines.map((line: any, index: number) => {
+                        let bg_color;
+                        switch (line.type) {
+                            case "add":
+                                bg_color = "bg-green-500"
+                                break;
+                            case "remove":
+                                bg_color = "bg-red-500"
+                                break;
+                            default:
+                                bg_color = "bg-orange-500"
+                        }
+                        return(
+                            <li className={bg_color}>
+                                {line.explanation}
+                            </li>
+                        )
+                    })}
+                </ul>
+            )
+        } else {
             return(
                 <div className={bodyClasses + " divide-y divide-indigo-900"}>
                     {props.feedback.lines.map((line: any, index: number) => {
                         return(
                             <div key={`feedback_line_${index}`}>
-                                <div id={`line_${index}`} className={`min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
+                                <div id={`line_${index}`} className={`min-h-[1.5rem] ${line.explanation.length > 0 ? "bg-red-500" : ""}`}>
                                     {line.code}
                                 </div>
                                 <Tooltip className="z-40 max-w-lg" anchorSelect={`#line_${index}`} place="right">
-                                    {line.explanation}
+                                    {line.explanation.join("\n")}
                                 </Tooltip>
                             </div>
                         )
                     })}
                 </div>
             )
-        } else {
-            return(
-                <div className={bodyClasses}>
-                    {props.feedback.explanation}
-                </div>
-            )
         }
     };
 
-    if (props.feedback.explanation) {
+    if (props.feedback.type) {
         return(
             <div className="border rounded-xl bg-indigo-900">
                 <Header />

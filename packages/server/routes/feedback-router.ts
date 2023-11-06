@@ -4,7 +4,7 @@ import { IUser } from "../models/user";
 import { openai } from "../utils/openai";
 import { verifyUser } from "../utils/strategy";
 import { formatPythonCode, removeComments } from "../utils/format";
-import { feedbackPrompt } from "../prompts/feedback-prompt";
+import { feedbackL1Prompt } from "../prompts/level-one-feedback-prompt";
 
 export const feedbackRouter = express.Router();
 
@@ -19,7 +19,9 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
 
     const cleanedCode = await formatPythonCode(removeComments(currentCode.trim()));
 
-    const formattedL1Prompt = feedbackPrompt(
+    console.log(`Original Code:\n${currentCode}`)
+    console.log(`Cleaned Code:\n${cleanedCode}`)
+    const formattedL1Prompt = feedbackL1Prompt(
         description.substring(0, 500),
         cleanedCode.substring(0, 2500),
         []
@@ -42,11 +44,17 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
         return;
     }
 
+    console.log("Raw Feedback:")
+    console.log(rawL1Feedback.choices[0].message.content);
+
     const L1Feedback: string = formattedL1Prompt.parser(rawL1Feedback.choices[0].message.content);
+
+    console.log("Parsed Feedback:")
+    console.log(L1Feedback);
 
     console.log("Returning Feedback...")
     res.json({
-        feedback: {resp: L1Feedback},
+        feedback: L1Feedback,
         success: true,
     });
 });
