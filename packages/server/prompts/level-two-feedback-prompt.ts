@@ -117,13 +117,13 @@ const feedbackParser = (txt: string) => {
     }
 
     const lines = annotatedCode[0].split('\n').slice(1, -1).join('\n');
-    const matches = lines.matchAll(/([^\r\n]*?)\s*#\s*\[\[([^[\]]*)\]\](.*)/g);
+    const matches = lines.matchAll(/^([^\r]*?)\s*#\s*\[\[([^[\]]*)\]\](.*)$/gm);
 
     obj.lines = []
     for (const match of matches) {
         const code = match[1]
         const status = match[2]
-        const explanation = match[3].trim()
+        const explanation = match[3] ? match[3].trim() : ""
 
         obj.lines.push({
             code,
