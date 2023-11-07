@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 export const feedbackL1Prompt = (intendedBehavior: string, studentCode: string, notes: string[]) => {
-    const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
+    const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
             content: `You are a programming tutor. I am a novice student that is learning how to write Python code for the first time. I might have difficulties understanding the syntax and logic as well as many other basic computational thinking and meta cognitive skills.

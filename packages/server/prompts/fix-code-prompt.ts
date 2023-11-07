@@ -9,7 +9,7 @@ import { diffOriginalCodeParser, diffFixedCodeParser, rawFixedCodeParser } from 
 // 4. generate [pseudo-code] from the [fixed-code] for the user to read.
 // produces [fixed-code] as c code
 export const fixCodePrompt = (behavior: string, code: string) => {
-    const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
+    const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
             content:
@@ -77,7 +77,7 @@ export const annotateOriginalCodePrompt = (
 ) => {
     const systemMessage = "show all the lines of [original-code] (do not show any of the lines from [fixed-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]";
 
-    const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
+    const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
             content: systemMessage,
@@ -236,7 +236,7 @@ export const annotateFixedCodePrompt = (
 ) => {
     const systemMessage = "show all the lines of [fixed-code] (do not show any of the lines from [original-code]), and for each line in [original-code] that is tagged with [modified] or [added], explain in mostly *plain English* all the required changes to make [original-code] match the above [fixed-code]";
 
-    const messages: Array<OpenAI.Chat.ChatCompletionMessage> = [
+    const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
             content: systemMessage,
