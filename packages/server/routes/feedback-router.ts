@@ -6,6 +6,7 @@ import { verifyUser } from "../utils/strategy";
 import { formatPythonCode, removeComments } from "../utils/format";
 import { feedbackL1Prompt } from "../prompts/level-one-feedback-prompt";
 import { feedbackL2Prompt } from "../prompts/level-two-feedback-prompt";
+import { feedbackL3Prompt } from "../prompts/level-three-feedback-prompt";
 
 export const feedbackRouter = express.Router();
 
@@ -27,8 +28,14 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
             cleanedCode.substring(0, 2500),
             []
         );
-    } else {
+    } else if(iteration === 2) {
         prompt = feedbackL2Prompt(
+            description.substring(0, 500),
+            cleanedCode.substring(0, 2500),
+            []
+        );
+    } else {
+        prompt = feedbackL3Prompt(
             description.substring(0, 500),
             cleanedCode.substring(0, 2500),
             []
