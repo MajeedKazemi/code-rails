@@ -15,18 +15,28 @@ import {
     WatchVideoTask,
 } from "../tasks/tasks";
 import { verifyUser } from "../utils/strategy";
+import { testcases } from "../tests/benchmark";
 
 export const tasksRouter = express.Router();
 
 // get task by id
-tasksRouter.get("/:id", verifyUser, (req, res, next) => {
-    const task = getTask(req.params.id)
-    if(task) {
-        res.send({ task: getTask(req.params.id) })
-    } else {
-        res.statusCode = 404;
+tasksRouter.get("/", verifyUser, (req, res, next) => {
+    if (!req.query.taskId) {
+        res.statusCode = 400;
         res.send({ task: null });
+        return;
     }
+    const task = getTask(req.query.taskId as string)
+    if(task) {
+        res.send({ task: task })
+    } else {
+        // res.statusCode = 404;
+        // res.send({ task: null });
+    }
+});
+
+tasksRouter.get("/tests", verifyUser, (req, res, next) => {
+    res.send({ testcases: testcases });
 });
 
 // get next task -> could be any type of task

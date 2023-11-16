@@ -1,15 +1,8 @@
 import React, { useContext, useEffect } from "react";
 
-import { apiGenerateFeedback, apiGetTask, apiUserNextTask, logError } from "../api/api";
-import { CodingTask } from "../components/coding-task";
+import { apiGenerateFeedback, apiGetTask, apiGetTestsTasks } from "../api/api";
 import { Layout } from "../components/layout";
-import { Loader } from "../components/loader";
-import { MultipleChoiceTask } from "../components/multiple-choice-task";
-import { ShortAnswerTask } from "../components/short-answer-task";
-import { WatchTutorialTask } from "../components/watch-video-task";
 import { AuthContext } from "../context";
-import { TaskType } from "../utils/constants";
-import { testCases, ITestCase } from "../tests/benchmark";
 import { Feedback } from "../components/feedback";
 
 interface completedTest {
@@ -22,8 +15,6 @@ interface completedTest {
 
 export const BenchmarkPage = () => {
     const { context } = useContext(AuthContext);
-    const [loading, setLoading] = React.useState(false);
-    const [task, setTask] = React.useState<any>(null);
     const [completedTests, setCompletedTests] = React.useState<completedTest[]>([]);
 
     const generateFeedback = async (task: any, userCode: string, correctness: boolean) => {
@@ -45,9 +36,11 @@ export const BenchmarkPage = () => {
     };
 
     const performTests = async () => {
-        console.log("Performing Tests on the following:")
-        console.log(testCases.splice(0, 3))
+        const resp = await apiGetTestsTasks(context?.token)
+        const testCases = (await resp.json()).testcases
+
         for (const testCase of testCases.splice(0, 3)) {
+            console.log(testCase)
             console.log(`Testing Case: ${testCase.taskId}`)
             const resp = await apiGetTask(context?.token, testCase.taskId)
             const task = (await resp.json()).task

@@ -115,7 +115,16 @@ export const apiAdminSetFinalGrade = (
     });
 
 export const apiGetTask = (token: string | null | undefined, taskId: string) =>
-    fetch(env.API_URL + `/api/tasks/${taskId}`, {
+    fetch(env.API_URL + `/api/tasks?taskId=${taskId}`, {
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+export const apiGetTestsTasks = (token: string | null | undefined) =>
+    fetch(env.API_URL + "/api/tasks/tests", {
         credentials: "include",
         headers: {
             "Content-Type": "application/json",
