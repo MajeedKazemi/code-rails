@@ -1,4 +1,4 @@
-import { Tooltip } from "react-tooltip";
+import Tooltip from '@mui/material/Tooltip';
 
 interface FeedbackProps {
     feedback: any;
@@ -69,11 +69,10 @@ export const Feedback = (props: FeedbackProps) => {
                     {props.feedback.lines.map((line: any, index: number) => {
                         return(
                             <div key={`feedback_line_${index}`}>
-                                <div id={`line_${index}`} className={`min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
-                                    {line.code}
-                                </div>
-                                <Tooltip className="z-40 max-w-lg" anchorSelect={`#line_${index}`} place="right">
-                                    {line.explanation}
+                                <Tooltip title={line.explanation} placement="right" arrow>
+                                    <div className={`min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
+                                        {line.code}
+                                    </div>
                                 </Tooltip>
                             </div>
                         )
