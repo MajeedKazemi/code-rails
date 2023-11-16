@@ -6,6 +6,7 @@ import {
     AuthoringTask,
     CodingTasks,
     getNextTask,
+    getTask,
     getTaskFromTaskId,
     getTaskSequenceFromTaskId,
     ModifyingTask,
@@ -16,6 +17,17 @@ import {
 import { verifyUser } from "../utils/strategy";
 
 export const tasksRouter = express.Router();
+
+// get task by id
+tasksRouter.get("/:id", verifyUser, (req, res, next) => {
+    const task = getTask(req.params.id)
+    if(task) {
+        res.send({ task: getTask(req.params.id) })
+    } else {
+        res.statusCode = 404;
+        res.send({ task: null });
+    }
+});
 
 // get next task -> could be any type of task
 tasksRouter.get("/next", verifyUser, (req, res, next) => {

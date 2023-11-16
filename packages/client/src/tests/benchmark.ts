@@ -8,7 +8,7 @@ export interface ITestCase {
     studentCode: string;
 }
 
-export const testcases: Array<ITestCase> = [
+export const testCases: Array<ITestCase> = [
     {
         taskId: "7",
         isCorrect: false,
