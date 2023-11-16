@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { apiGenerateFeedback, apiGetTask, apiGetTestsTasks } from "../api/api";
 import { Layout } from "../components/layout";
@@ -6,7 +6,7 @@ import { AuthContext } from "../context";
 import { Feedback } from "../components/feedback";
 
 interface completedTest {
-    feedback: string,
+    feedback: {code: string, explanation: string, status: string}[],
     iteration: number,
     taskDescription: string,
     isCorrect: boolean,
@@ -15,7 +15,7 @@ interface completedTest {
 
 export const BenchmarkPage = () => {
     const { context } = useContext(AuthContext);
-    const [completedTests, setCompletedTests] = React.useState<completedTest[]>([]);
+    const [completedTests, setCompletedTests] = useState<completedTest[]>([]);
 
     const generateFeedback = async (task: any, userCode: string, correctness: boolean) => {
         try {
@@ -39,25 +39,23 @@ export const BenchmarkPage = () => {
         const resp = await apiGetTestsTasks(context?.token)
         const testCases = (await resp.json()).testcases
 
-        for (const testCase of testCases.splice(0, 3)) {
-            console.log(testCase)
+        for (const testCase of testCases.slice(0, 3)) {
             console.log(`Testing Case: ${testCase.taskId}`)
             const resp = await apiGetTask(context?.token, testCase.taskId)
             const task = (await resp.json()).task
             const feedback = await generateFeedback(task, testCase.studentCode, testCase.isCorrect)
-            setCompletedTests(
-                [
-                    ...completedTests,
-                    { 
-                        feedback: feedback,
-                        iteration: 2,
-                        taskDescription: task.description,
-                        isCorrect: testCase.isCorrect,
-                        userCode: testCase.studentCode
-                    }
-                ]
-            );
+            setCompletedTests(completedTests => ([
+                ...completedTests,
+                { 
+                    feedback: feedback,
+                    iteration: 2,
+                    taskDescription: task.description,
+                    isCorrect: testCase.isCorrect,
+                    userCode: testCase.studentCode
+                },
+            ]));
         }
+        console.log("Tests Completed")
     };
 
     useEffect(() => {
@@ -69,6 +67,7 @@ export const BenchmarkPage = () => {
 
     return (
         <Layout>
+            <button onClick={() => {console.log(completedTests)}}>Log Completed Tests</button>
             <div>{completedTests.length}</div>
             <div className="grid grid-cols-3 gap-4 p-4">
                 {completedTests.map((test, index) => {
