@@ -17,7 +17,7 @@ export const BenchmarkPage = () => {
     const { context } = useContext(AuthContext);
     const [completedTests, setCompletedTests] = useState<completedTest[]>([]);
 
-    const generateFeedback = async (task: any, userCode: string, correctness: boolean) => {
+    const generateFeedback = async (task: any, userCode: string, correctness: boolean, feedbackLevel: number) => {
         try {
             const resp = await apiGenerateFeedback(
                 context?.token,
@@ -26,7 +26,7 @@ export const BenchmarkPage = () => {
                 task.solution,
                 task.output,
                 correctness,
-                2
+                feedbackLevel
             )
             const feedback = await resp.json()
             return feedback.feedback
@@ -35,7 +35,8 @@ export const BenchmarkPage = () => {
         }
     };
 
-    const performTests = async () => {
+    const performTests = async (feedbackLevel: number) => {
+        console.log("Performing Tests...")
         const resp = await apiGetTestsTasks(context?.token)
         const testCases = (await resp.json()).testcases
 
@@ -43,12 +44,12 @@ export const BenchmarkPage = () => {
             console.log(`Testing Case: ${testCase.taskId}`)
             const resp = await apiGetTask(context?.token, testCase.taskId)
             const task = (await resp.json()).task
-            const feedback = await generateFeedback(task, testCase.studentCode, testCase.isCorrect)
+            const feedback = await generateFeedback(task, testCase.studentCode, testCase.isCorrect, feedbackLevel)
             setCompletedTests(completedTests => ([
                 ...completedTests,
                 { 
                     feedback: feedback,
-                    iteration: 2,
+                    iteration: feedbackLevel,
                     taskDescription: task.description,
                     isCorrect: testCase.isCorrect,
                     userCode: testCase.studentCode
@@ -58,17 +59,15 @@ export const BenchmarkPage = () => {
         console.log("Tests Completed")
     };
 
-    useEffect(() => {
-        console.log("Effect Triggered")
-        performTests();
-        // console.log('test')
-    }, []);
-
-
     return (
         <Layout>
-            <button onClick={() => {console.log(completedTests)}}>Log Completed Tests</button>
-            <div>{completedTests.length}</div>
+            <div className="p-2 flex gap-2">
+                <button className="p-2 bg-violet-600 rounded-lg text-white" onClick={() => {console.log(completedTests)}}>Log Completed Tests</button>
+                <button className="p-2 bg-violet-600 rounded-lg text-white" onClick={() => {performTests(1)}}>Run Level 1</button>
+                <button className="p-2 bg-violet-600 rounded-lg text-white" onClick={() => {performTests(2)}}>Run Level 2</button>
+                <button className="p-2 bg-violet-600 rounded-lg text-white" onClick={() => {performTests(3)}}>Run Level 3</button>
+                <div className="p-2 bg-violet-600 rounded-lg text-white">{completedTests.length}</div>
+            </div>
             <div className="grid grid-cols-3 gap-4 p-4">
                 {completedTests.map((test, index) => {
                     return(
