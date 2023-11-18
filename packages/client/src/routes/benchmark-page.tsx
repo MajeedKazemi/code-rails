@@ -35,6 +35,22 @@ export const BenchmarkPage = () => {
         }
     };
 
+    const runTest = async (testCase: any, feedbackLevel: number) => {
+        const resp = await apiGetTask(context?.token, testCase.taskId)
+        const task = (await resp.json()).task
+        const feedback = await generateFeedback(task, testCase.studentCode, testCase.isCorrect, feedbackLevel)
+        setCompletedTests(completedTests => ([
+            ...completedTests,
+            { 
+                feedback: feedback,
+                iteration: feedbackLevel,
+                taskDescription: task.description,
+                isCorrect: testCase.isCorrect,
+                userCode: testCase.studentCode
+            },
+        ]));
+    }
+
     const performTests = async (feedbackLevel: number) => {
         console.log("Performing Tests...")
         const resp = await apiGetTestsTasks(context?.token)
@@ -42,19 +58,7 @@ export const BenchmarkPage = () => {
 
         for (const testCase of testCases.slice(0, 3)) {
             console.log(`Testing Case: ${testCase.taskId}`)
-            const resp = await apiGetTask(context?.token, testCase.taskId)
-            const task = (await resp.json()).task
-            const feedback = await generateFeedback(task, testCase.studentCode, testCase.isCorrect, feedbackLevel)
-            setCompletedTests(completedTests => ([
-                ...completedTests,
-                { 
-                    feedback: feedback,
-                    iteration: feedbackLevel,
-                    taskDescription: task.description,
-                    isCorrect: testCase.isCorrect,
-                    userCode: testCase.studentCode
-                },
-            ]));
+            runTest(testCase, feedbackLevel);
         }
         console.log("Tests Completed")
     };
