@@ -6196,6 +6196,10 @@ return fib_sequence[:n]`,
     ),
 ];
 
+export const getTask = (taskId: string): Task | null => {
+    return CodingTasks.find((task) => task.id === taskId) ?? null;
+}
+
 export const getNextTask = (completedTasks: IUserTask[]): Task | null => {
     for (let i = 0; i < CodingTasks.length; i++) {
         if (!completedTasks.find((t) => t.taskId === CodingTasks[i].id)) {

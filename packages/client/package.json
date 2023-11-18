@@ -26,11 +26,13 @@
     },
     "dependencies": {
         "@codingame/monaco-jsonrpc": "^0.4.0",
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "@mui/material": "^5.14.18",
         "monaco-editor": "^0.33.0",
         "monaco-editor-workers": "^0.33.0",
         "monaco-languageclient": "^1.0.1",
         "normalize-url": "^7.0.3",
-        "react-tooltip": "^5.21.5",
         "socket.io-client": "^4.6.1"
     },
     "devDependencies": {
