@@ -99,7 +99,11 @@ export const BenchmarkPage = () => {
                     return(
                         <div key={index} className="flex flex-col gap-2 bg-white p-2 shadow border-black rounded-xl">
                             <p className="font-bold">Task Description:</p>
-                            <p>{test.taskDescription}</p>
+                            <p
+                                dangerouslySetInnerHTML={{
+                                    __html: test.taskDescription,
+                                }}
+                            ></p>
                             <div className="border rounded-xl max-h-96 overflow-y-auto whitespace-pre-wrap">
                                 <div className="bg-slate-100 p-2">
                                     User Code:
