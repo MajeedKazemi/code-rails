@@ -30,8 +30,8 @@ tasksRouter.get("/", verifyUser, (req, res, next) => {
     if(task) {
         res.send({ task: task })
     } else {
-        // res.statusCode = 404;
-        // res.send({ task: null });
+        res.statusCode = 404;
+        res.send({ task: null });
     }
 });
 
