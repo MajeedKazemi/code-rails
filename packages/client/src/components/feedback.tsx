@@ -28,11 +28,16 @@ export const Feedback = (props: FeedbackProps) => {
             )
         } else {
             return(
-                <div className={headingClasses}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                    </svg>
-                    Feedback
+                <div className={headingClasses + " flex-col"}>
+                    <div className='flex gap-1'>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                        </svg>
+                        Feedback: 
+                    </div>
+                    <div>
+                        Try fixing your code based on the following suggestions
+                    </div>
                 </div>
             )
         }
@@ -42,22 +47,26 @@ export const Feedback = (props: FeedbackProps) => {
         const bodyClasses = "text-white p-2 max-h-96 overflow-y-auto whitespace-pre-wrap";
         if (props.feedback.type === "text") {
             return(
-                <ul className={bodyClasses + " divide-y divide-indigo-900"}>
+                <ul className={bodyClasses + " pl-6 list-disc divide-y divide-indigo-900"}>
                     {props.feedback.lines.map((line: any, index: number) => {
-                        let bg_color;
+                        let color;
+                        let key_word;
                         switch (line.type) {
                             case "add":
-                                bg_color = "bg-green-500"
+                                color = "marker:text-green-500"
+                                key_word = "Missing"
                                 break;
                             case "remove":
-                                bg_color = "bg-red-500"
+                                color = "marker:text-red-500"
+                                key_word = "Incorrect"
                                 break;
                             default:
-                                bg_color = "bg-orange-500"
+                                color = "marker:text-orange-500"
+                                key_word = "Fix"
                         }
                         return(
-                            <li className={bg_color}>
-                                {line.explanation}
+                            <li className={color}>
+                                {key_word + ": " + line.explanation}
                             </li>
                         )
                     })}
