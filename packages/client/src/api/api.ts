@@ -123,7 +123,7 @@ export const apiGetTask = (token: string | null | undefined, taskId: string) =>
         },
     });
 
-export const apiGetTestsTasks = (token: string | null | undefined) =>
+export const apiGetTestTasks = (token: string | null | undefined) =>
     fetch(env.API_URL + "/api/tasks/tests", {
         credentials: "include",
         headers: {

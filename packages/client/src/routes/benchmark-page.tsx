@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 
-import { apiGenerateFeedback, apiGetCorrectness, apiGetTask, apiGetTestsTasks } from "../api/api";
+import { apiGenerateFeedback, apiGetCorrectness, apiGetTask, apiGetTestTasks } from "../api/api";
 import { Layout } from "../components/layout";
 import { AuthContext } from "../context";
 import { Feedback } from "../components/feedback";
@@ -75,7 +75,7 @@ export const BenchmarkPage = () => {
 
     const performTests = async (feedbackLevel: number) => {
         console.log("Performing Tests...")
-        const resp = await apiGetTestsTasks(context?.token)
+        const resp = await apiGetTestTasks(context?.token)
         const testCases = (await resp.json()).testcases
 
         for (const testCase of testCases.slice(0, 1)) {
