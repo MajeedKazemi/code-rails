@@ -6,6 +6,11 @@ interface FeedbackProps {
 }
 
 export const Feedback = (props: FeedbackProps) => {
+    const highlightCode = (response: string) => {
+        const inlineCodeRegex = /`([^`]+)`/g;
+        return response.replace(inlineCodeRegex, "<code class='bg-gray-800 rounded-lg px-1 py-0.5'>$1</code>");
+    }
+
     const Header = () => {
         const headingClasses = "rounded-t-xl bg-indigo-600 text-white p-2 flex gap-1";
         if (props.iteration > 2) {
@@ -66,7 +71,8 @@ export const Feedback = (props: FeedbackProps) => {
                         }
                         return(
                             <li className={color}>
-                                {key_word + ": " + line.explanation}
+                                {key_word + ": "}
+                                <span dangerouslySetInnerHTML={{ __html: highlightCode(line.explanation) }} />
                             </li>
                         )
                     })}
