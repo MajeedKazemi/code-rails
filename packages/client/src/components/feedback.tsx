@@ -84,8 +84,8 @@ export const Feedback = (props: FeedbackProps) => {
                     {props.feedback.lines.map((line: any, index: number) => {
                         return(
                             <div key={`feedback_line_${index}`}>
-                                <Tooltip title={line.explanation} placement="right" arrow>
-                                    <div className={`min-h-[1.5rem] ${line.explanation ? "bg-red-500" : ""}`}>
+                                <Tooltip classes={{ popper: "whitespace-pre-wrap" }} title={line.explanation.join("\n")} placement="right" arrow>
+                                    <div className={`min-h-[1.5rem] ${line.explanation.length > 0 ? "bg-red-500" : ""}`}>
                                         {line.code}
                                     </div>
                                 </Tooltip>
