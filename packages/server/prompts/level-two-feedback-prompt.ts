@@ -121,8 +121,13 @@ const feedbackParser = (txt: string, studentCode: string) => {
         }
     };
 
-    for (const [i, line] of obj.lines.entries()) {
-        line.explanation = line.explanation.concat(missingSuggestions[i]);
+    for (var i = missingSuggestions.length - 1; i >= 0; i--) {
+        if (missingSuggestions[i].length > 0) {
+            obj.lines.splice(i+1, 0, {
+                code: "",
+                explanation: missingSuggestions[i]
+            });
+        }
     }
 
     return obj;
