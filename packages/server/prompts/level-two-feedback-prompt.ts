@@ -8,8 +8,6 @@ export const feedbackL2Prompt = (intendedBehavior: string, studentCode: string, 
 
 Look at the [intended-behavior] and [student-code] to first generate the [[numbered-fixed-student-code]]. The [[numbered-fixed-student-code]] should not go above and beyond to check every possible input. Just focus on making it work or achieving the [intended-behavior].
 
-Then, look back at the [student-code] and annotate each line with [[correct]] and those that need to be edited with either [[change]], [[remove]], or [[fix]] and a description about why and how. If there are lines that are [[add]], add an empty line and just tag it with [[add]] and an explanation of it.
-
 Then, look back at the [student-code] and generate [[suggested-fixes]].
 Each line in [[suggested-fixes]] has two element:
 \`[line]: <number>\` where \`<number>\` corresponds to the line number in [student-code] that the [[suggested-fixes]] is associated with.
