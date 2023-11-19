@@ -2,11 +2,13 @@
 // this benchmark can be used for both the grading and the feedback APIs (all three levels).
 // to report the results, researchers usually perform a thematic analysis on the grading and feedback.
 // the results of this benchmark should be reported in the paper.
-export const testcases: Array<{
+export interface ITestCase {
     taskId: string;
     isCorrect: boolean;
     studentCode: string;
-}> = [
+}
+
+export const testcases: Array<ITestCase> = [
     {
         taskId: "7",
         isCorrect: false,

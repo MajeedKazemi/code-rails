@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-export const feedbackL2Prompt = (intendedBehavior: string, studentCode: string, notes: string[]) => {
+export const feedbackL3Prompt = (intendedBehavior: string, studentCode: string, notes: string[]) => {
     const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
@@ -8,20 +8,20 @@ export const feedbackL2Prompt = (intendedBehavior: string, studentCode: string, 
 
 Look at the [intended-behavior] and [student-code] to first generate the [fixed-student-code]. The [fixed-student-code] should not go above and beyond to check every possible input. Just focus on making it work or achieving the [intended-behavior].
 
-Then, look back at the [student-code] and annotate each line with [[correct]] and those that need to be edited with either [[change]], [[remove]], or [[fix]] and a description about why and how. If there are lines that are [[add]], add an empty line and just tag it with [[add]] and an explanation of it.
+Then, look back at the [student-code] and annotate each line in [fixed-student-cide] with [[correct]] and those that needed to be edited with either [[change]], [[add]], or [[fix]] and a description about why and how. If a line must be removed tag it with [[remove]] and an explanation of it.
 
 I will provide one example, but try to generalize to other cases.
 
-[annotated-student-code]:
-student_code_... # [[change]] description about why it needs to be changed and how to change it. use keywords like this: \`keyword\`
+[annotated-fixed-student-code]:
+fixed_student_code_... # [[change]] description about why it needs to be changed and how to change it. use keywords like this: \`keyword\`
 # [[add]] description about what is missing and why.
-student_code_... # [[correct]]
-student_code_... # [[fix]] description about what is wrong and how to fix it.
-student_code_... # [[correct]]
-    student_code_... # [[correct]]
+fixed_student_code_... # [[correct]]
+fixed_student_code_... # [[fix]] description about what is wrong and how to fix it.
+fixed_student_code_... # [[correct]]
+    fixed_student_code_... # [[correct]]
 # [[add]] description about what is missing and why.
-student_code_... # [[remove]] description about why it needs to be removed.
-[end-annotated-student-code]`,
+fixed_student_code_... # [[remove]] description about why it needs to be removed.
+[end-annotated-fixed-student-code]`,
         },
         {
             role: "user",
@@ -47,7 +47,7 @@ num1 = random.randint(1, 1000)
 num2 = random.randint(1, 1000)
 result = 0
 
-comparison = input("Greater or smaller? ")
+comparison = input("Greater or smaller?")
 
 if comparison == "greater":
     if num1 > num2:
@@ -65,21 +65,31 @@ else:
 print("You entered " + comparison + " and the result is " + str(result)) 
 [end-fixed-student-code]
 
-[annotated-student-code]:
-# [[add]] import the \`random\` module
-num 1 = random.randit(1), (1000) # [[fix]] The variable name should be \`num1\`, not \`num 1\`. Also, the function is \`randint()\`, not \`randit()\`. The correct syntax for creating a random integer between \`a\` and \`b\` is \`random.randint(a, b)\`.
-num 2 == random.randit(1), (1000) # [[fix]] The variable name should be \`num2\`, not \`num 2\`. Also, the function is \`randint()\`, not \`randit()\`. The correct syntax for creating a random integer between \`a\` and \`b\` is \`random.randint(a, b)\`. Use \`=\` instead of \`==\` to assign a value to a variable.
-num 3 = random.randit(1), (1000) # [[remove]] The variable \`num3\` is not needed for this task and can be removed.
+[annotated-fixed-student-code]:
+import random # [[add]] import the \`random\` module
 
-# [[add]] Add a new line to create a variable called \`result\` and assign it the value \`0\`.
-Comparision = input(Greater or smaller?) # [[fix]] the \`input\` prompt message should be inside quotes.
-if Comparision = "greater" # [[change]] The comparison operator should be \`==\` (double equals) instead of \`=\` (single equals). Also, there should be a colon at the end of the line to indicate the start of a new block of code.
-if num 1 > num 2: # [[fix]] There should be an indentation error at this line. The line should be indented to be inside the above \`if\` block.
-    print("You entered" + str(Comparision) + " and the result is " + num 1) # [[fix]] The variable \`num1\` should be converted to a string using the \`str()\` function.
-# [[add]] Add an \`elif\` block to handle the case where the user enters \`"smaller"\`.
-# [[add]] Add an \`else\` block to handle the case where the user enters an invalid input.
-# [[add]] Add a print statement to display the message that displays the value of \`comparison\` and \`result\` variables.
-[end-annotated-student-code]`
+num1 = random.randint(1, 1000) # [[fix]] The variable name should be \`num1\`, not \`num 1\`. Also, the function is \`randint()\`, not \`randit()\`. The correct syntax for creating a random integer between \`a\` and \`b\` is \`random.randint(a, b)\`.
+num2 = random.randint(1, 1000) # [[fix]] The variable name should be \`num2\`, not \`num 2\`. Also, the function is \`randint()\`, not \`randit()\`. The correct syntax for creating a random integer between \`a\` and \`b\` is \`random.randint(a, b)\`. Use \`=\` instead of \`==\` to assign a value to a variable.
+# [[remove]] The variable \`num3\` is not needed for this task and can be removed.
+result = 0 # [[add]] Add a new line to create a variable called \`result\` and assign it the value \`0\`.
+
+comparison = input("Greater or smaller?") # [[fix]] the \`input\` prompt message should be inside quotes.
+
+if comparison == "greater": # [[change]] The comparison operator should be \`==\` (double equals) instead of \`=\` (single equals). Also, there should be a colon at the end of the line to indicate the start of a new block of code.
+    if num1 > num2: # [[fix]] There should be an indentation error at this line. The line should be indented to be inside the above \`if\` block.
+        result = num1
+    else:
+        result = num2
+elif comparison == "smaller": # [[add]] Add an \`elif\` block to handle the case where the user enters \`"smaller"\`.
+    if num1 < num2:
+        result = num1
+    else:
+        result = num2
+else: # [[add]] Add an \`else\` block to handle the case where the user enters an invalid input.
+    print("Invalid Option")
+
+print("You entered " + comparison + " and the result is " + str(result)) # [[add]] Add a print statement to display the message that displays the value of \`comparison\` and \`result\` variables.
+[end-annotated-fixed-student-code]`
         },
         {
             role: "user",
@@ -110,7 +120,7 @@ const feedbackParser = (txt: string) => {
         type: "code"
     };
 
-    const annotatedCode = txt.match(/\[annotated-student-code\](.*?)\[end-annotated-student-code\]/gs)
+    const annotatedCode = txt.match(/\[annotated-fixed-student-code\](.*?)\[end-annotated-fixed-student-code\]/gs)
 
     if (!annotatedCode) {
         return obj;

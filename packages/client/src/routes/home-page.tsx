@@ -17,10 +17,10 @@ export const HomePage = () => {
                 <main className="card">
                     {context?.token ? (
                         <div className="m-md">
-                            <h1>Welcome to Coding Steps!</h1>
+                            <h1>Welcome to Code Rails!</h1>
                             <p>
                                 Hello {context?.user?.firstName}, welcome to
-                                Coding Steps where you will be learning Python
+                                Code Rails where you will be learning Python
                                 by solving programming tasks.
                             </p>
                             <p>
@@ -73,7 +73,7 @@ export const HomePage = () => {
                                 )}
                             </div>
                             <section className="right">
-                                <h2 className="card-title">Coding Steps</h2>
+                                <h2 className="card-title">Code Rails</h2>
                                 <p className="mb-md">
                                     Learn Python and introductory programming
                                     concepts by solving programming tasks step

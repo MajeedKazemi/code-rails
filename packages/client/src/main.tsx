@@ -10,6 +10,7 @@ import { connectSocket } from "./api/python-shell";
 import { AuthContext, SocketContext } from "./context";
 import { HomePage } from "./routes/home-page";
 import { TasksPage } from "./routes/tasks-page";
+import { BenchmarkPage } from "./routes/benchmark-page";
 
 const rootEl = document.getElementById("root");
 if (!rootEl) throw new Error("[index.html] missing root element");
@@ -86,6 +87,15 @@ function App() {
                             element={
                                 <RequireAuth role="any">
                                     <TasksPage />
+                                </RequireAuth>
+                            }
+                        />
+                        <Route
+                            path="/benchmark"
+                            element={
+                                // Role does nothing
+                                <RequireAuth role="admin">
+                                    <BenchmarkPage />
                                 </RequireAuth>
                             }
                         />

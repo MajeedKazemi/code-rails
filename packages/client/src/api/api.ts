@@ -114,6 +114,24 @@ export const apiAdminSetFinalGrade = (
         }),
     });
 
+export const apiGetTask = (token: string | null | undefined, taskId: string) =>
+    fetch(env.API_URL + `/api/tasks?taskId=${taskId}`, {
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+export const apiGetTestTasks = (token: string | null | undefined) =>
+    fetch(env.API_URL + "/api/tasks/tests", {
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
 export const apiUserNextTask = (token: string | null | undefined) =>
     fetch(env.API_URL + "/api/tasks/next", {
         credentials: "include",
@@ -252,6 +270,54 @@ export const apiGenerateCodex = (
             description: description,
             type: "block",
             context: context,
+        }),
+    });
+
+export const apiGenerateFeedback = (
+    token: string | null | undefined,
+    description: string,
+    currentCode: string,
+    solution: string,
+    samples: Array<Array<string>>,
+    correctness: boolean,
+    iteration: number
+) =>
+    fetch(env.API_URL + "/api/feedback/generate", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            description,
+            currentCode,
+            solution,
+            samples,
+            correctness,
+            iteration
+        }),
+    });
+
+export const apiGetCorrectness = (
+    token: string | null | undefined,
+    description: string,
+    currentCode: string,
+    solution: string,
+    samples: Array<Array<string>>
+) =>
+    fetch(env.API_URL + "/api/feedback/correctness", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            description,
+            currentCode,
+            solution,
+            samples
         }),
     });
 
