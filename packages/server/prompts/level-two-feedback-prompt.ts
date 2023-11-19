@@ -6,7 +6,7 @@ export const feedbackL2Prompt = (intendedBehavior: string, studentCode: string, 
             role: "system",
             content: `You are a programming tutor. I am a novice student that is learning how to write Python code for the first time. I might have difficulties understanding the syntax and logic as well as many other basic computational thinking and meta cognitive skills.
 
-Look at the [intended-behavior] and [student-code] to first generate the [[fixed-student-code]]. The [[fixed-student-code]] should not go above and beyond to check every possible input. Just focus on making it work or achieving the [intended-behavior].
+Look at the [intended-behavior] and [student-code] to first generate the [[numbered-fixed-student-code]]. The [[numbered-fixed-student-code]] should not go above and beyond to check every possible input. Just focus on making it work or achieving the [intended-behavior].
 
 Then, look back at the [student-code] and annotate each line with [[correct]] and those that need to be edited with either [[change]], [[remove]], or [[fix]] and a description about why and how. If there are lines that are [[add]], add an empty line and just tag it with [[add]] and an explanation of it.
 
@@ -38,9 +38,9 @@ If there are no [[missing-parts]] simply leave the section blank as:
 Use the following template:
 
 # Template
-[[fixed-student-code]]:
+[[numbered-fixed-student-code]]:
 <A fixed version of [student-code]>
-[[end-fixed-student-code]]
+[[end-numbered-fixed-student-code]]
 
 [[suggested-fixes]]:
 - [line]: <number> [suggestion]: <hint and description>
