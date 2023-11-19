@@ -85,7 +85,7 @@ const feedbackParser = (txt: string, studentCode: string) => {
     const obj: any = {
         lines: Array<{
             code: string,
-            explanation: string
+            explanation: string[]
         }>,
         type: "code"
     };
