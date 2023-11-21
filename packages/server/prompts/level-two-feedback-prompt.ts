@@ -108,7 +108,7 @@ const feedbackParser = (txt: string, studentCode: string) => {
     const missingParts = txt.match(/\[\[missing-parts\]\](.*?)\[\[end-missing-parts\]\]/gs)
     const mpLines = missingParts ? missingParts[0].split('\n').slice(1, -1) : [];
     let lineNumber;
-    const missingSuggestions = Array.from(Array(studentCode.split('\n').length), () => [] as string[]); // new Array(studentCode.split('\n').length + 1).fill([]);
+    const missingSuggestions = Array.from(Array(studentCode.split('\n').length + 1), () => [] as string[]); // new Array(studentCode.split('\n').length + 1).fill([]);
 
     for (const line of mpLines) {
         if (line.trim().startsWith('- [line]:')) {
@@ -117,13 +117,13 @@ const feedbackParser = (txt: string, studentCode: string) => {
                 lineNumber = lineMatch[1];
             }
         } else if (line.trim().startsWith('- [missing-part]:')) {
-            missingSuggestions[Number(lineNumber)-1].push(line.trim().substring('- [missing-part]:'.length).trim());
+            missingSuggestions[Number(lineNumber)].push(line.trim().substring('- [missing-part]:'.length).trim());
         }
     };
 
     for (var i = missingSuggestions.length - 1; i >= 0; i--) {
         if (missingSuggestions[i].length > 0) {
-            obj.lines.splice(i+1, 0, {
+            obj.lines.splice(i, 0, {
                 code: "",
                 explanation: missingSuggestions[i]
             });
