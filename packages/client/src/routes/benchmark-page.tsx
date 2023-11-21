@@ -4,6 +4,8 @@ import { apiGenerateFeedback, apiGetCorrectness, apiGetTask, apiGetTestTasks } f
 import { Layout } from "../components/layout";
 import { AuthContext } from "../context";
 import { Feedback } from "../components/feedback";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface completedTest {
     feedback: any,
@@ -85,7 +87,7 @@ export const BenchmarkPage = () => {
         const resp = await apiGetTestTasks(context?.token)
         const testCases = (await resp.json()).testcases
 
-        for (const testCase of testCases.slice(0, 5)) {
+        for (const testCase of testCases.slice(0, 3)) {
             console.log(`Testing Case: ${testCase.taskId}`)
             runTest(testCase, feedbackLevel);
         }
@@ -111,14 +113,6 @@ export const BenchmarkPage = () => {
                                     __html: test.taskDescription,
                                 }}
                             ></p>
-                            <div className="border rounded-xl max-h-96 overflow-y-auto whitespace-pre-wrap">
-                                <div className="bg-slate-100 p-2">
-                                    User Code:
-                                </div>
-                                <div className="p-2">
-                                    {test.userCode}
-                                </div>
-                            </div>
                             {test.iteration ? 
                                 <Feedback
                                     feedback={test.feedback}
@@ -130,14 +124,34 @@ export const BenchmarkPage = () => {
                                     <div className="p-2 bg-violet-600 rounded-lg text-white">Generated Correctness: <span className={test.feedback.correct ? "text-green-500" : "text-red-500"}>{`${test.feedback.correct}`}</span></div>
                                 </div>
                             }
-                            {test.rawFeedback && <div className="border rounded-xl max-h-96 overflow-y-auto whitespace-pre-wrap">
-                                <div className="bg-slate-100 p-2">
-                                    Raw Feedback:
-                                </div>
-                                <div className="p-2">
-                                    {test.rawFeedback}
-                                </div>
-                            </div>}
+                            <div>
+                                <Accordion className="flex flex-col divide-y-2">
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        style={{ backgroundColor: "#F1F5F9" }}
+                                    >
+                                        User Code
+                                    </AccordionSummary>
+                                    <AccordionDetails className="overflow-y-auto">
+                                        <div className="max-h-96 whitespace-pre-wrap">
+                                            {test.userCode}
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
+                                {test.rawFeedback && <Accordion className="flex flex-col divide-y-2">
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        style={{ backgroundColor: "#F1F5F9" }}
+                                    >
+                                        <Typography>Raw Feedback</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails className="overflow-y-auto">
+                                        <div className="max-h-96 whitespace-pre-wrap">
+                                            {test.rawFeedback}
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>}
+                            </div>
                         </div>
                     );
                 })}
