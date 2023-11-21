@@ -19,7 +19,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
             iteration } = req.body;
     const userId = (req.user as IUser)._id;
 
-    const cleanedCode = await formatPythonCode(removeComments(currentCode.trim()));
+    const cleanedCode = currentCode.trim(); // await formatPythonCode(removeComments(currentCode.trim()));
 
     let prompt;
     if (iteration === 1) {
@@ -64,6 +64,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
     console.log("Returning Feedback...")
     res.json({
         feedback: feedback,
+        rawFeedback: rawFeedback.choices[0].message.content,
         success: true,
     });
 });
@@ -89,6 +90,8 @@ You should favour marking things as correct rather than incorrect.
 please indicate if the code is correct enough or incorrect by returning "correct" or "incorrect"
 Do not say anthing else`;
 
+        console.log("Generating Correctness...")
+
         let result;
         while ((result?.choices[0].message.content !== "correct") && (result?.choices[0].message.content !== "incorrect")) {
             result = await openai.chat.completions.create({
@@ -99,6 +102,7 @@ Do not say anthing else`;
             });
         }
 
+        console.log("Returning Correctness...")
         if (result.choices && result.choices?.length > 0) {
             switch (result.choices[0].message.content) {
                 case "correct":
@@ -119,5 +123,9 @@ Do not say anthing else`;
                 success: false,
             });
         }
+    } else {
+        res.json({
+            success: false,
+        });
     }
 });
