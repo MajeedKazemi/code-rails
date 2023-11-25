@@ -4,13 +4,16 @@ import { apiGenerateFeedback, apiGetCorrectness, apiGetTask, apiGetTestTasks } f
 import { Layout } from "../components/layout";
 import { AuthContext } from "../context";
 import { Feedback } from "../components/feedback";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface completedTest {
     feedback: any,
     iteration: number,
     taskDescription: string,
     isCorrect: boolean,
-    userCode: string
+    userCode: string,
+    rawFeedback: string
 }
 
 export const BenchmarkPage = () => {
@@ -29,7 +32,7 @@ export const BenchmarkPage = () => {
                 feedbackLevel
             )
             const feedback = await resp.json()
-            return feedback.feedback
+            return feedback;
         } catch (e) {
             console.log(e);
         }
@@ -56,10 +59,15 @@ export const BenchmarkPage = () => {
     const runTest = async (testCase: any, feedbackLevel: number) => {
         const resp = await apiGetTask(context?.token, testCase.taskId)
         const task = (await resp.json()).task
-        const feedback = feedbackLevel ? 
-            await generateFeedback(task, testCase.studentCode, testCase.isCorrect, feedbackLevel) 
-        : 
-            await getCorrectness(task, testCase)
+        let feedback: any;
+        let rawFeedback: string;
+        if (feedbackLevel) {
+            const resp = await generateFeedback(task, testCase.studentCode, testCase.isCorrect, feedbackLevel)
+            feedback = resp.feedback
+            rawFeedback = resp.rawFeedback
+        } else {
+            feedback = await getCorrectness(task, testCase)
+        }
 
         setCompletedTests(completedTests => ([
             ...completedTests,
@@ -68,7 +76,8 @@ export const BenchmarkPage = () => {
                 iteration: feedbackLevel,
                 taskDescription: task.description,
                 isCorrect: testCase.isCorrect,
-                userCode: testCase.studentCode
+                userCode: testCase.studentCode,
+                rawFeedback: rawFeedback
             },
         ]));
     }
@@ -78,7 +87,7 @@ export const BenchmarkPage = () => {
         const resp = await apiGetTestTasks(context?.token)
         const testCases = (await resp.json()).testcases
 
-        for (const testCase of testCases.slice(0, 1)) {
+        for (const testCase of testCases.slice(0, 3)) {
             console.log(`Testing Case: ${testCase.taskId}`)
             runTest(testCase, feedbackLevel);
         }
@@ -104,14 +113,6 @@ export const BenchmarkPage = () => {
                                     __html: test.taskDescription,
                                 }}
                             ></p>
-                            <div className="border rounded-xl max-h-96 overflow-y-auto whitespace-pre-wrap">
-                                <div className="bg-slate-100 p-2">
-                                    User Code:
-                                </div>
-                                <div className="p-2">
-                                    {test.userCode}
-                                </div>
-                            </div>
                             {test.iteration ? 
                                 <Feedback
                                     feedback={test.feedback}
@@ -123,6 +124,34 @@ export const BenchmarkPage = () => {
                                     <div className="p-2 bg-violet-600 rounded-lg text-white">Generated Correctness: <span className={test.feedback.correct ? "text-green-500" : "text-red-500"}>{`${test.feedback.correct}`}</span></div>
                                 </div>
                             }
+                            <div>
+                                <Accordion className="flex flex-col divide-y-2">
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        style={{ backgroundColor: "#F1F5F9" }}
+                                    >
+                                        User Code
+                                    </AccordionSummary>
+                                    <AccordionDetails className="overflow-y-auto">
+                                        <div className="max-h-96 whitespace-pre-wrap">
+                                            {test.userCode}
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
+                                {test.rawFeedback && <Accordion className="flex flex-col divide-y-2">
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        style={{ backgroundColor: "#F1F5F9" }}
+                                    >
+                                        <Typography>Raw Feedback</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails className="overflow-y-auto">
+                                        <div className="max-h-96 whitespace-pre-wrap">
+                                            {test.rawFeedback}
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>}
+                            </div>
                         </div>
                     );
                 })}
