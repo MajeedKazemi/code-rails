@@ -3,7 +3,7 @@ import express from "express";
 import { IUser } from "../models/user";
 import { openai } from "../utils/openai";
 import { verifyUser } from "../utils/strategy";
-import { formatPythonCode, removeComments } from "../utils/format";
+import { removeComments } from "../utils/format";
 import { feedbackL1Prompt } from "../prompts/level-one-feedback-prompt";
 import { feedbackL2Prompt } from "../prompts/level-two-feedback-prompt";
 import { feedbackL3Prompt } from "../prompts/level-three-feedback-prompt";
@@ -19,7 +19,7 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
             iteration } = req.body;
     const userId = (req.user as IUser)._id;
 
-    const cleanedCode = currentCode.trim(); // await formatPythonCode(removeComments(currentCode.trim()));
+    const cleanedCode = removeComments(currentCode.trim());
 
     let prompt;
     if (iteration === 1) {
