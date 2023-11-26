@@ -7,3 +7,25 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: secret
+
+  server:
+    build:
+      context: .
+      dockerfile: packages/server/Dockerfile
+    ports:
+      - "3001:3001"  # Replace with your server port
+    depends_on:
+      - mongo
+    environment:
+      - MONGODB_URI=mongodb://root:secret@mongo:27017
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_ORG_ID=${OPENAI_ORG_ID}
+      - NODE_ENV=${NODE_ENV}
+      - SESSION_EXPIRY=${SESSION_EXPIRY}
+      - REFRESH_TOKEN_EXPIRY=${REFRESH_TOKEN_EXPIRY}
+      - PORT_PREFIX=${PORT_PREFIX}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - WHITELISTED_DOMAINS=${WHITELISTED_DOMAINS}
+      - COOKIE_SECRET=${COOKIE_SECRET}
+      - NODE_APP_INSTANCE=${NODE_APP_INSTANCE}
+      - JWT_SECRET=${JWT_SECRET}
