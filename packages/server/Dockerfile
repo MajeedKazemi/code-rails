@@ -1,5 +1,5 @@
 # Base image
-FROM node:20-slim
+FROM node:21-slim
 
 # Python installation for pylsp
 RUN apt-get update && apt-get install -y python3 python3-pip python3-venv
