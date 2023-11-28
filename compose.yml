@@ -10,8 +10,7 @@ services:
 
   server:
     build:
-      context: .
-      dockerfile: packages/server/Dockerfile
+      context: packages/server
     ports:
       - "3001:3001"  # Replace with your server port
     depends_on:
