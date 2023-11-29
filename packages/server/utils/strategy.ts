@@ -69,5 +69,6 @@ export const COOKIE_OPTIONS: CookieOptions = {
     // secure cookies do not work correctly (in postman)
     secure: !env.dev,
     signed: true,
+    sameSite: env.dev ? 'lax' : 'none',
     maxAge: parseInt(env.REFRESH_TOKEN_EXPIRY),
 };
