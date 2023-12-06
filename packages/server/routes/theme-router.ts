@@ -6,7 +6,7 @@ import { verifyUser } from "../utils/strategy";
 
 export const themeRouter = express.Router();
 
-themeRouter.post("/", verifyUser, async (req, res) => {
+themeRouter.put("/", verifyUser, async (req, res) => {
     // Update User Theme
     const userId = (req.user as IUser)._id;
     const user = await UserModel.findById(userId)
