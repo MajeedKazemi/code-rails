@@ -16,6 +16,7 @@ import { feedbackRouter } from "./routes/feedback-router";
 import { initLanguageService } from "./sockets/intellisense";
 import { initPythonShell } from "./sockets/python-shell";
 import env from "./utils/env";
+import { themeRouter } from "./routes/theme-router";
 
 const corsOptions = {
     origin: (origin: any, callback: any) => {
@@ -68,6 +69,7 @@ mongoose
         app.use("/api/tasks/", tasksRouter);
         app.use("/api/codex/", codexRouter);
         app.use("/api/feedback/", feedbackRouter);
+        app.use("/api/theme/", themeRouter);
 
         const server = app.listen(
             env.PORT_PREFIX + env.NODE_APP_INSTANCE,
