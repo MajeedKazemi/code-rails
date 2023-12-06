@@ -1,6 +1,7 @@
 {
     "name": "server",
     "version": "1.0.0",
+    "license": "MIT",
     "dependencies": {
         "@appsignal/express": "^1.0.33",
         "@appsignal/nodejs": "^2.4.2",
