@@ -20,7 +20,7 @@ export const NavigationBar = (props: NavigationBarProps) => {
     };
 
     return (
-        <header className="navbar">
+        <header className="navbar mt-2 rounded-lg">
             <Link to="/" className="text-no-decoration">
                 <div className="navbar-logo-container">
                     <img
