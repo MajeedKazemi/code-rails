@@ -30,17 +30,19 @@ export function initPythonShell(server: http.Server) {
             if (err) {
                 return next(err);
             } else {
-                UserModel.findById(decoded._id, (err: any, user: any) => {
-                    if (err) {
+                UserModel.findById(decoded._id).then(
+                    (user: any) => {
+                        if (user) {
+                            req.user = user;
+                            return next();
+                        } else {
+                            return next(new Error("User doesn't exist"));
+                        }
+                    },
+                    (err: any) => {
                         return next(err);
-                    } else if (user) {
-                        req.user = user;
-
-                        return next();
-                    } else {
-                        return next(new Error("User doesn't exist"));
                     }
-                });
+                );
 
                 socket.on("python", async (data: any) => {
                     const code = `${CPU_LIMITER_CODE}\n${data.code}`;
