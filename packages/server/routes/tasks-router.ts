@@ -11,6 +11,7 @@ import {
     getTaskSequenceFromTaskId,
     ModifyingTask,
     MultipleChoiceTask,
+    SelectThemeTask,
     ShortAnswerTask,
     WatchVideoTask,
 } from "../tasks/tasks";
@@ -253,7 +254,8 @@ tasksRouter.post("/submit", verifyUser, (req, res, next) => {
         } else if (
             task instanceof MultipleChoiceTask ||
             task instanceof ShortAnswerTask ||
-            task instanceof WatchVideoTask
+            task instanceof WatchVideoTask ||
+            task instanceof SelectThemeTask
         ) {
             const { startedAt } = req.body;
 

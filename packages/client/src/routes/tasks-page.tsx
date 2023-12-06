@@ -9,6 +9,7 @@ import { ShortAnswerTask } from "../components/short-answer-task";
 import { WatchTutorialTask } from "../components/watch-video-task";
 import { AuthContext } from "../context";
 import { TaskType } from "../utils/constants";
+import { SelectThemeTask } from "../components/select-theme-task";
 
 export const TasksPage = () => {
     const { context } = useContext(AuthContext);
@@ -88,6 +89,14 @@ export const TasksPage = () => {
                         onCompletion={setNextTask}
                         taskType={task.type}
                     ></WatchTutorialTask>
+                );
+            case TaskType.SelectTheme:
+                return (
+                    <SelectThemeTask
+                        key={task.id}
+                        taskId={task.id}
+                        onCompletion={setNextTask}
+                    />
                 );
         }
     };
