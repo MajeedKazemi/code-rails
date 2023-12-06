@@ -11,9 +11,9 @@ export const apiUpdateTheme = (token: string | null | undefined) =>
     });
 
 export const apiGetTheme = (
-        token: string | null | undefined,
-        theme: string
-    ) =>
+    token: string | null | undefined,
+    theme: string
+) =>
     fetch(env.API_URL + "/api/theme/", {
         method: "GET",
         credentials: "include",
