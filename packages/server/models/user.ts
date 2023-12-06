@@ -17,6 +17,7 @@ export interface IUser extends mongoose.Document {
     role: string;
     age: number;
     grade: number;
+    themePreferences: Array<string>;
     editorType: "copilot" | "intellisense";
     gender: "male" | "female" | "other";
     ethnicity: string;
@@ -66,6 +67,10 @@ const UserSchema = new Schema({
     grade: {
         type: Number,
         default: 0,
+    },
+    themePreferences: {
+        type: [String],
+        default: [],
     },
     editorType: {
         type: String,
