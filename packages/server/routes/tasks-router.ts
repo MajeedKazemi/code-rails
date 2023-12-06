@@ -67,13 +67,8 @@ tasksRouter.post("/start", verifyUser, (req, res, next) => {
         if (task !== undefined) {
             UserTaskModel.findOne({ userId, taskId }).then((userTask) => {
                 if (userTask) {
-                    userTask.save((err, userTask) => {
-                        // have started before:
-
-                        if (err) {
-                            res.statusCode = 500;
-                            res.send(err);
-                        } else {
+                    userTask.save().then(
+                        (userTask) => {
                             res.send({
                                 success: true,
                                 canContinue: true,
@@ -86,8 +81,12 @@ tasksRouter.post("/start", verifyUser, (req, res, next) => {
                                     userTask.submissions
                                 ),
                             });
+                        },
+                        (err) => {
+                            res.statusCode = 500;
+                            res.send(err);
                         }
-                    });
+                    );
                 } else {
                     const userTask = new UserTaskModel({
                         sequence: getTaskSequenceFromTaskId(taskId),
@@ -97,14 +96,18 @@ tasksRouter.post("/start", verifyUser, (req, res, next) => {
                         startedAt: startedAt,
                     });
 
-                    userTask.save((err, userTask) => {
-                        if (err) {
+                    userTask.save().then(
+                        (userTask) => {
+                            res.send({
+                                success: true,
+                                continue: false,
+                            });
+                        },
+                        (err) => {
                             res.statusCode = 500;
                             res.send(err);
-                        } else {
-                            res.send({ success: true, continue: false });
                         }
-                    });
+                    );
                 }
             });
         } else {
@@ -146,16 +149,17 @@ tasksRouter.post("/eval-code", verifyUser, (req, res, next) => {
                             submittedAt: submittedAt,
                         });
 
-                        userTask.save((err, userTask) => {
-                            if (err) {
-                                res.statusCode = 500;
-                                res.send(err);
-                            } else {
+                        userTask.save().then(
+                            (userTask) => {
                                 res.send({
                                     success: true,
                                 });
+                            },
+                            (err) => {
+                                res.statusCode = 500;
+                                res.send(err);
                             }
-                        });
+                        )
                     } else {
                         res.statusCode = 500;
                         res.send({ message: "UserTask not found" });
@@ -229,17 +233,18 @@ tasksRouter.post("/submit", verifyUser, (req, res, next) => {
                         submittedAt: finishedAt,
                     });
 
-                    userTask.save((err, userTask) => {
-                        if (err) {
-                            res.statusCode = 500;
-                            res.send(err);
-                        } else {
+                    userTask.save().then(
+                        (userTask) => {
                             res.send({
                                 success: true,
                                 completed: true,
                             });
+                        },
+                        (err) => {
+                            res.statusCode = 500;
+                            res.send(err);
                         }
-                    });
+                    );
                 } else {
                     res.statusCode = 500;
                     res.send({ message: "UserTask not found" });
@@ -258,17 +263,18 @@ tasksRouter.post("/submit", verifyUser, (req, res, next) => {
                     userTask.completed = true;
                     userTask.data = data;
 
-                    userTask.save((err, userTask) => {
-                        if (err) {
-                            res.statusCode = 500;
-                            res.send(err);
-                        } else {
+                    userTask.save().then(
+                        (userTask) => {
                             res.send({
                                 success: true,
                                 completed: true,
                             });
+                        },
+                        (err) => {
+                            res.statusCode = 500;
+                            res.send(err);
                         }
-                    });
+                    );
                 } else {
                     const userTask = new UserTaskModel({
                         sequence: getTaskSequenceFromTaskId(taskId),
@@ -281,17 +287,18 @@ tasksRouter.post("/submit", verifyUser, (req, res, next) => {
                         data: data,
                     });
 
-                    userTask.save((err, userTask) => {
-                        if (err) {
-                            res.statusCode = 500;
-                            res.send(err);
-                        } else {
+                    userTask.save().then(
+                        (userTask) => {
                             res.send({
                                 success: true,
                                 completed: true,
                             });
+                        },
+                        (err) => {
+                            res.statusCode = 500;
+                            res.send(err);
                         }
-                    });
+                    )
                 }
             });
         } else {
@@ -316,16 +323,17 @@ tasksRouter.post("/log", verifyUser, (req, res, next) => {
                 if (userTask) {
                     userTask.log = log;
 
-                    userTask.save((err, userTask) => {
-                        if (err) {
-                            res.statusCode = 500;
-                            res.send(err);
-                        } else {
+                    userTask.save().then(
+                        (userTask) => {
                             res.send({
                                 success: true,
                             });
+                        },
+                        (err) => {
+                            res.statusCode = 500;
+                            res.send(err);
                         }
-                    });
+                    );
                 } else {
                     res.statusCode = 500;
                     res.send({ message: "UserTask not found" });
@@ -353,16 +361,17 @@ tasksRouter.post("/save-code", verifyUser, (req, res, next) => {
                     userTask.savedCode = code;
                     userTask.lastSaveAt = new Date();
 
-                    userTask.save((err, userTask) => {
-                        if (err) {
-                            res.statusCode = 500;
-                            res.send(err);
-                        } else {
+                    userTask.save().then(
+                        (userTask) => {
                             res.send({
                                 success: true,
                             });
+                        },
+                        (err) => {
+                            res.statusCode = 500;
+                            res.send(err);
                         }
-                    });
+                    );
                 } else {
                     res.statusCode = 500;
                     res.send({ message: "UserTask not found" });

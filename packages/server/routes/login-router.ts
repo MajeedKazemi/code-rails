@@ -2,7 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import passport from "passport";
 
-import { getUserData, UserModel } from "../models/user";
+import { getUserData, IUser, UserModel } from "../models/user";
 import env from "../utils/env";
 import {
     COOKIE_OPTIONS,
@@ -38,11 +38,8 @@ loginRouter.post("/signup", (req, res, next) => {
 
                     user.refreshToken.push({ refreshToken });
 
-                    user.save((err: any, user: any) => {
-                        if (err) {
-                            res.statusCode = 500;
-                            res.send(err);
-                        } else {
+                    user.save().then(
+                        (user: IUser) => {
                             res.cookie(
                                 "refreshToken",
                                 refreshToken,
@@ -53,8 +50,12 @@ loginRouter.post("/signup", (req, res, next) => {
                                 token,
                                 user: getUserData(user),
                             });
+                        },
+                        (err: any) => {
+                            res.statusCode = 500;
+                            res.send(err);
                         }
-                    });
+                    );
                 }
             }
         );
@@ -70,11 +71,8 @@ loginRouter.post(
         UserModel.findById(req.user._id).then(
             (user: any) => {
                 user.refreshToken.push({ refreshToken });
-                user.save((err: any, user: any) => {
-                    if (err) {
-                        res.statusCode = 500;
-                        res.send(err);
-                    } else {
+                user.save().then(
+                    (user: IUser) => {
                         res.cookie(
                             "refreshToken",
                             refreshToken,
@@ -85,8 +83,12 @@ loginRouter.post(
                             token,
                             user: getUserData(user),
                         });
+                    },
+                    (err: any) => {
+                        res.statusCode = 500;
+                        res.send(err);
                     }
-                });
+                );
             },
             (err) => next(err)
         );
@@ -123,11 +125,9 @@ loginRouter.post("/refreshToken", (req: any, res: any, next) => {
                         user.refreshToken[tokenIndex] = {
                             refreshToken: newRefreshToken,
                         };
-                        user.save((err: any, user: any) => {
-                            if (err) {
-                                res.statusCode = 500;
-                                res.send(err);
-                            } else {
+
+                        user.save().then(
+                            (user: IUser) => {
                                 res.cookie(
                                     "refreshToken",
                                     newRefreshToken,
@@ -138,8 +138,12 @@ loginRouter.post("/refreshToken", (req: any, res: any, next) => {
                                     token,
                                     user: getUserData(user),
                                 });
+                            },
+                            (err: any) => {
+                                res.statusCode = 500;
+                                res.send(err);
                             }
-                        });
+                        );
                     }
                 } else {
                     res.statusCode = 401;
@@ -167,18 +171,19 @@ loginRouter.get("/logout", verifyUser, (req: any, res: any, next) => {
             if (tokenIndex !== -1) {
                 user.refreshToken
                     .id(user.refreshToken[tokenIndex]._id)
-                    .remove();
+                    .deleteOne();
             }
 
-            user.save((err: any, user: any) => {
-                if (err) {
-                    res.statusCode = 500;
-                    res.send(err);
-                } else {
+            user.save().then(
+                (user: IUser) => {
                     res.clearCookie("refreshToken", COOKIE_OPTIONS);
                     res.send({ success: true });
+                },
+                (err: any) => {
+                    res.statusCode = 500;
+                    res.send(err);
                 }
-            });
+            );
         },
         (err) => next(err)
     );
