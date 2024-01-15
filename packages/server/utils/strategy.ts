@@ -35,18 +35,16 @@ export const jwtPassport = passport.use(
         },
         (jwt_payload, done) => {
             // Search the user with jwt.payload ID field
-            UserModel.findOne(
-                { _id: jwt_payload._id },
-                (err: any, user: any) => {
-                    if (err) {
-                        return done(err, false);
-                    } else if (user) {
-                        // User exist
+            UserModel.findOne({ _id: jwt_payload._id }).then(
+                (user: any) => {
+                    if (user) {
                         return done(null, user);
                     } else {
-                        // User doesn't exist
                         return done(null, false);
                     }
+                },
+                (err: any) => {
+                    return done(err, false);
                 }
             );
         }
