@@ -36,7 +36,11 @@ const corsOptions = {
 mongoose.set("strictQuery", true);
 
 mongoose
-    .connect(env.MONGODB_URI)
+    .connect(env.MONGODB_URI,
+        {
+            dbName: "code-rails",  
+        }
+    )
     .then((db) => {
         const app = express();
 
