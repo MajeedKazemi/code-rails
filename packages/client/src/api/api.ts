@@ -280,7 +280,8 @@ export const apiGenerateFeedback = (
     solution: string,
     samples: Array<Array<string>>,
     correctness: boolean,
-    iteration: number
+    iteration: number,
+    taskId: string
 ) =>
     fetch(env.API_URL + "/api/feedback/generate", {
         method: "POST",
@@ -295,8 +296,22 @@ export const apiGenerateFeedback = (
             solution,
             samples,
             correctness,
-            iteration
+            iteration,
+            taskId
         }),
+    });
+
+export const apiFeedbackInformation = (
+    token: string | null | undefined,
+    taskId: string
+) =>
+    fetch(env.API_URL + `/api/feedback?taskId=${taskId}`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        }
     });
 
 export const apiGetCorrectness = (

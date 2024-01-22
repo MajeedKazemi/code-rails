@@ -7,6 +7,7 @@ import { removeComments } from "../utils/format";
 import { feedbackL1Prompt } from "../prompts/level-one-feedback-prompt";
 import { feedbackL2Prompt } from "../prompts/level-two-feedback-prompt";
 import { feedbackL3Prompt } from "../prompts/level-three-feedback-prompt";
+import { UserTaskModel } from "../models/user-task";
 
 export const feedbackRouter = express.Router();
 
@@ -16,7 +17,8 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
             solution,
             samples,
             correctness,
-            iteration } = req.body;
+            iteration,
+            taskId } = req.body;
     const userId = (req.user as IUser)._id;
 
     const cleanedCode = removeComments(currentCode.trim());
@@ -60,6 +62,21 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
     }
 
     const feedback: string = prompt.parser(rawFeedback.choices[0].message.content);
+
+    // Save feedback to UserTask model
+    UserTaskModel.findOne({ userId: userId, taskId: taskId }).then((userTask) => {
+        if (userTask) {
+            userTask.submissions.push({
+                code: currentCode,
+                submittedAt: new Date(),
+                feedback: feedback,
+                correctness: correctness,
+            });
+            userTask.save();
+        } else {
+            console.log("Error: Failed to save feedback to UserTask model.");
+        }
+    });
 
     console.log("Returning Feedback...")
     res.json({
@@ -128,4 +145,28 @@ Do not say anthing else`;
             success: false,
         });
     }
+});
+
+feedbackRouter.get("/", verifyUser, async (req, res) => {
+    const { taskId } = req.query;
+    const userId = (req.user as IUser)._id;
+
+    console.log("Fetching Initial Feedback information for user: " + userId + " and task: " + taskId + "...")
+
+    // Get submission length from UserTask model
+    UserTaskModel.findOne({ userId: userId, taskId: taskId }).then((userTask) => {
+        if (userTask) {
+            res.json({
+                iteration: userTask.submissions.length,
+                feedback: userTask.submissions[userTask.submissions.length - 1].feedback,
+                success: true,
+            });
+        } else {
+            console.log("Error: Failed to get iteration from UserTask model.");
+            res.json({
+                success: false,
+            });
+        }
+    });
+    
 });
