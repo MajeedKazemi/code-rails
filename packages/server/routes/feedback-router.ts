@@ -156,11 +156,19 @@ feedbackRouter.get("/", verifyUser, async (req, res) => {
     // Get submission length from UserTask model
     UserTaskModel.findOne({ userId: userId, taskId: taskId }).then((userTask) => {
         if (userTask) {
-            res.json({
-                iteration: userTask.submissions.length,
-                feedback: userTask.submissions[userTask.submissions.length - 1].feedback,
-                success: true,
-            });
+            if (userTask.submissions.length === 0) {
+                res.json({
+                    iteration: 0,
+                    feedback: "",
+                    success: true,
+                });
+            } else {
+                res.json({
+                    iteration: userTask.submissions.length,
+                    feedback: userTask.submissions[userTask.submissions.length - 1].feedback,
+                    success: true,
+                });
+            }
         } else {
             console.log("Error: Failed to get iteration from UserTask model.");
             res.json({
