@@ -16,9 +16,10 @@ passport.serializeUser((user: any, done: any) => {
 });
 
 passport.deserializeUser((id, done) => {
-    UserModel.findById(id, (err: any, user: any) => {
-        done(err, user);
-    });
+    UserModel.findById(id).then(
+        (user: any) => done(null, user),
+        (err: any) => done(err, null)
+    );
 });
 
 export const getToken = (user: any) => {

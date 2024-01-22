@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { authLogout } from "../api/api";
-import logo from "../assets/coding-steps-logo.png";
+import logo from "../assets/code-rails-logo.png";
 import { AuthContext } from "../context";
 import { Button } from "./button";
 
@@ -20,7 +20,7 @@ export const NavigationBar = (props: NavigationBarProps) => {
     };
 
     return (
-        <header className="navbar">
+        <header className="navbar mt-2 rounded-lg">
             <Link to="/" className="text-no-decoration">
                 <div className="navbar-logo-container">
                     <img

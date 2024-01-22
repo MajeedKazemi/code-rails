@@ -4,6 +4,7 @@ export enum TaskType {
     ShortAnswer = "shortAnswer",
     MultipleChoice = "multipleChoice",
     WatchVideo = "watchVideo",
+    SelectTheme = "selectTheme"
 }
 
 export interface IUserTask {
@@ -47,6 +48,11 @@ export abstract class Task {
 export class WatchVideoTask extends Task {
     constructor(id: string, description: string) {
         super(id, description, TaskType.WatchVideo);
+    }
+}
+export class SelectThemeTask extends Task {
+    constructor(id: string, description: string) {
+        super(id, description, TaskType.SelectTheme);
     }
 }
 
@@ -176,6 +182,10 @@ export enum TaskStage {
 }
 
 export const CodingTasks = [
+    new SelectThemeTask(
+        "st0",
+        "Select your theme"
+    ),
     new WatchVideoTask(
         "wv0",
         "Watch the following tutorial to learn how to properly use Coding Steps to learn about Python and write code."

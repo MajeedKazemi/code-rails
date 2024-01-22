@@ -9,6 +9,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: secret
 
   server:
+    profiles: ["server"]
     build:
       context: packages/server
     ports:
