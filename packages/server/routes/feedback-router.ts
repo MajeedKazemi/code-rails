@@ -146,3 +146,27 @@ Do not say anthing else`;
         });
     }
 });
+
+feedbackRouter.get("/", verifyUser, async (req, res) => {
+    const { taskId } = req.query;
+    const userId = (req.user as IUser)._id;
+
+    console.log("Fetching Initial Feedback information for user: " + userId + " and task: " + taskId + "...")
+
+    // Get submission length from UserTask model
+    UserTaskModel.findOne({ userId: userId, taskId: taskId }).then((userTask) => {
+        if (userTask) {
+            res.json({
+                iteration: userTask.submissions.length,
+                feedback: userTask.submissions[userTask.submissions.length - 1].feedback,
+                success: true,
+            });
+        } else {
+            console.log("Error: Failed to get iteration from UserTask model.");
+            res.json({
+                success: false,
+            });
+        }
+    });
+    
+});
