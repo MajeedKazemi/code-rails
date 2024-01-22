@@ -70,7 +70,7 @@ export const Feedback = (props: FeedbackProps) => {
                                 key_word = "Fix"
                         }
                         return(
-                            <li className={color}>
+                            <li className={color} key={`line_${index}`}>
                                 {key_word + ": "}
                                 <span dangerouslySetInnerHTML={{ __html: highlightCode(line.explanation) }} />
                             </li>
