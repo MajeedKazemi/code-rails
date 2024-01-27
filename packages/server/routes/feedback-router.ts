@@ -170,7 +170,6 @@ feedbackRouter.get("/", verifyUser, async (req, res) => {
                 });
             }
         } else {
-            console.log("Error: Failed to get iteration from UserTask model.");
             res.json({
                 success: false,
             });
