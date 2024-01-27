@@ -37,5 +37,5 @@ ${task_description}`,
 };
 
 const titleGenerationParser = (txt: string) => {
-    return txt.split("\n").slice(1, -1);
+    return txt.split("\n").slice(1, -1).map(l => l.replace(/^- /, "").trim());
 };
