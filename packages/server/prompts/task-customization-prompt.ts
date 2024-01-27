@@ -4,39 +4,32 @@ export const taskCustomizationPrompt = (theme: string, task_description: string)
     const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
-            content: `You are a programming tutor. The student is a novice that is learning how to write Python code for the first time. They might have difficulties understanding the syntax and logic as well as many other basic computational thinking and meta cognitive skills.
+            content: `using the given [character] and [story-title] augment the provided [python-programming-task] to include the [story-title]'s narrative.
 
-You will be given a [[generic-task-description]] and some [[generic-task-samples]].
-The [[generic-task-description]] represents a coding task the student is being asked to complete.
-The [[generic-task-samples]] are examples related to [[generic-task-description]] such as intended code output.
+This will be given to a k-12 student trying to learn about python programming. Just by augmenting the task description with a story using the provided [story-title] make the task more engaging for the student. The task should still implement a code that has the very similar code constructs (maybe just change the strings or numbers to fit with the new story)
 
-You will take the provided [[generic-task-description]] and personalize the theme of it to [[student-interest]]. This personalization will maintain the original task objectives and structure.
+The story should include the following parts:
+[set-up], [conflict], and [resolution] all of which to be short/concise, easy to read and understand, and engaging for the young student.
 
-Ensure that the [[personalized-task-samples]] are updated to match the [[personalized-task-description]] after they have both been adjusted.
+in the [set-up] just try to provide the setup...
+The [conflict] part is where you would focus on the [python-programming-task], make sure that the augmented version of the task does not have any ambiguity and could be precisely implemented to code. it should be well-specified for a programmer to write code for it, but augmented as part of the story.
 
-The goal of the personalization is to simply change the theme of the provided task so that it is related to the student's interest. 
+for the [conflict] part, make it look like an instruction that a students needs to follow. the subject should be the student, they have to do the task correctly so that ...
 
-Use the following template:
-# Template
-[[personalized-task-description]]
-<A personalized version of [[task-description]]>
-[[end-personalized-task-description]]
+and finally the resolution.
 
-[[personalized-task-samples]]
-[[sample]]
-<A personalized version of the first line in [[task-samples]]>
-[[end-sample]]
-[[sample]]
-<A personalized version of the second line in [[task-samples]]>
-[[end-sample]]
-[[end-personalized-task-samples]]`,
+use the following format:
+[set-up]: <2-3 sentences>
+[conflict]: <one paragraph augmented task>
+[resolution]: <2-3 sentences>`,
         },
         {
             role: "user",
-            content: `[[student-interest]]: ${theme}
-[[generic-task-description]]
-${task_description}
-[[end-generic-task-description]]`,
+            content: `[character]: ${theme}
+[story-title]: Mario's Countdown to Save Princess Peach
+
+[python-programming-task]:
+${task_description}`,
         }
     ];
 
