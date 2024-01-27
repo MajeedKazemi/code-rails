@@ -5,6 +5,7 @@ import { IUser, UserModel } from "../models/user";
 import { verifyUser } from "../utils/strategy";
 import { openai } from "../utils/openai";
 import { titleGenerationPrompt } from "../prompts/title-generation-prompt";
+import { taskCustomizationPrompt } from "../prompts/task-customization-prompt";
 
 export const themeRouter = express.Router();
 
@@ -104,5 +105,49 @@ themeRouter.post("/titles", verifyUser, async (req, res) => {
     res.send({
         success: true,
         titles,
+    });
+});
+
+themeRouter.post("/apply", verifyUser, async (req, res) => {
+    const { taskDescription } = req.body;
+    const userId = (req.user as IUser)._id;
+    const theme = (req.user as IUser).theme;
+
+    if (!theme) {
+        res.statusCode = 500;
+        res.send({
+            success: false,
+            message: "User Theme not found"
+        });
+        return;
+    }
+
+    const prompt = taskCustomizationPrompt(
+        theme,
+        taskDescription
+    );
+
+    const rawTask = await openai.chat.completions.create({
+        messages: prompt.messages,
+        model: prompt.model,
+        temperature: prompt.temperature,
+        stop: prompt.stop,
+        user: userId,
+    });
+
+    if (rawTask.choices[0].message.content === null) {
+        console.log("Generation Failed...")
+        res.json({
+            success: false,
+        });
+        return;
+    }
+
+    const task = prompt.parser(rawTask.choices[0].message.content);
+
+    res.statusCode = 200;
+    res.send({
+        success: true,
+        task,
     });
 });
