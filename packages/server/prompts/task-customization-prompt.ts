@@ -44,10 +44,31 @@ ${task_description}`,
 };
 
 const taskCustomizationParser = (txt: string) => {
-    const obj: any = {
-        lines: Array<{type: string, explanation: string}>,
-        type: "text"
+    const obj: {
+        set_up: string,
+        conflict: string,
+        resolution: string
+    } = {
+        set_up: "",
+        conflict: "",
+        resolution: "",
     };
+
+    const lines = txt.split("\n");
+
+    const removeTags = (line: string) => {
+        return line.replace("[set-up]:", "").replace("[conflict]:", "").replace("[resolution]:", "").trim();
+    }
+
+    for (const line of lines) {
+        if (line.startsWith("[set-up]:")) {
+            obj.set_up = removeTags(line);
+        } else if (line.startsWith("[conflict]:")) {
+            obj.conflict = removeTags(line);
+        } else if (line.startsWith("[resolution]:")) {
+            obj.resolution = removeTags(line);
+        }
+    }
 
     return obj;
 };
