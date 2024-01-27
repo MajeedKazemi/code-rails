@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-export const titleGenerationPrompt = (theme: string, task_description: string, code_solution: string) => {
+export const titleGenerationPrompt = (theme: string, task_description: string) => {
     const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
@@ -22,10 +22,7 @@ each story should have a completely different narrative and conflict. be imagina
             content: `[character]: ${theme}
 
 [python-programming-task]:
-${task_description}
-
-[code-solution]:
-${code_solution}`,
+${task_description}`,
         }
     ];
 
