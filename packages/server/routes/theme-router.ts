@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getUserData, IUser, UserModel } from "../models/user";
+import { IUser, UserModel } from "../models/user";
 
 import { verifyUser } from "../utils/strategy";
 import { openai } from "../utils/openai";
