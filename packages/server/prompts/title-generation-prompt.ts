@@ -37,10 +37,5 @@ ${task_description}`,
 };
 
 const titleGenerationParser = (txt: string) => {
-    const obj: any = {
-        lines: Array<{type: string, explanation: string}>,
-        type: "text"
-    };
-
-    return obj;
+    return txt.split("\n").slice(1, -1);
 };
