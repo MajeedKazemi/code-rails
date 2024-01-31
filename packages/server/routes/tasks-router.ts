@@ -81,6 +81,7 @@ tasksRouter.post("/start", verifyUser, (req, res, next) => {
                                 feedback: getLastSubmissionFeedback(
                                     userTask.submissions
                                 ),
+                                iteration: userTask.submissions.length
                             });
                         },
                         (err) => {
@@ -447,14 +448,12 @@ const getLastSubmissionFeedback = (
     submissions: Array<{
         code: string;
         submittedAt: Date;
-        checkedAt?: Date;
         feedback?: string;
+        correctness?: boolean;
     }>
 ) => {
     if (submissions.length > 0) {
-        const lastSubmission = submissions[submissions.length - 1];
-
-        return lastSubmission.checkedAt ? lastSubmission.feedback : "";
+        return submissions[submissions.length - 1].feedback;
     }
 
     return "";
