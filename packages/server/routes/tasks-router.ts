@@ -72,7 +72,7 @@ tasksRouter.post("/start", verifyUser, (req, res, next) => {
                         (userTask) => {
                             res.send({
                                 success: true,
-                                canContinue: true,
+                                continue: true,
                                 startedAt: userTask.startedAt,
                                 beingGraded: userTask.beingGraded,
                                 checkingTime: calcCheckingTime(
