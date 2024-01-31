@@ -264,14 +264,14 @@ export const CodingTask = (props: CodingTaskProps) => {
 
                     <div className="task-submission-buttons-container">
                         {!showFeedback && <div>
-                            <div className="submit-attention">
+                            {/* <div className="submit-attention">
                                 <b>ATTENTION</b>
                                 <br />
                                 <br />
                                 You can only submit <b>ONCE</b>. So please double-check your
                                 solution before submitting.
                             </div>
-                            <br />
+                            <br /> */}
                             
                             <Button
                                 class={blink ? "btn-attention" : ""}
