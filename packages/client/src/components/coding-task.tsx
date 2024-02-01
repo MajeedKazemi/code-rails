@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 
-import { apiGenerateFeedback, apiGetCorrectness, apiGetTitles, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
+import { apiApplyTitle, apiGenerateFeedback, apiGetCorrectness, apiGetTitles, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
 import { AuthContext } from "../context";
 import { TaskType } from "../utils/constants";
 import { getLogObject } from "../utils/logger";
@@ -150,6 +150,7 @@ export const CodingTask = (props: CodingTaskProps) => {
 
                 if (data.success) {
                     if (data.continue) {
+                        // TODO: Fix following line for production
                         // setStarted(true);
                         if (data.iteration) {
                             setFeedbackIteration(data.iteration);
@@ -166,6 +167,9 @@ export const CodingTask = (props: CodingTaskProps) => {
                             setStartTime(now);
                             setElapsedTime(now - startTime);
                         }
+
+                        // TODO: Remove following line for production
+                        generateTitles();
                     } else {
                         // Generate task titles
                         generateTitles();
@@ -181,7 +185,6 @@ export const CodingTask = (props: CodingTaskProps) => {
         apiGetTitles(context?.token, props.taskId)
             .then(async (response) => {
                 const data = await response.json();
-                console.log(data);
                 setCandidateTitles(data.titles);
             })
             .catch((error: any) => {
@@ -189,7 +192,15 @@ export const CodingTask = (props: CodingTaskProps) => {
             });
 
     const confirmTitle = (title: string) => {
-        // Hit API to generate task description from title and save to model
+        apiApplyTitle(context?.token, props.taskId, title)
+            .then(async (response) => {
+                const data = await response.json();
+                console.log(data);
+                setDescription(data.task.set_up + "\n" + data.task.conflict);
+            })
+            .catch((error: any) => {
+                logError("confirmTitle: " + error.toString());
+            });
         setStarted(true);
     }
 

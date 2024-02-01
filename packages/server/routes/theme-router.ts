@@ -152,6 +152,7 @@ themeRouter.post("/apply", verifyUser, async (req, res) => {
         title
     );
 
+    console.log("Applying Theme...");
     const rawTaskInformation = await openai.chat.completions.create({
         messages: prompt.messages,
         model: prompt.model,
@@ -173,6 +174,6 @@ themeRouter.post("/apply", verifyUser, async (req, res) => {
     res.statusCode = 200;
     res.send({
         success: true,
-        task: taskInformation
+        task: {title, ...taskInformation}
     });
 });
