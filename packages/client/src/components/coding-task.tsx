@@ -227,7 +227,7 @@ export const CodingTask = (props: CodingTaskProps) => {
     }, [startTime, elapsedTime, blink]);
 
     useEffect(() => {
-        if (userCode.length > 0) {
+        if (userCode.length > 0 && customTask.title) {
             setCanSubmit(true);
         } else {
             setCanSubmit(false);
