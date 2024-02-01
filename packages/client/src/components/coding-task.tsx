@@ -271,7 +271,7 @@ export const CodingTask = (props: CodingTaskProps) => {
                         {customTask.title ?
                             <>
                                 <span className="task-title">{customTask.title}</span>
-                                <span className="task-subtitle">
+                                <span className="task-subtitle flex flex-col gap-2">
                                     <p>{customTask.set_up}</p>
                                     <p>{customTask.conflict}</p>
                                 </span>
