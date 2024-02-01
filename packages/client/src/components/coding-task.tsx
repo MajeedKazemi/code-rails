@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import { apiApplyTitle, apiGenerateFeedback, apiGetCorrectness, apiGetTitles, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
 import { AuthContext } from "../context";
@@ -8,7 +8,6 @@ import { convertTime } from "../utils/shared";
 import { Button } from "./button";
 import { Editor } from "./editor";
 import { Feedback } from "./feedback";
-import { TitleButton } from "./title-button";
 import { TitleSelection } from "./title-selection";
 
 interface CodingTaskProps {
