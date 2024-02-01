@@ -30,7 +30,12 @@ export const CodingTask = (props: CodingTaskProps) => {
     const editorRef = useRef<any>(null);
 
     // Personalization Setup States
-    const [description, setDescription] = useState(props.description);
+    const [customTask, setCustomTask] = useState({} as {
+        title: string,
+        set_up: string,
+        conflict: string,
+        resolution: string
+    });
     const [output, setOutput] = useState(props.output);
     const [candidateTitles, setCandidateTitles] = useState([] as string[]);
     const [title, setTitle] = useState("");
@@ -71,7 +76,7 @@ export const CodingTask = (props: CodingTaskProps) => {
             console.log("Generating Feedback")
             await apiGenerateFeedback(
                 context?.token,
-                description,
+                customTask.set_up + customTask.conflict,
                 userCode,
                 props.solution,
                 output,
@@ -93,7 +98,7 @@ export const CodingTask = (props: CodingTaskProps) => {
             console.log("Determining Correctness")
             const resp = await apiGetCorrectness(
                 context?.token,
-                description,
+                customTask.set_up + customTask.conflict,
                 userCode,
                 props.solution,
                 output
@@ -191,12 +196,12 @@ export const CodingTask = (props: CodingTaskProps) => {
                 logError("taskSetup: " + error.toString());
             });
 
-    const confirmTitle = (title: string) => {
+    const confirmTitle = () => {
         apiApplyTitle(context?.token, props.taskId, title)
             .then(async (response) => {
                 const data = await response.json();
                 console.log(data);
-                setDescription(data.task.set_up + "\n" + data.task.conflict);
+                setCustomTask(data.task);
             })
             .catch((error: any) => {
                 logError("confirmTitle: " + error.toString());
@@ -263,37 +268,45 @@ export const CodingTask = (props: CodingTaskProps) => {
             <div className="flex gap-4 flex-grow">
                 <section className="flex-auto task-info max-w-lg">
                     <div className="task-description-container">
-                        <span className="task-title">Task Description:</span>
-                        <span className="task-subtitle">
-                            <p
-                                dangerouslySetInnerHTML={{
-                                    __html: description,
-                                }}
-                            ></p>
-                        </span>
-
-                        <span className="task-sample-output-header">Sample:</span>
-                        {output.map((lines, i) => {
-                            return (
-                                <div
-                                    key={`sample-out-key-${i}`}
-                                    className="task-sample-output"
-                                >
-                                    <span>
-                                        {lines.map((line, j) => {
-                                            return (
-                                                <p
-                                                    key={`sample-line-key-${j}`}
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: line,
-                                                    }}
-                                                ></p>
-                                            );
-                                        })}
-                                    </span>
-                                </div>
-                            );
-                        })}
+                        {customTask.title ?
+                            <>
+                                <span className="task-title">{customTask.title}</span>
+                                <span className="task-subtitle">
+                                    <p>{customTask.set_up}</p>
+                                    <p>{customTask.conflict}</p>
+                                </span>
+                                {/* Temporarily Hide Samples */}
+                                {/* <span className="task-sample-output-header">Sample:</span>
+                                {output.map((lines, i) => {
+                                    return (
+                                        <div
+                                            key={`sample-out-key-${i}`}
+                                            className="task-sample-output"
+                                        >
+                                            <span>
+                                                {lines.map((line, j) => {
+                                                    return (
+                                                        <p
+                                                            key={`sample-line-key-${j}`}
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: line,
+                                                            }}
+                                                        ></p>
+                                                    );
+                                                })}
+                                            </span>
+                                        </div>
+                                    );
+                                })} */}
+                            </>
+                        :
+                            <div className="flex flex-row gap-2 bg-white px-6 py-3 rounded-3xl border border-slate-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="animate-spin w-6 h-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                </svg>
+                                Generating Task Information
+                            </div>
+                        }
 
                         {feedback ? (
                             <div className="task-feedback-container">
