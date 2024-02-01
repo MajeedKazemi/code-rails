@@ -289,7 +289,8 @@ export const apiGetTitles = (
 
 export const apiApplyTitle = (
     token: string | null | undefined,
-    taskId: string
+    taskId: string,
+    title: string
 ) =>
     fetch(env.API_URL + "/api/theme/apply/", {
         method: "POST",
@@ -298,7 +299,10 @@ export const apiApplyTitle = (
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ taskId }),
+        body: JSON.stringify({
+            taskId,
+            title
+        }),
     });
 
 export const apiGenerateFeedback = (

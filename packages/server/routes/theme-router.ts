@@ -122,7 +122,7 @@ themeRouter.post("/titles", verifyUser, async (req, res) => {
 });
 
 themeRouter.post("/apply", verifyUser, async (req, res) => {
-    const { taskId } = req.body;
+    const { taskId, title } = req.body;
     const task = getTaskFromTaskId(taskId);
     if (!task) {
         res.statusCode = 404;
@@ -148,7 +148,8 @@ themeRouter.post("/apply", verifyUser, async (req, res) => {
 
     const prompt = taskCustomizationPrompt(
         theme,
-        taskDescription
+        taskDescription,
+        title
     );
 
     const rawTaskInformation = await openai.chat.completions.create({

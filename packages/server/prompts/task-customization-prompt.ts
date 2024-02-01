@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-export const taskCustomizationPrompt = (theme: string, task_description: string) => {
+export const taskCustomizationPrompt = (theme: string, task_description: string, story_title: string) => {
     const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
@@ -26,7 +26,7 @@ use the following format:
         {
             role: "user",
             content: `[character]: ${theme}
-[story-title]: Mario's Countdown to Save Princess Peach
+[story-title]: ${story_title}
 
 [python-programming-task]:
 ${task_description}`,
