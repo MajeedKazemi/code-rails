@@ -95,6 +95,7 @@ themeRouter.post("/titles", verifyUser, async (req, res) => {
         taskDescription
     );
 
+    console.log("Generating Titles...");
     const rawTitles = await openai.chat.completions.create({
         messages: prompt.messages,
         model: prompt.model,

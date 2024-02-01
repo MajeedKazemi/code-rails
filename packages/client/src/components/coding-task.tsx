@@ -168,15 +168,7 @@ export const CodingTask = (props: CodingTaskProps) => {
                         }
                     } else {
                         // Generate task titles
-                        apiGetTitles(context?.token, props.taskId)
-                            .then(async (response) => {
-                                const data = await response.json();
-                                console.log(data);
-                                setCandidateTitles(data.titles);
-                            })
-                            .catch((error: any) => {
-                                logError("taskSetup: " + error.toString());
-                            });
+                        generateTitles();
                     }
                 }
             })
@@ -184,6 +176,17 @@ export const CodingTask = (props: CodingTaskProps) => {
                 logError("handleStart: " + error.toString());
             });
     };
+
+    const generateTitles = () => 
+        apiGetTitles(context?.token, props.taskId)
+            .then(async (response) => {
+                const data = await response.json();
+                console.log(data);
+                setCandidateTitles(data.titles);
+            })
+            .catch((error: any) => {
+                logError("taskSetup: " + error.toString());
+            });
 
     const confirmTitle = (title: string) => {
         // Hit API to generate task description from title and save to model
