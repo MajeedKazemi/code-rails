@@ -184,7 +184,8 @@ export const CodingTask = (props: CodingTaskProps) => {
             });
     };
 
-    const generateTitles = () => 
+    const generateTitles = () => {
+        setCandidateTitles([]);
         apiGetTitles(context?.token, props.taskId)
             .then(async (response) => {
                 const data = await response.json();
@@ -193,6 +194,7 @@ export const CodingTask = (props: CodingTaskProps) => {
             .catch((error: any) => {
                 logError("taskSetup: " + error.toString());
             });
+    }
 
     const confirmTitle = () => {
         apiApplyTitle(context?.token, props.taskId, title)
@@ -247,6 +249,7 @@ export const CodingTask = (props: CodingTaskProps) => {
                     </svg>
                 </div>
                 <TitleSelection
+                    generateTitles={generateTitles}
                     titles={candidateTitles}
                     title={title}
                     setTitle={setTitle}

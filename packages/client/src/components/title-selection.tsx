@@ -5,6 +5,7 @@ interface Props {
     title: string;
     setTitle: (title: string) => void;
     confirmTitle: () => void;
+    generateTitles: () => void;
 }
 
 export const TitleSelection = (props: Props) => {
@@ -34,9 +35,19 @@ export const TitleSelection = (props: Props) => {
                         )
                     })}
 
-                    <button disabled={!props.title} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full self-end" onClick={() => props.confirmTitle()}>
-                        Confirm Title
-                    </button>
+                    <div className="flex gap-2 self-end">
+                        <button 
+                            className=""
+                            onClick={() => props.generateTitles()}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                        </button>                        
+                        <button disabled={!props.title} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => props.confirmTitle()}>
+                            Confirm Title
+                        </button>
+                    </div>
                 </>
             :
                 <div className="flex flex-row gap-2 bg-white px-6 py-3 rounded-3xl border border-slate-300">
