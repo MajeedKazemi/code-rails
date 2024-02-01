@@ -61,15 +61,12 @@ const taskCustomizationParser = (txt: string) => {
     };
 
     const setUpMatch = txt.match(/\[set-up\](.*?)\[end-set-up\]/gs);
-    console.log(setUpMatch);
     obj.set_up = setUpMatch ? setUpMatch[0].split('\n').slice(1, -1).join('\n') : "";
 
     const conflictMatch = txt.match(/\[conflict\](.*?)\[end-conflict\]/gs);
-    console.log(conflictMatch);
     obj.conflict = conflictMatch ? conflictMatch[0].split('\n').slice(1, -1).join('\n') : "";
 
     const resolutionMatch = txt.match(/\[resolution\](.*?)\[end-resolution\]/gs);
-    console.log(resolutionMatch);
     obj.resolution = resolutionMatch ? resolutionMatch[0].split('\n').slice(1, -1).join('\n') : "";
 
     return obj;
