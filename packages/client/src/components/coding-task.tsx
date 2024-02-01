@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 
-import { apiFeedbackInformation, apiGenerateFeedback, apiGetCorrectness, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
+import { apiGenerateFeedback, apiGetCorrectness, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
 import { AuthContext } from "../context";
 import { TaskType } from "../utils/constants";
 import { getLogObject } from "../utils/logger";

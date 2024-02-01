@@ -301,19 +301,6 @@ export const apiGenerateFeedback = (
         }),
     });
 
-export const apiFeedbackInformation = (
-    token: string | null | undefined,
-    taskId: string
-) =>
-    fetch(env.API_URL + `/api/feedback?taskId=${taskId}`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        }
-    });
-
 export const apiGetCorrectness = (
     token: string | null | undefined,
     description: string,
