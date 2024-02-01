@@ -122,7 +122,18 @@ themeRouter.post("/titles", verifyUser, async (req, res) => {
 });
 
 themeRouter.post("/apply", verifyUser, async (req, res) => {
-    const { taskDescription } = req.body;
+    const { taskId } = req.body;
+    const task = getTaskFromTaskId(taskId);
+    if (!task) {
+        res.statusCode = 404;
+        res.send({
+            success: false,
+            message: "Task not found"
+        });
+        return;
+    }
+
+    const taskDescription = task.description;
     const userId = (req.user as IUser)._id;
     const theme = (req.user as IUser).theme;
 
@@ -140,7 +151,7 @@ themeRouter.post("/apply", verifyUser, async (req, res) => {
         taskDescription
     );
 
-    const rawTask = await openai.chat.completions.create({
+    const rawTaskInformation = await openai.chat.completions.create({
         messages: prompt.messages,
         model: prompt.model,
         temperature: prompt.temperature,
@@ -148,7 +159,7 @@ themeRouter.post("/apply", verifyUser, async (req, res) => {
         user: userId,
     });
 
-    if (rawTask.choices[0].message.content === null) {
+    if (rawTaskInformation.choices[0].message.content === null) {
         console.log("Generation Failed...")
         res.json({
             success: false,
@@ -156,11 +167,11 @@ themeRouter.post("/apply", verifyUser, async (req, res) => {
         return;
     }
 
-    const task = prompt.parser(rawTask.choices[0].message.content);
+    const taskInformation = prompt.parser(rawTaskInformation.choices[0].message.content);
 
     res.statusCode = 200;
     res.send({
         success: true,
-        task,
+        task: taskInformation
     });
 });
