@@ -199,8 +199,8 @@ export const CodingTask = (props: CodingTaskProps) => {
 
     if (!started) {
         return (
-            <div className="container">
-                <div className="card p-md">
+            <div className="flex flex-col gap-2 max-w-lg h-full items-center justify-center m-auto">
+                <div className="bg-white p-6 rounded-3xl border border-slate-300">
                     <p>
                         You have{" "}
                         <span className="remaining-time">
