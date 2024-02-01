@@ -4,7 +4,7 @@ export const titleGenerationPrompt = (theme: string, task_description: string) =
     const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
-            content: `using the provided [character] generate three [story-titles] as a way to incorporate storytelling (which includes a setup, conflict, and resolution) for the provided [python-programming-task].
+            content: `using the provided [character] generate three [story-titles] without quotes as a way to incorporate storytelling (which includes a setup, conflict, and resolution) for the provided [python-programming-task].
 
 The story's conflict part should be about the provided [python-programming-task]
 
