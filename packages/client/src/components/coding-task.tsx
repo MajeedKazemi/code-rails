@@ -30,6 +30,7 @@ export const CodingTask = (props: CodingTaskProps) => {
 
     const [description, setDescription] = useState(props.description);
     const [output, setOutput] = useState(props.output);
+    const [title, setTitle] = useState("");
 
     const [started, setStarted] = useState(false);
     const [completed, setCompleted] = useState(false);
@@ -227,13 +228,19 @@ export const CodingTask = (props: CodingTaskProps) => {
                     </div>
 
                     <TitleButton
-                        title="Mario's Countdown to Save Princess Peach"
+                        text="Mario's Countdown to Save Princess Peach"
+                        title={title}
+                        setTitle={setTitle}
                     />
                     <TitleButton
-                        title="The Quest for the Vanishing Power Stars"
+                        text="The Quest for the Vanishing Power Stars"
+                        title={title}
+                        setTitle={setTitle}
                     />
                     <TitleButton
-                        title="Mario's Race Against the Clock"
+                        text="Mario's Race Against the Clock"
+                        title={title}
+                        setTitle={setTitle}
                     />
 
                     {/* Padding, Rounding, Font */}
