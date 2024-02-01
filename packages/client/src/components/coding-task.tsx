@@ -8,6 +8,7 @@ import { convertTime } from "../utils/shared";
 import { Button } from "./button";
 import { Editor } from "./editor";
 import { Feedback } from "./feedback";
+import { TitleButton } from "./title-button";
 
 interface CodingTaskProps {
     taskId: string;
@@ -26,6 +27,9 @@ interface CodingTaskProps {
 export const CodingTask = (props: CodingTaskProps) => {
     const { context, setContext } = useContext(AuthContext);
     const editorRef = useRef<any>(null);
+
+    const [description, setDescription] = useState(props.description);
+    const [output, setOutput] = useState(props.output);
 
     const [started, setStarted] = useState(false);
     const [completed, setCompleted] = useState(false);
@@ -63,10 +67,10 @@ export const CodingTask = (props: CodingTaskProps) => {
             console.log("Generating Feedback")
             await apiGenerateFeedback(
                 context?.token,
-                props.description,
+                description,
                 userCode,
                 props.solution,
-                props.output,
+                output,
                 correct,
                 feedbackIteration + 1,
                 props.taskId
@@ -85,10 +89,10 @@ export const CodingTask = (props: CodingTaskProps) => {
             console.log("Determining Correctness")
             const resp = await apiGetCorrectness(
                 context?.token,
-                props.description,
+                description,
                 userCode,
                 props.solution,
-                props.output
+                output
             )
             const correctness = await resp.json();
             return correctness.correct;
@@ -166,6 +170,11 @@ export const CodingTask = (props: CodingTaskProps) => {
             });
     };
 
+    const confirmTitle = () => {
+        // Hit API to generate task description from title and save to model
+        setStarted(true);
+    }
+
     useEffect(() => {
         const id = setInterval(() => {
             setElapsedTime(Date.now() - startTime);
@@ -199,20 +208,40 @@ export const CodingTask = (props: CodingTaskProps) => {
 
     if (!started) {
         return (
-            <div className="flex flex-col gap-2 max-w-lg h-full items-center justify-center m-auto">
-                <div className="bg-white p-6 rounded-3xl border border-slate-300">
-                    <p>
-                        You have{" "}
-                        <span className="remaining-time">
-                            {convertTime(props.timeLimit)} minutes
-                        </span>{" "}
-                        to finish this task.
-                    </p>
-                    <button className="btn btn-primary" onClick={() => {setStarted(true)}}>
-                        Start task
+            <>
+                <div className="absolute top-6 right-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={0.75} stroke="currentColor" className="w-12 h-12">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                </div>
+                <div className="flex flex-col gap-2 w-[400px] h-full items-center justify-center m-auto">
+                    <div className="w-full bg-slate-100 px-6 py-2 rounded-3xl border border-slate-300">
+                        {/* <p>
+                            You have{" "}
+                            <span className="remaining-time">
+                                {convertTime(props.timeLimit)} minutes
+                            </span>{" "}
+                            to finish this task.
+                        </p> */}
+                        <p>Please pick one of the following titles:</p>
+                    </div>
+
+                    <TitleButton
+                        title="Mario's Countdown to Save Princess Peach"
+                    />
+                    <TitleButton
+                        title="The Quest for the Vanishing Power Stars"
+                    />
+                    <TitleButton
+                        title="Mario's Race Against the Clock"
+                    />
+
+                    {/* Padding, Rounding, Font */}
+                    <button className="bg-sky-200 hover:bg-sky-100 hover:text-white py-2 px-4 rounded-full self-end" onClick={confirmTitle}>
+                        Confirm Title
                     </button>
                 </div>
-            </div>
+            </>
         );
     }
 
@@ -225,13 +254,13 @@ export const CodingTask = (props: CodingTaskProps) => {
                         <span className="task-subtitle">
                             <p
                                 dangerouslySetInnerHTML={{
-                                    __html: props.description,
+                                    __html: description,
                                 }}
                             ></p>
                         </span>
 
                         <span className="task-sample-output-header">Sample:</span>
-                        {props.output.map((lines, i) => {
+                        {output.map((lines, i) => {
                             return (
                                 <div
                                     key={`sample-out-key-${i}`}
