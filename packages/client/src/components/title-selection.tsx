@@ -3,7 +3,7 @@ import { TitleButton } from "./title-button";
 interface Props {
     titles: string[];
     title: string;
-    setTitle: React.Dispatch<React.SetStateAction<string>>;
+    setTitle: (title: string) => void;
     confirmTitle: (title: string) => void;
 }
 

@@ -222,6 +222,7 @@ export const CodingTask = (props: CodingTaskProps) => {
                         "The Quest for the Vanishing Power Stars",
                         "Mario's Race Against the Clock"
                     ]}
+                    title={title}
                     setTitle={setTitle}
                     confirmTitle={confirmTitle}
                 />
