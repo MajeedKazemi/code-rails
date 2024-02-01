@@ -27,6 +27,12 @@ export interface IUserTask extends mongoose.Document {
         grade: number;
         receivedDirectHint: boolean;
     }>;
+    customTask: {
+        title: string;
+        set_up: string;
+        conflict: string;
+        resolution: string;
+    };
 }
 
 // a user-task represents a user's progress on a task
@@ -100,6 +106,10 @@ const UserTaskSchema = new Schema({
     finalGrades: {
         type: Array,
         default: [],
+    },
+    customTask: {
+        type: Object,
+        default: {},
     },
 });
 

@@ -7,6 +7,7 @@ import { openai } from "../utils/openai";
 import { titleGenerationPrompt } from "../prompts/title-generation-prompt";
 import { taskCustomizationPrompt } from "../prompts/task-customization-prompt";
 import { getTaskFromTaskId } from "../tasks/tasks";
+import { UserTaskModel } from "../models/user-task";
 
 export const themeRouter = express.Router();
 
@@ -169,11 +170,28 @@ themeRouter.post("/apply", verifyUser, async (req, res) => {
         return;
     }
 
-    const taskInformation = prompt.parser(rawTaskInformation.choices[0].message.content);
+    const customTask = {title, ...prompt.parser(rawTaskInformation.choices[0].message.content)};
 
-    res.statusCode = 200;
-    res.send({
-        success: true,
-        task: {title, ...taskInformation}
+    UserTaskModel.findOne({ userId, taskId }).then((userTask) => {
+        if (userTask) {
+            userTask.customTask = customTask;
+
+            userTask.save().then(
+                (userTask) => {
+                    res.statusCode = 200;
+                    res.send({
+                        success: true,
+                        task: customTask
+                    });
+                },
+                (err) => {
+                    res.statusCode = 500;
+                    res.send(err);
+                }
+            );
+        } else {
+            res.statusCode = 500;
+            res.send({ message: "UserTask not found" });
+        }
     });
 });
