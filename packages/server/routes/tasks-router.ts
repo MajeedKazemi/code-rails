@@ -81,7 +81,8 @@ tasksRouter.post("/start", verifyUser, (req, res, next) => {
                                 feedback: getLastSubmissionFeedback(
                                     userTask.submissions
                                 ),
-                                iteration: userTask.submissions.length
+                                iteration: userTask.submissions.length,
+                                customTask: userTask.customTask
                             });
                         },
                         (err) => {

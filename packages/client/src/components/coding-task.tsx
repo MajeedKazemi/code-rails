@@ -154,9 +154,10 @@ export const CodingTask = (props: CodingTaskProps) => {
                 const data = await response.json();
 
                 if (data.success) {
-                    if (data.continue) {
-                        // TODO: Fix following line for production
-                        // setStarted(true);
+                    if (data.customTask) {
+                        setStarted(true);
+                        setCustomTask(data.customTask);
+
                         if (data.iteration) {
                             setFeedbackIteration(data.iteration);
                         }
@@ -172,9 +173,6 @@ export const CodingTask = (props: CodingTaskProps) => {
                             setStartTime(now);
                             setElapsedTime(now - startTime);
                         }
-
-                        // TODO: Remove following line for production
-                        generateTitles();
                     } else {
                         // Generate task titles
                         generateTitles();
