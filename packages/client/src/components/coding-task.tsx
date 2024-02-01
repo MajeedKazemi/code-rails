@@ -9,6 +9,7 @@ import { Button } from "./button";
 import { Editor } from "./editor";
 import { Feedback } from "./feedback";
 import { TitleButton } from "./title-button";
+import { TitleSelection } from "./title-selection";
 
 interface CodingTaskProps {
     taskId: string;
@@ -171,7 +172,7 @@ export const CodingTask = (props: CodingTaskProps) => {
             });
     };
 
-    const confirmTitle = () => {
+    const confirmTitle = (title: string) => {
         // Hit API to generate task description from title and save to model
         setStarted(true);
     }
@@ -215,39 +216,15 @@ export const CodingTask = (props: CodingTaskProps) => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                     </svg>
                 </div>
-                <div className="flex flex-col gap-2 w-[400px] h-full items-center justify-center m-auto">
-                    <div className="w-full bg-slate-100 px-6 py-2 rounded-3xl border border-slate-300">
-                        {/* <p>
-                            You have{" "}
-                            <span className="remaining-time">
-                                {convertTime(props.timeLimit)} minutes
-                            </span>{" "}
-                            to finish this task.
-                        </p> */}
-                        <p>Please pick one of the following titles:</p>
-                    </div>
-
-                    <TitleButton
-                        text="Mario's Countdown to Save Princess Peach"
-                        title={title}
-                        setTitle={setTitle}
-                    />
-                    <TitleButton
-                        text="The Quest for the Vanishing Power Stars"
-                        title={title}
-                        setTitle={setTitle}
-                    />
-                    <TitleButton
-                        text="Mario's Race Against the Clock"
-                        title={title}
-                        setTitle={setTitle}
-                    />
-
-                    {/* Padding, Rounding, Font */}
-                    <button className="bg-sky-200 hover:bg-sky-100 hover:text-white py-2 px-4 rounded-full self-end" onClick={confirmTitle}>
-                        Confirm Title
-                    </button>
-                </div>
+                <TitleSelection
+                    titles={[
+                        "Mario's Countdown to Save Princess Peach",
+                        "The Quest for the Vanishing Power Stars",
+                        "Mario's Race Against the Clock"
+                    ]}
+                    setTitle={setTitle}
+                    confirmTitle={confirmTitle}
+                />
             </>
         );
     }
