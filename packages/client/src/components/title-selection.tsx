@@ -11,19 +11,18 @@ interface Props {
 export const TitleSelection = (props: Props) => {
     return(
         <div className="flex flex-col gap-2 w-[400px] h-full items-center justify-center m-auto">
-            <div className="w-full bg-slate-100 px-6 py-2 rounded-3xl border border-slate-300">
-                {/* <p>
-                    You have{" "}
-                    <span className="remaining-time">
-                        {convertTime(props.timeLimit)} minutes
-                    </span>{" "}
-                    to finish this task.
-                </p> */}
-                <p>Please pick one of the following titles:</p>
-            </div>
-            
             {props.titles.length > 0 ?
                 <>
+                    <div className="w-full font-semibold">
+                        {/* <p>
+                            You have{" "}
+                            <span className="remaining-time">
+                                {convertTime(props.timeLimit)} minutes
+                            </span>{" "}
+                            to finish this task.
+                        </p> */}
+                        <p>Please pick one of the following titles:</p>
+                    </div>
                     {props.titles.map((title: string, index: number) => {
                         return(
                             <TitleButton
@@ -43,7 +42,7 @@ export const TitleSelection = (props: Props) => {
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                             </svg>
-                        </button>                        
+                        </button>
                         <button disabled={!props.title} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => props.confirmTitle()}>
                             Confirm Title
                         </button>
