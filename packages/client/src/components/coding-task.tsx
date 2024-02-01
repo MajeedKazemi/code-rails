@@ -147,7 +147,7 @@ export const CodingTask = (props: CodingTaskProps) => {
 
                 if (data.success) {
                     if (data.continue) {
-                        setStarted(true);
+                        // setStarted(true);
                         if (data.iteration) {
                             setFeedbackIteration(data.iteration);
                         }
