@@ -154,7 +154,7 @@ export const CodingTask = (props: CodingTaskProps) => {
                 const data = await response.json();
 
                 if (data.success) {
-                    if (data.customTask) {
+                    if (data.customTask && data.customTask.title) {
                         setStarted(true);
                         setCustomTask(data.customTask);
 
@@ -247,11 +247,6 @@ export const CodingTask = (props: CodingTaskProps) => {
                     </svg>
                 </div>
                 <TitleSelection
-                    // titles={[
-                    //     "Mario's Countdown to Save Princess Peach",
-                    //     "The Quest for the Vanishing Power Stars",
-                    //     "Mario's Race Against the Clock"
-                    // ]}
                     titles={candidateTitles}
                     title={title}
                     setTitle={setTitle}
