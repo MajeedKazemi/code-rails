@@ -6,6 +6,7 @@ import { verifyUser } from "../utils/strategy";
 import { openai } from "../utils/openai";
 import { titleGenerationPrompt } from "../prompts/title-generation-prompt";
 import { taskCustomizationPrompt } from "../prompts/task-customization-prompt";
+import { getTaskFromTaskId } from "../tasks/tasks";
 
 export const themeRouter = express.Router();
 
@@ -65,7 +66,18 @@ themeRouter.get("/", verifyUser, async (req, res) => {
 });
 
 themeRouter.post("/titles", verifyUser, async (req, res) => {
-    const { taskDescription } = req.body;
+    const { taskId } = req.body;
+    const task = getTaskFromTaskId(taskId);
+    if (!task) {
+        res.statusCode = 404;
+        res.send({
+            success: false,
+            message: "Task not found"
+        });
+        return;
+    }
+
+    const taskDescription = task.description;
     const userId = (req.user as IUser)._id;
     const theme = (req.user as IUser).theme;
 

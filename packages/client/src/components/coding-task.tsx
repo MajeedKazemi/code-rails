@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
 
-import { apiGenerateFeedback, apiGetCorrectness, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
+import { apiGenerateFeedback, apiGetCorrectness, apiGetTitles, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
 import { AuthContext } from "../context";
 import { TaskType } from "../utils/constants";
 import { getLogObject } from "../utils/logger";
@@ -29,8 +29,10 @@ export const CodingTask = (props: CodingTaskProps) => {
     const { context, setContext } = useContext(AuthContext);
     const editorRef = useRef<any>(null);
 
+    // Personalization Setup States
     const [description, setDescription] = useState(props.description);
     const [output, setOutput] = useState(props.output);
+    const [candidateTitles, setCandidateTitles] = useState([] as string[]);
     const [title, setTitle] = useState("");
 
     const [started, setStarted] = useState(false);
@@ -164,6 +166,17 @@ export const CodingTask = (props: CodingTaskProps) => {
                             setStartTime(now);
                             setElapsedTime(now - startTime);
                         }
+                    } else {
+                        // Generate task titles
+                        apiGetTitles(context?.token, props.taskId)
+                            .then(async (response) => {
+                                const data = await response.json();
+                                console.log(data);
+                                setCandidateTitles(data.titles);
+                            })
+                            .catch((error: any) => {
+                                logError("taskSetup: " + error.toString());
+                            });
                     }
                 }
             })
@@ -217,11 +230,12 @@ export const CodingTask = (props: CodingTaskProps) => {
                     </svg>
                 </div>
                 <TitleSelection
-                    titles={[
-                        "Mario's Countdown to Save Princess Peach",
-                        "The Quest for the Vanishing Power Stars",
-                        "Mario's Race Against the Clock"
-                    ]}
+                    // titles={[
+                    //     "Mario's Countdown to Save Princess Peach",
+                    //     "The Quest for the Vanishing Power Stars",
+                    //     "Mario's Race Against the Clock"
+                    // ]}
+                    titles={candidateTitles}
                     title={title}
                     setTitle={setTitle}
                     confirmTitle={confirmTitle}

@@ -273,6 +273,20 @@ export const apiGenerateCodex = (
         }),
     });
 
+export const apiGetTitles = (
+    token: string | null | undefined,
+    taskId: string
+) =>
+    fetch(env.API_URL + "/api/theme/titles/", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ taskId }),
+    });
+
 export const apiGenerateFeedback = (
     token: string | null | undefined,
     description: string,
