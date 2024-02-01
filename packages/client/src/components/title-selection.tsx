@@ -34,7 +34,7 @@ export const TitleSelection = (props: Props) => {
                         )
                     })}
 
-                    <button className="bg-sky-200 hover:bg-sky-100 hover:text-white py-2 px-4 rounded-full self-end" onClick={() => props.confirmTitle("")}>
+                    <button disabled={!props.title} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full self-end" onClick={() => props.confirmTitle("")}>
                         Confirm Title
                     </button>
                 </>
