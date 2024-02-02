@@ -192,7 +192,7 @@ export const CodingTask = (props: CodingTaskProps) => {
             });
     };
 
-    const generateTitles = async () => {
+    const generateTitles = () => {
         apiGetTitles(context?.token, props.taskId, candidateTitles)
             .then(async (response) => {
                 const data = await response.json();
