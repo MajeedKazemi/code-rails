@@ -196,7 +196,7 @@ export const CodingTask = (props: CodingTaskProps) => {
         apiGetTitles(context?.token, props.taskId, candidateTitles)
             .then(async (response) => {
                 const data = await response.json();
-                setCandidateTitles([...data.titles, ...candidateTitles]);
+                setCandidateTitles([...data.titles, ...candidateTitles].splice(0, 6));
             })
             .catch((error: any) => {
                 logError("taskSetup: " + error.toString());

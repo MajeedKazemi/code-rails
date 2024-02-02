@@ -36,7 +36,7 @@ ${current_titles}
 
         messages.push({
             role: "user",
-            content: `Generate more titles`
+            content: `Generate three more titles`
         });
     }
 
