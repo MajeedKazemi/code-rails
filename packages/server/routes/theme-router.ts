@@ -67,7 +67,7 @@ themeRouter.get("/", verifyUser, async (req, res) => {
 });
 
 themeRouter.post("/titles", verifyUser, async (req, res) => {
-    const { taskId } = req.body;
+    const { taskId, currentTitles } = req.body;
     const task = getTaskFromTaskId(taskId);
     if (!task) {
         res.statusCode = 404;
@@ -93,7 +93,8 @@ themeRouter.post("/titles", verifyUser, async (req, res) => {
 
     const prompt = titleGenerationPrompt(
         theme,
-        taskDescription
+        taskDescription,
+        currentTitles && currentTitles.length > 0 ? currentTitles.map((item: string) => `- ${item}`).join("\n") : ""
     );
 
     console.log("Generating Titles...");

@@ -275,7 +275,8 @@ export const apiGenerateCodex = (
 
 export const apiGetTitles = (
     token: string | null | undefined,
-    taskId: string
+    taskId: string,
+    currentTitles: string[]
 ) =>
     fetch(env.API_URL + "/api/theme/titles/", {
         method: "POST",
@@ -284,7 +285,10 @@ export const apiGetTitles = (
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ taskId }),
+        body: JSON.stringify({
+            taskId,
+            currentTitles
+        }),
     });
 
 export const apiApplyTitle = (

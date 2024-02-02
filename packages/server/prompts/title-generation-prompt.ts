@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-export const titleGenerationPrompt = (theme: string, task_description: string) => {
+export const titleGenerationPrompt = (theme: string, task_description: string, current_titles: string) => {
     const messages: Array<OpenAI.Chat.ChatCompletionMessageParam> = [
         {
             role: "system",
@@ -25,6 +25,20 @@ each story should have a completely different narrative and conflict. be imagina
 ${task_description}`,
         }
     ];
+
+    if (current_titles) {
+        messages.push({
+            role: "assistant",
+            content: `[story-titles]:
+${current_titles}
+[end-story-titles]`
+        });
+
+        messages.push({
+            role: "user",
+            content: `Generate more titles`
+        });
+    }
 
     return {
         messages,

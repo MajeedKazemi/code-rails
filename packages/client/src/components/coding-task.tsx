@@ -192,12 +192,11 @@ export const CodingTask = (props: CodingTaskProps) => {
             });
     };
 
-    const generateTitles = () => {
-        setCandidateTitles([]);
-        apiGetTitles(context?.token, props.taskId)
+    const generateTitles = async () => {
+        apiGetTitles(context?.token, props.taskId, candidateTitles)
             .then(async (response) => {
                 const data = await response.json();
-                setCandidateTitles(data.titles);
+                setCandidateTitles([...data.titles, ...candidateTitles]);
             })
             .catch((error: any) => {
                 logError("taskSetup: " + error.toString());
