@@ -72,7 +72,7 @@ tasksRouter.post("/start", verifyUser, (req, res, next) => {
                         (userTask) => {
                             res.send({
                                 success: true,
-                                canContinue: true,
+                                continue: true,
                                 startedAt: userTask.startedAt,
                                 beingGraded: userTask.beingGraded,
                                 checkingTime: calcCheckingTime(
@@ -81,6 +81,11 @@ tasksRouter.post("/start", verifyUser, (req, res, next) => {
                                 feedback: getLastSubmissionFeedback(
                                     userTask.submissions
                                 ),
+                                correctness: getLastSubmissionCorrectness(
+                                    userTask.submissions
+                                ),
+                                iteration: userTask.submissions.length,
+                                customTask: userTask.customTask
                             });
                         },
                         (err) => {
@@ -447,15 +452,28 @@ const getLastSubmissionFeedback = (
     submissions: Array<{
         code: string;
         submittedAt: Date;
-        checkedAt?: Date;
         feedback?: string;
+        correctness?: boolean;
     }>
 ) => {
     if (submissions.length > 0) {
-        const lastSubmission = submissions[submissions.length - 1];
-
-        return lastSubmission.checkedAt ? lastSubmission.feedback : "";
+        return submissions[submissions.length - 1].feedback;
     }
 
     return "";
+};
+
+const getLastSubmissionCorrectness = (
+    submissions: Array<{
+        code: string;
+        submittedAt: Date;
+        feedback?: string;
+        correctness?: boolean;
+    }>
+) => {
+    if (submissions.length > 0) {
+        return submissions[submissions.length - 1].correctness;
+    }
+
+    return false;
 };

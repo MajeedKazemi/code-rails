@@ -273,6 +273,42 @@ export const apiGenerateCodex = (
         }),
     });
 
+export const apiGetTitles = (
+    token: string | null | undefined,
+    taskId: string,
+    currentTitles: string[]
+) =>
+    fetch(env.API_URL + "/api/theme/titles/", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            taskId,
+            currentTitles
+        }),
+    });
+
+export const apiApplyTitle = (
+    token: string | null | undefined,
+    taskId: string,
+    title: string
+) =>
+    fetch(env.API_URL + "/api/theme/apply/", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            taskId,
+            title
+        }),
+    });
+
 export const apiGenerateFeedback = (
     token: string | null | undefined,
     description: string,
@@ -299,19 +335,6 @@ export const apiGenerateFeedback = (
             iteration,
             taskId
         }),
-    });
-
-export const apiFeedbackInformation = (
-    token: string | null | undefined,
-    taskId: string
-) =>
-    fetch(env.API_URL + `/api/feedback?taskId=${taskId}`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        }
     });
 
 export const apiGetCorrectness = (

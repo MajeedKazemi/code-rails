@@ -1,8 +1,13 @@
 import express from "express";
 
-import { getUserData, IUser, UserModel } from "../models/user";
+import { IUser, UserModel } from "../models/user";
 
 import { verifyUser } from "../utils/strategy";
+import { openai } from "../utils/openai";
+import { titleGenerationPrompt } from "../prompts/title-generation-prompt";
+import { taskCustomizationPrompt } from "../prompts/task-customization-prompt";
+import { getTaskFromTaskId } from "../tasks/tasks";
+import { UserTaskModel } from "../models/user-task";
 
 export const themeRouter = express.Router();
 
@@ -59,4 +64,135 @@ themeRouter.get("/", verifyUser, async (req, res) => {
             messsage: "User theme not found"
         });
     }
+});
+
+themeRouter.post("/titles", verifyUser, async (req, res) => {
+    const { taskId, currentTitles } = req.body;
+    const task = getTaskFromTaskId(taskId);
+    if (!task) {
+        res.statusCode = 404;
+        res.send({
+            success: false,
+            message: "Task not found"
+        });
+        return;
+    }
+
+    const taskDescription = task.description;
+    const userId = (req.user as IUser)._id;
+    const theme = (req.user as IUser).theme;
+
+    if (!theme) {
+        res.statusCode = 500;
+        res.send({
+            success: false,
+            message: "User Theme not found"
+        });
+        return;
+    }
+
+    const prompt = titleGenerationPrompt(
+        theme,
+        taskDescription,
+        currentTitles && currentTitles.length > 0 ? currentTitles.map((item: string) => `- ${item}`).join("\n") : ""
+    );
+
+    console.log("Generating Titles...");
+    const rawTitles = await openai.chat.completions.create({
+        messages: prompt.messages,
+        model: prompt.model,
+        temperature: prompt.temperature,
+        stop: prompt.stop,
+        user: userId,
+    });
+
+    if (rawTitles.choices[0].message.content === null) {
+        console.log("Generation Failed...")
+        res.json({
+            success: false,
+        });
+        return;
+    }
+
+    const titles = prompt.parser(rawTitles.choices[0].message.content);
+
+    res.statusCode = 200;
+    res.send({
+        success: true,
+        titles,
+    });
+});
+
+themeRouter.post("/apply", verifyUser, async (req, res) => {
+    const { taskId, title } = req.body;
+    const task = getTaskFromTaskId(taskId);
+    if (!task) {
+        res.statusCode = 404;
+        res.send({
+            success: false,
+            message: "Task not found"
+        });
+        return;
+    }
+
+    const taskDescription = task.description;
+    const userId = (req.user as IUser)._id;
+    const theme = (req.user as IUser).theme;
+
+    if (!theme) {
+        res.statusCode = 500;
+        res.send({
+            success: false,
+            message: "User Theme not found"
+        });
+        return;
+    }
+
+    const prompt = taskCustomizationPrompt(
+        theme,
+        taskDescription,
+        title
+    );
+
+    console.log("Applying Theme...");
+    const rawTaskInformation = await openai.chat.completions.create({
+        messages: prompt.messages,
+        model: prompt.model,
+        temperature: prompt.temperature,
+        stop: prompt.stop,
+        user: userId,
+    });
+
+    if (rawTaskInformation.choices[0].message.content === null) {
+        console.log("Generation Failed...")
+        res.json({
+            success: false,
+        });
+        return;
+    }
+
+    const customTask = {title, ...prompt.parser(rawTaskInformation.choices[0].message.content)};
+
+    UserTaskModel.findOne({ userId, taskId }).then((userTask) => {
+        if (userTask) {
+            userTask.customTask = customTask;
+
+            userTask.save().then(
+                (userTask) => {
+                    res.statusCode = 200;
+                    res.send({
+                        success: true,
+                        task: customTask
+                    });
+                },
+                (err) => {
+                    res.statusCode = 500;
+                    res.send(err);
+                }
+            );
+        } else {
+            res.statusCode = 500;
+            res.send({ message: "UserTask not found" });
+        }
+    });
 });
