@@ -73,10 +73,10 @@ export const SelectThemeTask = (props: Props) => {
                     return (
                         <button
                             key={`theme_button_${index}`}
-                            className={(selectedTheme === theme ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex p-4 border rounded-3xl hover:bg-slate-300 w-full aspect-square"}
+                            className={(selectedTheme === theme ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex items-center p-4 border rounded-3xl hover:bg-slate-300 w-full aspect-square"}
                             onClick={() => setSelectedTheme(theme)}
                         >
-                            {theme}
+                            <p className="w-full">{theme}</p>
                         </button>
                     );
                 })}
