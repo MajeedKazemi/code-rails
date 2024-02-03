@@ -99,6 +99,18 @@ export const SelectThemeTask = (props: Props) => {
         })
     };
 
+    const themeButton = (refText: string, text: string, index: number, setRefText: (text: string) => void) => {
+        return (
+            <button
+                key={`button_${index}`}
+                className={(refText === text ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex items-center p-4 border rounded-3xl hover:bg-slate-300 w-full h-full"}
+                onClick={() => setRefText(text)}
+            >
+                <p className="w-full">{text}</p>
+            </button>
+        );
+    };
+
     return (
         <div className="flex flex-col gap-2 max-w-2xl m-auto">
             {!categoryConfirmed ?
@@ -116,26 +128,14 @@ export const SelectThemeTask = (props: Props) => {
                 {!categoryConfirmed ?
                     categories.map((category, index) => {
                         return (
-                            <button
-                                key={`category_button_${index}`}
-                                className={(selectedCategory === category ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex items-center p-4 border rounded-3xl hover:bg-slate-300 w-full h-full"}
-                                onClick={() => setSelectedCategory(category)}
-                            >
-                                <p className="w-full">{category}</p>
-                            </button>
+                            themeButton(selectedCategory, category, index, setSelectedCategory)
                         );
                     })
                 :
                     <> {themes.length > 0 ?
                         themes.map((theme, index) => {
                             return (
-                                <button
-                                    key={`category_button_${index}`}
-                                    className={(selectedTheme === theme ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex items-center p-4 border rounded-3xl hover:bg-slate-300 w-full h-full"}
-                                    onClick={() => setSelectedTheme(theme)}
-                                >
-                                    <p className="w-full">{theme}</p>
-                                </button>
+                                themeButton(selectedTheme, theme, index, setSelectedTheme)
                             );
                         })
                     :
