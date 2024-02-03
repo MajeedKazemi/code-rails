@@ -112,7 +112,7 @@ export const SelectThemeTask = (props: Props) => {
     };
 
     return (
-        <div className="flex flex-col gap-2 max-w-2xl m-auto">
+        <div className="flex flex-col gap-2 py-4 max-w-2xl m-auto">
             {!categoryConfirmed ?
                 <>
                     <h1 className="text-2xl font-semibold">Category Selection</h1>
