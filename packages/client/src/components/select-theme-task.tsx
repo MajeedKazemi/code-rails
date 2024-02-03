@@ -14,7 +14,22 @@ interface Props {
 
 export const SelectThemeTask = (props: Props) => {
     const { context, setContext } = useContext(AuthContext);
-    const [selectedTheme, setSelectedTheme] = useState<string>("");
+
+    const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+    const categories = [
+        "Video Games",
+        "Sports",
+        "Time Travel",
+        "Space Exploration",
+        "Music",
+        "Ancient Civilizations",
+        "Underwater Worlds",
+        "Superheros",
+        "Mythical Creatures",
+        "National History",
+        "Cultural Heroes"
+    ];
 
     const sendLog = () => {
         apiLogEvents(
@@ -28,12 +43,16 @@ export const SelectThemeTask = (props: Props) => {
             });
     };
 
+    const confirmCategory = () => {
+
+    };
+
     const submitTheme = async (): Promise<boolean> => {
         try {
-            console.log("Theme Selected: " + selectedTheme);
+            console.log("Theme Selected: " + selectedCategory);
             const resp = await apiUpdateTheme(
                 context?.token,
-                selectedTheme
+                selectedCategory
             )
             const success = await resp.json();
             return success.success;
@@ -69,20 +88,20 @@ export const SelectThemeTask = (props: Props) => {
     return (
         <div className="flex flex-col max-w-3xl m-auto">
             <div className="grid grid-cols-4 gap-2 py-6 justify-items-center items-center w-full">
-                {["Video Games", "Sports", "Time Travel", "Space Exploration", "Music", "Ancient Civilizations", "Underwater Worlds", "Superheros", "Mythical Creatures", "National History", "Cultural Heroes"].map((theme, index) => {
+                {categories.map((category, index) => {
                     return (
                         <button
-                            key={`theme_button_${index}`}
-                            className={(selectedTheme === theme ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex items-center p-4 border rounded-3xl hover:bg-slate-300 w-full aspect-square"}
-                            onClick={() => setSelectedTheme(theme)}
+                            key={`category_button_${index}`}
+                            className={(selectedCategory === category ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex items-center p-4 border rounded-3xl hover:bg-slate-300 w-full aspect-square"}
+                            onClick={() => setSelectedCategory(category)}
                         >
-                            <p className="w-full">{theme}</p>
+                            <p className="w-full">{category}</p>
                         </button>
                     );
                 })}
             </div>
             <div className="flex flex-row self-end">
-                <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => console.log('click')}>
+                <button disabled={!selectedCategory} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={confirmCategory}>
                     Confirm Category
                 </button>
             </div>
