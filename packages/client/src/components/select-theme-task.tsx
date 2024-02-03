@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 
 import { AuthContext } from "../context";
 import { apiUpdateTheme } from "../api/theme_api";
