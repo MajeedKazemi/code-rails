@@ -25,11 +25,11 @@ export const HomePage = () => {
                             </p>
                             <p>
                                 To start learning and working on the programming
-                                tasks click start:
+                                tasks click get started:
                             </p>
                             <Link to="/tasks" className="text-no-decoration">
                                 <Button type="block" class="text-sm">
-                                    Start Coding
+                                    Get Started
                                 </Button>
                             </Link>
                             <br />
