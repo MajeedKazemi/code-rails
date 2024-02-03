@@ -124,7 +124,7 @@ export const SelectThemeTask = (props: Props) => {
                     <p>The selected theme will be used to generate a task for you to complete:</p>
                 </>
             }
-            <div className="grid grid-cols-3 gap-2 justify-items-center items-center w-full">
+            <div className="grid grid-cols-3 auto-rows-fr gap-2 justify-items-center items-center w-full">
                 {!categoryConfirmed ?
                     categories.map((category, index) => {
                         return (
