@@ -14,7 +14,7 @@ interface Props {
 
 export const SelectThemeTask = (props: Props) => {
     const { context, setContext } = useContext(AuthContext);
-    const [theme, setTheme] = useState<string>("");
+    const [selectedTheme, setSelectedTheme] = useState<string>("");
 
     const sendLog = () => {
         apiLogEvents(
@@ -30,10 +30,10 @@ export const SelectThemeTask = (props: Props) => {
 
     const submitTheme = async (): Promise<boolean> => {
         try {
-            console.log("Theme Selected: " + theme);
+            console.log("Theme Selected: " + selectedTheme);
             const resp = await apiUpdateTheme(
                 context?.token,
-                theme
+                selectedTheme
             )
             const success = await resp.json();
             return success.success;
@@ -67,30 +67,24 @@ export const SelectThemeTask = (props: Props) => {
     };
 
     return (
-        <div className="flex justify-items-center items-center max-w-5xl h-full m-auto">
-            <div className="flex flex-col p-4 max-w-lg gap-2 border border-slate-300 m-auto rounded-3xl bg-white overflow-hidden">
-                <div>
-                    It is now time to select your personalized tasks theme. This theme will be used to generate your tasks during the study.
-                </div>
-                <div>
-                    <TextField
-                        label="Theme"
-                        variant="standard"
-                        value={theme}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            setTheme(event.target.value);
-                        }}
-                    />
-                </div>
-                <div className="flex justify-end">
-                    <Button
-                        onClick={handleSubmitTask}
-                        type="block"
-                        class="max-w-[50%]"
-                    >
-                        Submit Theme
-                    </Button>
-                </div>
+        <div className="flex flex-col max-w-3xl m-auto">
+            <div className="grid grid-cols-4 gap-2 py-6 justify-items-center items-center w-full">
+                {["Video Games", "Sports", "Time Travel", "Space Exploration", "Music", "Ancient Civilizations", "Underwater Worlds", "Superheros", "Mythical Creatures", "National History", "Cultural Heroes"].map((theme, index) => {
+                    return (
+                        <button
+                            key={`theme_button_${index}`}
+                            className={(selectedTheme === theme ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex p-4 border rounded-3xl hover:bg-slate-300 w-full aspect-square"}
+                            onClick={() => setSelectedTheme(theme)}
+                        >
+                            {theme}
+                        </button>
+                    );
+                })}
+            </div>
+            <div className="flex flex-row self-end">
+                <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => console.log('click')}>
+                    Confirm Title
+                </button>
             </div>
         </div>
     );
