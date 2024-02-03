@@ -67,8 +67,8 @@ export const SelectThemeTask = (props: Props) => {
     };
 
     return (
-        <div className="container">
-            <div className="flex flex-col card p-4 max-w-lg gap-2">
+        <div className="flex justify-items-center items-center max-w-5xl h-full m-auto">
+            <div className="flex flex-col p-4 max-w-lg gap-2 border border-slate-300 m-auto rounded-3xl bg-white overflow-hidden">
                 <div>
                     It is now time to select your personalized tasks theme. This theme will be used to generate your tasks during the study.
                 </div>
