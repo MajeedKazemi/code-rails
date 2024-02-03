@@ -38,7 +38,7 @@ export const Layout = (props: LayoutProps) => {
             {loading ? (
                 <Loader />
             ) : (
-                <div className="layout-content">{props.children}</div>
+                <div className="h-screen">{props.children}</div>
             )}
         </div>
     );
