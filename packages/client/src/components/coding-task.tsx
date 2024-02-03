@@ -274,12 +274,29 @@ export const CodingTask = (props: CodingTaskProps) => {
                         {customTask.title ?
                             <>
                                 <span className="task-title">{customTask.title}</span>
-                                <span className="task-subtitle flex flex-col gap-2">
+                                <span className="task-subtitle flex flex-col gap-2 max-h-72 overflow-y-auto">
                                     <p
                                     dangerouslySetInnerHTML={{
                                         __html: description,
                                     }} />
                                 </span>
+                                <div className="flex flex-row w-full justify-end">
+                                    {description === customTask.resolution ?
+                                        <button onClick={() => setDescription(customTask.set_up + "<br/><br/>" + customTask.conflict)}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                                            </svg>
+                                        </button>
+                                    :
+                                        <>{!incorrectAnswer && 
+                                            <button onClick={() => setDescription(customTask.resolution)}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                                                </svg>
+                                            </button>
+                                        }</>
+                                    }
+                                </div>
                             </>
                         :
                             <div className="flex flex-row gap-2 bg-white px-6 py-3 rounded-3xl border border-slate-300">
