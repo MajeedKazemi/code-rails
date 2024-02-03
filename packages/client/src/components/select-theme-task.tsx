@@ -83,7 +83,7 @@ export const SelectThemeTask = (props: Props) => {
             </div>
             <div className="flex flex-row self-end">
                 <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => console.log('click')}>
-                    Confirm Title
+                    Confirm Category
                 </button>
             </div>
         </div>
