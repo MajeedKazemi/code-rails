@@ -27,3 +27,19 @@ export const apiGetTheme = (
             Authorization: `Bearer ${token}`,
         }
     });
+
+export const apiGenerateSubCategories = (
+    token: string | null | undefined,
+    category: string
+) =>
+    fetch(env.API_URL + "/api/theme/sub_categories", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            category
+        })
+    });

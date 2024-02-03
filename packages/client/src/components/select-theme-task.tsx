@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 
 import { AuthContext } from "../context";
-import { apiUpdateTheme } from "../api/theme_api";
+import { apiGenerateSubCategories, apiUpdateTheme } from "../api/theme_api";
 import { apiLogEvents, apiUserSubmitTask, logError } from "../api/api";
 import { getLogObject } from "../utils/logger";
 import { Button } from "./button";
@@ -25,11 +25,11 @@ export const SelectThemeTask = (props: Props) => {
         "Space Exploration",
         "Music",
         "Ancient Civilizations",
-        "Underwater Worlds",
+        // "Underwater Worlds",
         "Superheros",
         "Mythical Creatures",
         "National History",
-        "Cultural Heroes"
+        // "Cultural Heroes"
     ];
     const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [categoryConfirmed, setCategoryConfirmed] = useState<boolean>(false);
@@ -47,21 +47,16 @@ export const SelectThemeTask = (props: Props) => {
     };
 
     const confirmCategory = () => {
-        // set themes based on category
-        setThemes([
-            "Mario",
-            "Zelda",
-            "Sonic",
-            "Pokemon",
-            "Halo",
-            "Call of Duty",
-            "FIFA",
-            "Madden",
-            "NBA 2K",
-            "MLB The Show",
-            "NHL",
-            "Rocket League"
-        ]);
+        console.log("Category Selected: " + selectedCategory)
+        setThemes([]);
+        apiGenerateSubCategories(context?.token, selectedCategory)
+            .then(async (response) => {
+                const data = await response.json();
+                setThemes(data.categories);
+            })
+            .catch((error) => {
+                logError("confirmCategory: " + error.toString());
+            });
 
         setCategoryConfirmed(true);
     };
@@ -105,8 +100,19 @@ export const SelectThemeTask = (props: Props) => {
     };
 
     return (
-        <div className="flex flex-col max-w-3xl m-auto">
-            <div className="grid grid-cols-4 gap-2 py-6 justify-items-center items-center w-full">
+        <div className="flex flex-col gap-2 py-4 max-w-xl m-auto">
+            {!categoryConfirmed ?
+                <>
+                    <h1 className="text-2xl font-semibold">Category Selection</h1>
+                    <p>The selected category will be used to generate a list of sub-categories for more refined interest selection:</p>
+                </>
+            :
+                <>
+                    <h1 className="text-2xl font-semibold">Theme Selection</h1>
+                    <p>The selected theme will be used to generate a task for you to complete:</p>
+                </>
+            }
+            <div className="grid grid-cols-3 gap-2 justify-items-center items-center w-full">
                 {!categoryConfirmed ?
                     categories.map((category, index) => {
                         return (
@@ -120,17 +126,26 @@ export const SelectThemeTask = (props: Props) => {
                         );
                     })
                 :
-                    themes.map((theme, index) => {
-                        return (
-                            <button
-                                key={`category_button_${index}`}
-                                className={(selectedTheme === theme ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex items-center p-4 border rounded-3xl hover:bg-slate-300 w-full aspect-square"}
-                                onClick={() => setSelectedTheme(theme)}
-                            >
-                                <p className="w-full">{theme}</p>
-                            </button>
-                        );
-                    })
+                    <> {themes.length > 0 ?
+                        themes.map((theme, index) => {
+                            return (
+                                <button
+                                    key={`category_button_${index}`}
+                                    className={(selectedTheme === theme ? "bg-slate-300 border-black" : "bg-white border-slate-300") + " flex items-center p-4 border rounded-3xl hover:bg-slate-300 w-full aspect-square"}
+                                    onClick={() => setSelectedTheme(theme)}
+                                >
+                                    <p className="w-full">{theme}</p>
+                                </button>
+                            );
+                        })
+                    :
+                        <div className="col-span-full row-span-full flex flex-row gap-2 bg-white px-6 py-3 rounded-3xl border border-slate-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="animate-spin w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                            Generating Sub Categories
+                        </div>
+                    } </>
                 }
             </div>
             <div className="flex flex-row self-end gap-2">
@@ -140,12 +155,16 @@ export const SelectThemeTask = (props: Props) => {
                         </button>
                     :
                         <>
-                            <button className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => setCategoryConfirmed(false)}>
-                                Back
-                            </button>
-                            <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={handleSubmitTask}>
-                                Confirm Theme
-                            </button>
+                            {themes.length > 0 &&
+                                <>
+                                    <button className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => setCategoryConfirmed(false)}>
+                                        Back
+                                    </button>
+                                    <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={handleSubmitTask}>
+                                        Confirm Theme
+                                    </button>
+                                </>
+                            }
                         </>
                     }
             </div>
