@@ -32,7 +32,7 @@ export const SelectThemeTask = (props: Props) => {
         // "Cultural Heroes"
     ];
     const [selectedCategory, setSelectedCategory] = useState<string>("");
-    const [categoryConfirmed, setCategoryConfirmed] = useState<boolean>(false);
+    const [selectionStage, setSelectionStage] = useState<number>(0);
 
     const sendLog = () => {
         apiLogEvents(
@@ -58,7 +58,7 @@ export const SelectThemeTask = (props: Props) => {
                 logError("confirmCategory: " + error.toString());
             });
 
-        setCategoryConfirmed(true);
+        setSelectionStage(selectionStage + 1);
     };
 
     const submitTheme = async (): Promise<boolean> => {
@@ -113,7 +113,7 @@ export const SelectThemeTask = (props: Props) => {
 
     return (
         <div className="flex flex-col gap-2 py-4 max-w-2xl m-auto">
-            {!categoryConfirmed ?
+            {!selectionStage ?
                 <>
                     <h1 className="text-2xl font-semibold">Category Selection</h1>
                     <p>The selected category will be used to generate a list of sub-categories for more refined interest selection:</p>
@@ -125,7 +125,7 @@ export const SelectThemeTask = (props: Props) => {
                 </>
             }
             <div className="grid grid-cols-3 auto-rows-fr gap-2 justify-items-center items-center w-full">
-                {!categoryConfirmed ?
+                {!selectionStage ?
                     categories.map((category, index) => {
                         return (
                             themeButton(selectedCategory, category, index, setSelectedCategory)
@@ -149,7 +149,7 @@ export const SelectThemeTask = (props: Props) => {
                 }
             </div>
             <div className="flex flex-row self-end gap-2">
-                    {!categoryConfirmed ?
+                    {!selectionStage ?
                         <button disabled={!selectedCategory} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={confirmCategory}>
                             Confirm Category
                         </button>
@@ -157,7 +157,7 @@ export const SelectThemeTask = (props: Props) => {
                         <>
                             {themes.length > 0 &&
                                 <>
-                                    <button className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => setCategoryConfirmed(false)}>
+                                    <button className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => setSelectionStage(selectionStage-1)}>
                                         Back
                                     </button>
                                     <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={handleSubmitTask}>
