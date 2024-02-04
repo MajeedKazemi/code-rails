@@ -116,6 +116,32 @@ export const SelectThemeTask = (props: Props) => {
         })
     };
 
+    const headers = () => {
+        let headerText: string;
+        let subHeaderText: string;
+
+        switch (selectionStage) {
+            case 2:
+                headerText = "Character Selection";
+                subHeaderText = "The selected character will be used to generate a task for you to complete";
+                break;
+            case 1:
+                headerText = "Sub-Category Selection";
+                subHeaderText = "The selected sub-category will be used to generate a list of characters for you to select from";
+                break;
+            case 0:
+            default:
+                headerText = "Category Selection";
+                subHeaderText = "The selected category will be used to generate a list of sub-categories for more refined interest selection";
+        }
+        return (
+            <>
+                <h1 className="text-2xl font-semibold">{headerText}</h1>
+                <p>{subHeaderText}</p>
+            </>
+        );
+    };
+
     const themeButton = (refText: string, text: string, index: number, setRefText: (text: string) => void) => {
         return (
             <button
@@ -125,43 +151,6 @@ export const SelectThemeTask = (props: Props) => {
             >
                 <p className="w-full">{text}</p>
             </button>
-        );
-    };
-
-    const navButtons = () => {
-        let nextTask: () => void;
-        let nextText: string;
-        let disabled: boolean;
-    
-        switch (selectionStage) {
-            case 2:
-                nextTask = handleSubmitTask;
-                nextText = "Confirm Theme";
-                disabled = !selectedTheme;
-                break;
-            case 1:
-                nextTask = confirmSubCategory;
-                nextText = "Generate Sub Categories";
-                disabled = !selectedSubCategory;
-                break;
-            case 0:
-            default:
-                nextTask = confirmCategory;
-                nextText = "Confirm Category";
-                disabled = !selectedCategory;
-        }
-
-        return (
-            <div className="flex flex-row self-end gap-2">
-                {selectionStage > 0 &&
-                    <button className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => setSelectionStage(selectionStage-1)}>
-                        Back
-                    </button>
-                }
-                <button disabled={disabled} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={nextTask}>
-                    {nextText}
-                </button>
-            </div>
         );
     };
 
@@ -213,29 +202,40 @@ export const SelectThemeTask = (props: Props) => {
         );
     };
 
-    const headers = () => {
-        let headerText: string;
-        let subHeaderText: string;
-
+    const navButtons = () => {
+        let nextTask: () => void;
+        let nextText: string;
+        let disabled: boolean;
+    
         switch (selectionStage) {
             case 2:
-                headerText = "Character Selection";
-                subHeaderText = "The selected character will be used to generate a task for you to complete";
+                nextTask = handleSubmitTask;
+                nextText = "Confirm Theme";
+                disabled = !selectedTheme;
                 break;
             case 1:
-                headerText = "Sub-Category Selection";
-                subHeaderText = "The selected sub-category will be used to generate a list of characters for you to select from";
+                nextTask = confirmSubCategory;
+                nextText = "Generate Sub Categories";
+                disabled = !selectedSubCategory;
                 break;
             case 0:
             default:
-                headerText = "Category Selection";
-                subHeaderText = "The selected category will be used to generate a list of sub-categories for more refined interest selection";
+                nextTask = confirmCategory;
+                nextText = "Confirm Category";
+                disabled = !selectedCategory;
         }
+
         return (
-            <>
-                <h1 className="text-2xl font-semibold">{headerText}</h1>
-                <p>{subHeaderText}</p>
-            </>
+            <div className="flex flex-row self-end gap-2">
+                {selectionStage > 0 &&
+                    <button className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => setSelectionStage(selectionStage-1)}>
+                        Back
+                    </button>
+                }
+                <button disabled={disabled} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={nextTask}>
+                    {nextText}
+                </button>
+            </div>
         );
     };
 
