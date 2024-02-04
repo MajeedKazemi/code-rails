@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 
 import { AuthContext } from "../context";
-import { apiGenerateSubCategories, apiUpdateTheme } from "../api/theme_api";
+import { apiGenerateCharacters, apiGenerateSubCategories, apiUpdateTheme } from "../api/theme_api";
 import { apiLogEvents, apiUserSubmitTask, logError } from "../api/api";
 import { getLogObject } from "../utils/logger";
 import { Button } from "./button";
@@ -14,9 +14,6 @@ interface Props {
 
 export const SelectThemeTask = (props: Props) => {
     const { context, setContext } = useContext(AuthContext);
-
-    const [themes, setThemes] = useState<string[]>([]);
-    const [selectedTheme, setSelectedTheme] = useState<string>("");
 
     const categories = [
         "Video Games",
@@ -31,8 +28,16 @@ export const SelectThemeTask = (props: Props) => {
         "National History",
         // "Cultural Heroes"
     ];
-    const [selectedCategory, setSelectedCategory] = useState<string>("");
+    const [selectedCategory, setSelectedCategory] = useState<string>("");    
+
+    const [subCategories, setSubCategories] = useState<string[]>([]);
+    const [selectedSubCategory, setSelectedSubCategory] = useState<string>("");
+
+    const [themes, setThemes] = useState<string[]>([]);
+    const [selectedTheme, setSelectedTheme] = useState<string>("");
+    
     const [selectionStage, setSelectionStage] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const sendLog = () => {
         apiLogEvents(
@@ -47,23 +52,37 @@ export const SelectThemeTask = (props: Props) => {
     };
 
     const confirmCategory = () => {
-        console.log("Category Selected: " + selectedCategory)
-        setThemes([]);
+        setSubCategories([]);
+        setLoading(true);
         apiGenerateSubCategories(context?.token, selectedCategory)
             .then(async (response) => {
                 const data = await response.json();
-                setThemes(data.categories);
+                setSubCategories(data.categories);
+                setLoading(false);
             })
             .catch((error) => {
                 logError("confirmCategory: " + error.toString());
             });
+        setSelectionStage(selectionStage + 1);
+    };
 
+    const confirmSubCategory = () => {
+        setThemes([]);
+        setLoading(true);
+        apiGenerateCharacters(context?.token, selectedSubCategory)
+            .then(async (response) => {
+                const data = await response.json();
+                setThemes(data.characters);
+                setLoading(false);
+            })
+            .catch((error) => {
+                logError("confirmSubCategory: " + error.toString());
+            });
         setSelectionStage(selectionStage + 1);
     };
 
     const submitTheme = async (): Promise<boolean> => {
         try {
-            console.log("Theme Selected: " + selectedTheme);
             const resp = await apiUpdateTheme(
                 context?.token,
                 selectedTheme
@@ -117,10 +136,15 @@ export const SelectThemeTask = (props: Props) => {
         let disabled: boolean;
     
         switch (selectionStage) {
-            case 1:
+            case 2:
                 nextTask = handleSubmitTask;
                 nextText = "Confirm Theme";
                 disabled = !selectedTheme;
+                break;
+            case 1:
+                nextTask = confirmSubCategory;
+                nextText = "Generate Sub Categories";
+                disabled = !selectedSubCategory;
                 break;
             case 0:
             default:
@@ -143,43 +167,85 @@ export const SelectThemeTask = (props: Props) => {
         );
     };
 
-    return (
-        <div className="flex flex-col gap-2 py-4 max-w-2xl m-auto">
-            {!selectionStage ?
-                <>
-                    <h1 className="text-2xl font-semibold">Category Selection</h1>
-                    <p>The selected category will be used to generate a list of sub-categories for more refined interest selection:</p>
-                </>
-            :
-                <>
-                    <h1 className="text-2xl font-semibold">Theme Selection</h1>
-                    <p>The selected theme will be used to generate a task for you to complete:</p>
-                </>
-            }
+    const grid = () => {
+        let items: string[] = [];
+        let comparisonValue: string;
+        let setComparisonValue: (text: string) => void;
+
+        let loadingText: string;
+    
+        switch (selectionStage) {
+            case 2:
+                items = themes;
+                comparisonValue = selectedTheme;
+                setComparisonValue = setSelectedTheme;
+                loadingText = "Generating Themes";
+                break;
+            case 1:
+                items = subCategories;
+                comparisonValue = selectedSubCategory;
+                setComparisonValue = setSelectedSubCategory;
+                loadingText = "Generating Sub Categories";
+                break;
+            case 0:
+            default:
+                items = categories;
+                comparisonValue = selectedCategory;
+                setComparisonValue = setSelectedCategory;
+                loadingText = "Generating Characters";
+        }
+
+        return (
             <div className="grid grid-cols-3 auto-rows-fr gap-2 justify-items-center items-center w-full">
-                {!selectionStage ?
-                    categories.map((category, index) => {
+                {!loading ?
+                    items.map((item, index) => {
                         return (
-                            themeButton(selectedCategory, category, index, setSelectedCategory)
+                            themeButton(comparisonValue, item, index, setComparisonValue)
                         );
                     })
                 :
-                    <> {themes.length > 0 ?
-                        themes.map((theme, index) => {
-                            return (
-                                themeButton(selectedTheme, theme, index, setSelectedTheme)
-                            );
-                        })
-                    :
-                        <div className="col-span-full row-span-full flex flex-row gap-2 bg-white px-6 py-3 rounded-3xl border border-slate-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="animate-spin w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                            </svg>
-                            Generating Themes
-                        </div>
-                    } </>
+                    <div className="col-span-full row-span-full flex flex-row gap-2 bg-white px-6 py-3 rounded-3xl border border-slate-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="animate-spin w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                        {loadingText}
+                    </div>
                 }
             </div>
+        );
+    };
+
+    const headers = () => {
+        let headerText: string;
+        let subHeaderText: string;
+
+        switch (selectionStage) {
+            case 2:
+                headerText = "Character Selection";
+                subHeaderText = "The selected character will be used to generate a task for you to complete";
+                break;
+            case 1:
+                headerText = "Sub-Category Selection";
+                subHeaderText = "The selected sub-category will be used to generate a list of characters for you to select from";
+                break;
+            case 0:
+            default:
+                headerText = "Category Selection";
+                subHeaderText = "The selected category will be used to generate a list of sub-categories for more refined interest selection";
+        }
+        return (
+            <>
+                <h1 className="text-2xl font-semibold">{headerText}</h1>
+                <p>{subHeaderText}</p>
+            </>
+        );
+    };
+
+
+    return (
+        <div className="flex flex-col gap-2 py-4 max-w-2xl m-auto">
+            {headers()}
+            {grid()}
             <div className="flex flex-row self-end gap-2">
                 {navButtons()}
             </div>

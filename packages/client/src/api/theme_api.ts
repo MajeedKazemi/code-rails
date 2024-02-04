@@ -43,3 +43,19 @@ export const apiGenerateSubCategories = (
             category
         })
     });
+
+export const apiGenerateCharacters = (
+    token: string | null | undefined,
+    category: string
+) =>
+    fetch(env.API_URL + "/api/theme/characters", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            category
+        })
+    });
