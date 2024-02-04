@@ -240,7 +240,7 @@ export const SelectThemeTask = (props: Props) => {
     };
 
     return (
-        <div className="flex flex-col gap-2 py-4 max-w-2xl m-auto">
+        <div className="flex flex-col gap-2 py-12 max-w-2xl m-auto">
             {headers()}
             {grid()}
             {navButtons()}
