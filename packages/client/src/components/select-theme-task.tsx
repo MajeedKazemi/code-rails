@@ -4,8 +4,6 @@ import { AuthContext } from "../context";
 import { apiGenerateCharacters, apiGenerateSubCategories, apiUpdateTheme } from "../api/theme_api";
 import { apiLogEvents, apiUserSubmitTask, logError } from "../api/api";
 import { getLogObject } from "../utils/logger";
-import { Button } from "./button";
-import { TextField } from "@mui/material";
 
 interface Props {
     taskId: string;
