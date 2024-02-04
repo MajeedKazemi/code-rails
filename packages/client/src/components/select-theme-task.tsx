@@ -154,7 +154,7 @@ export const SelectThemeTask = (props: Props) => {
         }
 
         return (
-            <>
+            <div className="flex flex-row self-end gap-2">
                 {selectionStage > 0 &&
                     <button className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={() => setSelectionStage(selectionStage-1)}>
                         Back
@@ -163,7 +163,7 @@ export const SelectThemeTask = (props: Props) => {
                 <button disabled={disabled} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={nextTask}>
                     {nextText}
                 </button>
-            </>
+            </div>
         );
     };
 
@@ -241,14 +241,11 @@ export const SelectThemeTask = (props: Props) => {
         );
     };
 
-
     return (
         <div className="flex flex-col gap-2 py-4 max-w-2xl m-auto">
             {headers()}
             {grid()}
-            <div className="flex flex-row self-end gap-2">
-                {navButtons()}
-            </div>
+            {navButtons()}
         </div>
     );
 };
