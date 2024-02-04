@@ -8,6 +8,8 @@ import { titleGenerationPrompt } from "../prompts/title-generation-prompt";
 import { taskCustomizationPrompt } from "../prompts/task-customization-prompt";
 import { getTaskFromTaskId } from "../tasks/tasks";
 import { UserTaskModel } from "../models/user-task";
+import { subCategoryPrompt } from "../prompts/sub-category-prompt";
+import { characterPrompt } from "../prompts/character-prompt";
 
 export const themeRouter = express.Router();
 
@@ -194,5 +196,91 @@ themeRouter.post("/apply", verifyUser, async (req, res) => {
             res.statusCode = 500;
             res.send({ message: "UserTask not found" });
         }
+    });
+});
+
+themeRouter.post("/sub_categories", verifyUser, async (req, res) => {
+    const { category } = req.body;
+    const userId = (req.user as IUser)._id;
+
+    if (!category) {
+        res.statusCode = 400;
+        res.send({
+            success: false,
+            message: "Category not provided"
+        });
+        return;
+    }
+
+    const prompt = subCategoryPrompt(
+        category
+    );
+
+    console.log("Generating Sub Categories...");
+    const rawCategories = await openai.chat.completions.create({
+        messages: prompt.messages,
+        model: prompt.model,
+        temperature: prompt.temperature,
+        stop: prompt.stop,
+        user: userId,
+    });
+
+    if (rawCategories.choices[0].message.content === null) {
+        console.log("Category Generation Failed...")
+        res.json({
+            success: false,
+        });
+        return;
+    }
+
+    const categories = prompt.parser(rawCategories.choices[0].message.content);
+
+    res.statusCode = 200;
+    res.send({
+        success: true,
+        categories,
+    });
+});
+
+themeRouter.post("/characters", verifyUser, async (req, res) => {
+    const { category } = req.body;
+    const userId = (req.user as IUser)._id;
+
+    if (!category) {
+        res.statusCode = 400;
+        res.send({
+            success: false,
+            message: "Category not provided"
+        });
+        return;
+    }
+
+    const prompt = characterPrompt(
+        category
+    );
+
+    console.log("Generating Characters...");
+    const rawCharacters = await openai.chat.completions.create({
+        messages: prompt.messages,
+        model: prompt.model,
+        temperature: prompt.temperature,
+        stop: prompt.stop,
+        user: userId,
+    });
+
+    if (rawCharacters.choices[0].message.content === null) {
+        console.log("Category Generation Failed...")
+        res.json({
+            success: false,
+        });
+        return;
+    }
+
+    const characters = prompt.parser(rawCharacters.choices[0].message.content);
+
+    res.statusCode = 200;
+    res.send({
+        success: true,
+        characters,
     });
 });
