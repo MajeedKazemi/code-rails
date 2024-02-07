@@ -199,8 +199,6 @@ export const SelectThemeTask = (props: Props) => {
     const handleTextClick = (setValue: (text: string) => void, value: string, gridStage: number) => {
         setValue(value);
 
-        console.log("Grid Stage: " + gridStage);
-    
         switch (gridStage) {
             case 0:
                 // Reset sub category and theme
