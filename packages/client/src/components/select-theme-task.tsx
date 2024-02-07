@@ -166,7 +166,7 @@ export const SelectThemeTask = (props: Props) => {
                 items = themes;
                 comparisonValue = selectedTheme;
                 setComparisonValue = setSelectedTheme;
-                loadingText = "Generating Themes";
+                loadingText = "Generating Characters";
                 break;
             case 1:
                 items = subCategories;
@@ -179,7 +179,7 @@ export const SelectThemeTask = (props: Props) => {
                 items = categories;
                 comparisonValue = selectedCategory;
                 setComparisonValue = setSelectedCategory;
-                loadingText = "Generating Characters";
+                loadingText = "Generating Categories";
         }
 
         return (
