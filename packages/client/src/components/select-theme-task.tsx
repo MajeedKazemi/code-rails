@@ -176,34 +176,12 @@ export const SelectThemeTask = (props: Props) => {
     };
 
     const navButtons = () => {
-        let nextTask: () => void;
-        let nextText: string;
-        let disabled: boolean;
-    
-        switch (selectionStage) {
-            case 2:
-                nextTask = handleSubmitTask;
-                nextText = "Confirm Theme";
-                disabled = !selectedTheme;
-                break;
-            case 1:
-                nextTask = handleSubmitTask;
-                nextText = "Generate Sub Categories";
-                disabled = !selectedSubCategory;
-                break;
-            case 0:
-            default:
-                nextTask = handleSubmitTask;
-                nextText = "Confirm Category";
-                disabled = !selectedCategory;
-        }
-
         return (
             <div
                 ref={buttonRef}
                 className="flex flex-row self-end gap-2"
             >
-                {selectionStage >= 2 && <button disabled={disabled} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={nextTask}>
+                {selectionStage >= 2 && <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={handleSubmitTask}>
                     Confirm Character
                 </button>}
             </div>
