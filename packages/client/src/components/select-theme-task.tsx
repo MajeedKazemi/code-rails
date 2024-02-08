@@ -4,6 +4,8 @@ import { AuthContext } from "../context";
 import { apiGenerateCharacters, apiGenerateSubCategories, apiUpdateTheme } from "../api/theme_api";
 import { apiLogEvents, apiUserSubmitTask, logError } from "../api/api";
 import { getLogObject } from "../utils/logger";
+import { Accordion, AccordionDetails, AccordionSummary, TextField } from "@mui/material";
+import { DashboardCustomizeSharp } from "@mui/icons-material";
 
 interface Props {
     taskId: string;
@@ -179,7 +181,7 @@ export const SelectThemeTask = (props: Props) => {
         return (
             <div
                 ref={buttonRef}
-                className="flex flex-row self-end gap-2"
+                className="flex flex-row self-end"
             >
                 {selectionStage >= 2 && <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={handleSubmitTask}>
                     Confirm Character
@@ -187,6 +189,81 @@ export const SelectThemeTask = (props: Props) => {
             </div>
         );
     };
+
+    const loadingSpinner = (loadingText: string) => 
+        <div key={`spinner_${loadingText}`} className="flex flex-row gap-2 bg-white px-6 py-3 rounded-3xl border border-slate-300 max-w-sm m-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="animate-spin w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+            {loadingText}
+        </div>
+
+    const [textInput, setTextInput] = useState<string>("");
+    const [customLoading, setCustomLoading] = useState<boolean>(false);
+    const [customThemes, setCustomThemes] = useState<string[]>([]);
+
+    const generateFromTextInput = () => {
+        setCustomLoading(true);
+        apiGenerateCharacters(context?.token, textInput)
+            .then(async (response) => {
+                const data = await response.json();
+                setCustomThemes(data.characters);
+                setCustomLoading(false);
+            })
+            .catch((error) => {
+                logError("generateFromTextInput: " + error.toString());
+            });
+    };
+
+    const textInputAccordion = () => {
+        return (
+            <div className="flex flex-col gap-2 my-6 rounded-3xl overflow-clip border-slate-300 border">
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        }
+                        className="font-semibold"
+                    >
+                        Or Enter your own character
+                    </AccordionSummary>
+                    <AccordionDetails className="flex flex-col gap-2 -mt-4">
+                        <p>Input your own character or a description of them to get character examples generated for you</p>
+                        <div className="flex gap-4">
+                            <TextField
+                                label="Character name or description"
+                                variant="standard"
+                                value={textInput}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    setTextInput(event.target.value);
+                                }}
+                                className="grow"
+                            />
+                            <button disabled={!textInput || customLoading} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={generateFromTextInput}>
+                                Generate
+                            </button>
+                        </div>
+                    </AccordionDetails>
+                </Accordion>
+            </div>
+        );
+    }
+
+    const textInputComponents = () => {
+        return (
+            <div className="flex flex-col gap-2">
+                {textInputAccordion()}
+                { customLoading ? loadingSpinner("Generating Characters") : grid(customThemes, selectedTheme, setSelectedTheme, 2)}
+                { customThemes.length > 0 && <div className="flex flex-row self-end">
+                    <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={handleSubmitTask}>
+                        Confirm Character
+                    </button>
+                </div>}
+            </div>
+        );
+    }
 
     const scrollToBottom = () => {
         buttonRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -236,16 +313,14 @@ export const SelectThemeTask = (props: Props) => {
                                 stage
                             )
                         :
-                            <div key={`grid_loading_${stage}`} className="flex flex-row gap-2 bg-white px-6 py-3 rounded-3xl border border-slate-300 max-w-sm m-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="animate-spin w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                </svg>
-                                {stage === 2 ? "Generating Characters" : stage === 1 ? "Generating Sub Categories" : "Generating Categories"}
-                            </div>
+                            loadingSpinner(
+                                stage === 2 ? "Generating Characters" : stage === 1 ? "Generating Sub Categories" : "Generating Categories"
+                            )
                     )
                 })}
             </div>
             {navButtons()}
+            {textInputComponents()}
         </div>
     );
 };
