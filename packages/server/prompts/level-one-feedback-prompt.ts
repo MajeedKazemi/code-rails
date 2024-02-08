@@ -82,7 +82,7 @@ ${studentCode}
     return {
         messages,
         stop: [],
-        model: "gpt-4-1106-preview",
+        model: "gpt-4-turbo-preview",
         temperature: 0.5,
         max_tokens: 1024,
         parser: (resTxt: string) => l1FeedbackParser(resTxt, studentCode),
