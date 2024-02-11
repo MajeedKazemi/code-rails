@@ -288,7 +288,7 @@ export const SelectThemeTask = (props: Props) => {
 
     return (
         <div className="flex flex-col gap-2 py-12 max-w-2xl m-auto">
-            <Accordion>
+            <Accordion defaultExpandedKeys={["1"]}>
                 <AccordionItem key="1" aria-label="Category Selection" title="Category Selection">
                     {headers()}
                     <div className="flex flex-col gap-8 h-full">
