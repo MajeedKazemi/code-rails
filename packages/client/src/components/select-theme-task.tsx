@@ -125,7 +125,7 @@ export const SelectThemeTask = (props: Props) => {
         switch (stage) {
             case 2:
                 headerText = "Character Selection";
-                subHeaderText = "The selected character will be used to generate a task for you to complete";
+                subHeaderText = "The selected character will be used to generate tasks for you to complete";
                 break;
             case 1:
                 headerText = "Sub-Category Selection";
