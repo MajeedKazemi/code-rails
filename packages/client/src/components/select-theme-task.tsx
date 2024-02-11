@@ -136,6 +136,7 @@ export const SelectThemeTask = (props: Props) => {
                 headerText = "Category Selection";
                 subHeaderText = "The selected category will be used to generate a list of sub-categories for more refined interest selection";
         }
+
         return [headerText, subHeaderText];
     };
 
