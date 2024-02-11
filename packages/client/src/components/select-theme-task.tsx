@@ -5,7 +5,7 @@ import { apiGenerateCharacters, apiGenerateSubCategories, apiUpdateTheme } from 
 import { apiLogEvents, apiUserSubmitTask, logError } from "../api/api";
 import { getLogObject } from "../utils/logger";
 import { TextField } from "@mui/material";
-import { Accordion, AccordionItem } from "@nextui-org/react";
+import { Accordion, AccordionItem, Selection } from "@nextui-org/react";
 
 interface Props {
     taskId: string;
@@ -293,7 +293,7 @@ export const SelectThemeTask = (props: Props) => {
                         <Accordion
                             selectionMode="multiple"
                             selectedKeys={selectedAccordionKeys}
-                            onSelectionChange={setSelectedAccordionKeys}
+                            onSelectionChange={(keys: Selection) => setSelectedAccordionKeys(keys as Set<string>)}
                         >
                             {[...Array(selectionStage + 1)].map((_e, stage) => {
                                 const [headerText, subHeaderText] = headers(stage);
