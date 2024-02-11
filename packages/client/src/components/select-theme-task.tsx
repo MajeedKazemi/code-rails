@@ -289,7 +289,6 @@ export const SelectThemeTask = (props: Props) => {
             <Accordion defaultExpandedKeys={["main_1"]}>
                 <AccordionItem key="main_1" title="Guided Selection">
                     <div className="flex flex-col gap-2">
-                        {/* {headers()} */}
                         <Accordion
                             selectionMode="multiple"
                             selectedKeys={selectedAccordionKeys}
