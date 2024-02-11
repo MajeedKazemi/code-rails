@@ -1,11 +1,11 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { AuthContext } from "../context";
 import { apiGenerateCharacters, apiGenerateSubCategories, apiUpdateTheme } from "../api/theme_api";
 import { apiLogEvents, apiUserSubmitTask, logError } from "../api/api";
 import { getLogObject } from "../utils/logger";
-import { Accordion, AccordionDetails, AccordionSummary, TextField } from "@mui/material";
-import { DashboardCustomizeSharp } from "@mui/icons-material";
+import { Accordion as MuiAccordion, AccordionDetails, AccordionSummary, TextField } from "@mui/material";
+import { Accordion, AccordionItem } from "@nextui-org/react";
 
 interface Props {
     taskId: string;
@@ -218,7 +218,7 @@ export const SelectThemeTask = (props: Props) => {
     const textInputAccordion = () => {
         return (
             <div className="flex flex-col gap-2 my-6 rounded-3xl overflow-clip border-slate-300 border">
-                <Accordion>
+                <MuiAccordion>
                     <AccordionSummary
                         expandIcon={
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -246,7 +246,7 @@ export const SelectThemeTask = (props: Props) => {
                             </button>
                         </div>
                     </AccordionDetails>
-                </Accordion>
+                </MuiAccordion>
             </div>
         );
     }
@@ -301,26 +301,33 @@ export const SelectThemeTask = (props: Props) => {
 
     return (
         <div className="flex flex-col gap-2 py-12 max-w-2xl m-auto">
-            {headers()}
-            <div className="flex flex-col gap-8 h-full">
-                {[...Array(selectionStage + 1)].map((_e, stage) => {
-                    return(
-                        !loading || selectionStage != stage ?
-                            grid(
-                                stage === 2 ? themes : stage === 1 ? subCategories : categories,
-                                stage === 2 ? selectedTheme : stage === 1 ? selectedSubCategory : selectedCategory,
-                                stage === 2 ? setSelectedTheme : stage === 1 ? setSelectedSubCategory : setSelectedCategory,
-                                stage
+            <Accordion>
+                <AccordionItem key="1" aria-label="Accordion 1" title="Accordion 1">
+                    {headers()}
+                    <div className="flex flex-col gap-8 h-full">
+                        {[...Array(selectionStage + 1)].map((_e, stage) => {
+                            return(
+                                !loading || selectionStage != stage ?
+                                    grid(
+                                        stage === 2 ? themes : stage === 1 ? subCategories : categories,
+                                        stage === 2 ? selectedTheme : stage === 1 ? selectedSubCategory : selectedCategory,
+                                        stage === 2 ? setSelectedTheme : stage === 1 ? setSelectedSubCategory : setSelectedCategory,
+                                        stage
+                                    )
+                                :
+                                    loadingSpinner(
+                                        stage === 2 ? "Generating Characters" : stage === 1 ? "Generating Sub Categories" : "Generating Categories"
+                                    )
                             )
-                        :
-                            loadingSpinner(
-                                stage === 2 ? "Generating Characters" : stage === 1 ? "Generating Sub Categories" : "Generating Categories"
-                            )
-                    )
-                })}
-            </div>
-            {navButtons()}
-            {textInputComponents()}
+                        })}
+                    </div>
+                    {navButtons()}
+                </AccordionItem>
+                <AccordionItem key="2" aria-label="Accordion 2" title="Accordion 2">
+                    {textInputComponents()}
+                </AccordionItem>
+
+            </Accordion>
         </div>
     );
 };

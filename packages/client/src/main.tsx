@@ -11,6 +11,7 @@ import { AuthContext, SocketContext } from "./context";
 import { HomePage } from "./routes/home-page";
 import { TasksPage } from "./routes/tasks-page";
 import { BenchmarkPage } from "./routes/benchmark-page";
+import { NextUIProvider } from "@nextui-org/react";
 
 const rootEl = document.getElementById("root");
 if (!rootEl) throw new Error("[index.html] missing root element");
@@ -106,4 +107,10 @@ function App() {
     );
 }
 
-root.render(<App />);
+root.render(
+    <React.StrictMode>
+        <NextUIProvider>
+            <App />
+        </NextUIProvider>
+    </React.StrictMode>
+);
