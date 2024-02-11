@@ -39,7 +39,7 @@ export const SelectThemeTask = (props: Props) => {
     const [selectionStage, setSelectionStage] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [selectedAccordionKeys, setSelectedAccordionKeys] = React.useState(new Set(["stage_0"]));
+    const [selectedAccordionKeys, setSelectedAccordionKeys] = React.useState<Selection>(new Set(["stage_0"]));
 
     const buttonRef = useRef<HTMLDivElement>(null);
 
@@ -293,7 +293,7 @@ export const SelectThemeTask = (props: Props) => {
                         <Accordion
                             selectionMode="multiple"
                             selectedKeys={selectedAccordionKeys}
-                            onSelectionChange={(keys: Selection) => setSelectedAccordionKeys(keys as Set<string>)}
+                            onSelectionChange={setSelectedAccordionKeys}
                         >
                             {[...Array(selectionStage + 1)].map((_e, stage) => {
                                 const [headerText, subHeaderText] = headers(stage);
