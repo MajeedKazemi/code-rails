@@ -260,11 +260,11 @@ export const SelectThemeTask = (props: Props) => {
 
     const handleTextClick = (setValue: (text: string) => void, value: string, gridStage: number) => {
         setValue(value);
-        setSelectedAccordionKeys(new Set([`stage_${Math.min(gridStage + 1, 2)}`]));
 
         switch (gridStage) {
             case 0:
                 // Reset sub category and theme
+                setSelectedAccordionKeys(new Set([`stage_${gridStage + 1}`]));
                 setSelectionStage(1);
                 setSelectedTheme("");
                 setSelectedSubCategory("");
@@ -274,6 +274,7 @@ export const SelectThemeTask = (props: Props) => {
                 break;
             case 1:
                 // Reset theme
+                setSelectedAccordionKeys(new Set([`stage_${gridStage + 1}`]));
                 setSelectionStage(2);
                 setSelectedTheme("");
                 setThemes([]);
