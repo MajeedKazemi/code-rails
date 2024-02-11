@@ -287,33 +287,34 @@ export const SelectThemeTask = (props: Props) => {
     };
 
     return (
-        <div className="flex flex-col gap-2 py-12 max-w-2xl m-auto">
+        <div className="flex flex-col py-12 max-w-2xl m-auto">
             <Accordion defaultExpandedKeys={["1"]}>
                 <AccordionItem key="1" aria-label="Category Selection" title="Category Selection">
-                    {headers()}
-                    <div className="flex flex-col gap-8 h-full">
-                        {[...Array(selectionStage + 1)].map((_e, stage) => {
-                            return(
-                                !loading || selectionStage != stage ?
-                                    grid(
-                                        stage === 2 ? themes : stage === 1 ? subCategories : categories,
-                                        stage === 2 ? selectedTheme : stage === 1 ? selectedSubCategory : selectedCategory,
-                                        stage === 2 ? setSelectedTheme : stage === 1 ? setSelectedSubCategory : setSelectedCategory,
-                                        stage
-                                    )
-                                :
-                                    loadingSpinner(
-                                        stage === 2 ? "Generating Characters" : stage === 1 ? "Generating Sub Categories" : "Generating Categories"
-                                    )
-                            )
-                        })}
+                    <div className="flex flex-col gap-2">
+                        {headers()}
+                        <div className="flex flex-col gap-8 h-full">
+                            {[...Array(selectionStage + 1)].map((_e, stage) => {
+                                return(
+                                    !loading || selectionStage != stage ?
+                                        grid(
+                                            stage === 2 ? themes : stage === 1 ? subCategories : categories,
+                                            stage === 2 ? selectedTheme : stage === 1 ? selectedSubCategory : selectedCategory,
+                                            stage === 2 ? setSelectedTheme : stage === 1 ? setSelectedSubCategory : setSelectedCategory,
+                                            stage
+                                        )
+                                    :
+                                        loadingSpinner(
+                                            stage === 2 ? "Generating Characters" : stage === 1 ? "Generating Sub Categories" : "Generating Categories"
+                                        )
+                                )
+                            })}
+                        </div>
+                        {navButtons()}
                     </div>
-                    {navButtons()}
                 </AccordionItem>
                 <AccordionItem key="2" aria-label="Text Input" title="Text Input">
                     {textInputComponents()}
                 </AccordionItem>
-
             </Accordion>
         </div>
     );
