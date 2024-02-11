@@ -39,6 +39,8 @@ export const SelectThemeTask = (props: Props) => {
     const [selectionStage, setSelectionStage] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
 
+    const [selectedAccordionKeys, setSelectedAccordionKeys] = React.useState(new Set(["stage_0"]));
+
     const buttonRef = useRef<HTMLDivElement>(null);
 
     const sendLog = () => {
@@ -257,6 +259,7 @@ export const SelectThemeTask = (props: Props) => {
 
     const handleTextClick = (setValue: (text: string) => void, value: string, gridStage: number) => {
         setValue(value);
+        setSelectedAccordionKeys(new Set([`stage_${gridStage + 1}`]));
 
         switch (gridStage) {
             case 0:
@@ -287,7 +290,11 @@ export const SelectThemeTask = (props: Props) => {
                 <AccordionItem key="main_1" title="Guided Selection">
                     <div className="flex flex-col gap-2">
                         {/* {headers()} */}
-                        <Accordion selectionMode="multiple" defaultExpandedKeys={[`stage_${selectionStage.toString()}`]}>
+                        <Accordion
+                            selectionMode="multiple"
+                            selectedKeys={selectedAccordionKeys}
+                            onSelectionChange={setSelectedAccordionKeys}
+                        >
                             {[...Array(selectionStage + 1)].map((_e, stage) => {
                                 const [headerText, subHeaderText] = headers(stage);
                                 return(
