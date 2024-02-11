@@ -283,15 +283,15 @@ export const SelectThemeTask = (props: Props) => {
 
     return (
         <div className="flex flex-col py-12 max-w-2xl m-auto">
-            <Accordion defaultExpandedKeys={["1"]}>
-                <AccordionItem key="1" title="Guided Selection">
+            <Accordion defaultExpandedKeys={["main_1"]}>
+                <AccordionItem key="main_1" title="Guided Selection">
                     <div className="flex flex-col gap-2">
                         {/* {headers()} */}
-                        <Accordion selectionMode="multiple" defaultExpandedKeys={[selectionStage.toString()]}>
+                        <Accordion selectionMode="multiple" defaultExpandedKeys={[`stage_${selectionStage.toString()}`]}>
                             {[...Array(selectionStage + 1)].map((_e, stage) => {
                                 const [headerText, subHeaderText] = headers(stage);
                                 return(
-                                    <AccordionItem key={stage} title={headerText} subtitle={subHeaderText}>
+                                    <AccordionItem key={`stage_${stage}`} title={headerText} subtitle={subHeaderText}>
                                         <div className="flex flex-col gap-2">
                                         {!loading || selectionStage != stage ?
                                             <>
@@ -315,7 +315,7 @@ export const SelectThemeTask = (props: Props) => {
                         </Accordion>
                     </div>
                 </AccordionItem>
-                <AccordionItem key="2" title="Custom Input">
+                <AccordionItem key="main_2" title="Custom Input">
                     {textInputComponents()}
                 </AccordionItem>
             </Accordion>
