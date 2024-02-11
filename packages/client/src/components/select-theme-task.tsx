@@ -4,7 +4,7 @@ import { AuthContext } from "../context";
 import { apiGenerateCharacters, apiGenerateSubCategories, apiUpdateTheme } from "../api/theme_api";
 import { apiLogEvents, apiUserSubmitTask, logError } from "../api/api";
 import { getLogObject } from "../utils/logger";
-import { Accordion as MuiAccordion, AccordionDetails, AccordionSummary, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { Accordion, AccordionItem } from "@nextui-org/react";
 
 interface Props {
@@ -215,38 +215,25 @@ export const SelectThemeTask = (props: Props) => {
             });
     };
 
-    const textInputAccordion = () => {
+    const textInputBox = () => {
         return (
-            <div className="flex flex-col gap-2 my-6 rounded-3xl overflow-clip border-slate-300 border">
-                <MuiAccordion>
-                    <AccordionSummary
-                        expandIcon={
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        }
-                        className="font-semibold"
-                    >
-                        Or Enter your own character
-                    </AccordionSummary>
-                    <AccordionDetails className="flex flex-col gap-2 -mt-4">
-                        <p>Input your own character or a description of them to get character examples generated for you</p>
-                        <div className="flex gap-4">
-                            <TextField
-                                label="Character name or description"
-                                variant="standard"
-                                value={textInput}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    setTextInput(event.target.value);
-                                }}
-                                className="grow"
-                            />
-                            <button disabled={!textInput || customLoading} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={generateFromTextInput}>
-                                Generate
-                            </button>
-                        </div>
-                    </AccordionDetails>
-                </MuiAccordion>
+            <div className="flex flex-col gap-2 p-4 rounded-3xl overflow-clip border-slate-300 border bg-white">
+                <p className="font-semibold">Enter a character name or description</p>
+                <p>Input your own character or a description of them to get character examples generated for you</p>
+                <div className="flex gap-4">
+                    <TextField
+                        label="Character name or description"
+                        variant="standard"
+                        value={textInput}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            setTextInput(event.target.value);
+                        }}
+                        className="grow"
+                    />
+                    <button disabled={!textInput || customLoading} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={generateFromTextInput}>
+                        Generate
+                    </button>
+                </div>
             </div>
         );
     }
@@ -254,7 +241,7 @@ export const SelectThemeTask = (props: Props) => {
     const textInputComponents = () => {
         return (
             <div className="flex flex-col gap-2">
-                {textInputAccordion()}
+                { textInputBox() }
                 { customLoading ? loadingSpinner("Generating Characters") : grid(customThemes, selectedTheme, setSelectedTheme, 2)}
                 { customThemes.length > 0 && <div className="flex flex-row self-end">
                     <button disabled={!selectedTheme} className="bg-sky-200 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-sky-100 enabled:hover:text-white py-2 px-4 rounded-full" onClick={handleSubmitTask}>
@@ -302,7 +289,7 @@ export const SelectThemeTask = (props: Props) => {
     return (
         <div className="flex flex-col gap-2 py-12 max-w-2xl m-auto">
             <Accordion>
-                <AccordionItem key="1" aria-label="Accordion 1" title="Accordion 1">
+                <AccordionItem key="1" aria-label="Category Selection" title="Category Selection">
                     {headers()}
                     <div className="flex flex-col gap-8 h-full">
                         {[...Array(selectionStage + 1)].map((_e, stage) => {
@@ -323,7 +310,7 @@ export const SelectThemeTask = (props: Props) => {
                     </div>
                     {navButtons()}
                 </AccordionItem>
-                <AccordionItem key="2" aria-label="Accordion 2" title="Accordion 2">
+                <AccordionItem key="2" aria-label="Text Input" title="Text Input">
                     {textInputComponents()}
                 </AccordionItem>
 
