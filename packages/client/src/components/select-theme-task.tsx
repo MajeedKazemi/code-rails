@@ -259,7 +259,7 @@ export const SelectThemeTask = (props: Props) => {
 
     const handleTextClick = (setValue: (text: string) => void, value: string, gridStage: number) => {
         setValue(value);
-        setSelectedAccordionKeys(new Set([`stage_${gridStage + 1}`]));
+        setSelectedAccordionKeys(new Set([`stage_${Math.min(gridStage + 1, 2)}`]));
 
         switch (gridStage) {
             case 0:
