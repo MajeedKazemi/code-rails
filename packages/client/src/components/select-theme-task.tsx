@@ -293,22 +293,21 @@ export const SelectThemeTask = (props: Props) => {
                                 return(
                                     <AccordionItem key={stage} title={headerText} subtitle={subHeaderText}>
                                         <div className="flex flex-col gap-2">
-                                        {
-                                            !loading || selectionStage != stage ?
-                                                    <>
-                                                        {grid(
-                                                            stage === 2 ? themes : stage === 1 ? subCategories : categories,
-                                                            stage === 2 ? selectedTheme : stage === 1 ? selectedSubCategory : selectedCategory,
-                                                            stage === 2 ? setSelectedTheme : stage === 1 ? setSelectedSubCategory : setSelectedCategory,
-                                                            stage
-                                                        )}
-                                                        { stage === 2 && navButtons()}
-                                                    </>
-                                                    :
-                                                    loadingSpinner(
-                                                        stage === 2 ? "Generating Characters" : stage === 1 ? "Generating Sub Categories" : "Generating Categories"
-                                                        )
-                                                    }
+                                        {!loading || selectionStage != stage ?
+                                            <>
+                                                {grid(
+                                                    stage === 2 ? themes : stage === 1 ? subCategories : categories,
+                                                    stage === 2 ? selectedTheme : stage === 1 ? selectedSubCategory : selectedCategory,
+                                                    stage === 2 ? setSelectedTheme : stage === 1 ? setSelectedSubCategory : setSelectedCategory,
+                                                    stage
+                                                )}
+                                                { stage === 2 && navButtons()}
+                                            </>
+                                        :
+                                            loadingSpinner(
+                                                stage === 2 ? "Generating Characters" : stage === 1 ? "Generating Sub Categories" : "Generating Categories"
+                                            )
+                                        }
                                         </div>
                                     </AccordionItem>
                                 )
