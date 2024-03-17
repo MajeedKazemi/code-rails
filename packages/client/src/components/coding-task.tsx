@@ -207,8 +207,8 @@ export const CodingTask = (props: CodingTaskProps) => {
         apiApplyTitle(context?.token, props.taskId, title)
             .then(async (response) => {
                 const data = await response.json();
-                console.log(data);
                 setCustomTask(data.task);
+                setDescription(data.task.set_up + "<br/><br/>" + data.task.conflict);
             })
             .catch((error: any) => {
                 logError("confirmTitle: " + error.toString());

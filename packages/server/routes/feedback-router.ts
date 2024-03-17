@@ -64,19 +64,21 @@ feedbackRouter.post("/generate", verifyUser, async (req, res) => {
     const feedback: string = prompt.parser(rawFeedback.choices[0].message.content);
 
     // Save feedback to UserTask model
-    UserTaskModel.findOne({ userId: userId, taskId: taskId }).then((userTask) => {
-        if (userTask) {
-            userTask.submissions.push({
-                code: currentCode,
-                submittedAt: new Date(),
-                feedback: feedback,
-                correctness: correctness,
-            });
-            userTask.save();
-        } else {
-            console.log("Error: Failed to save feedback to UserTask model.");
-        }
-    });
+    if (userId && taskId) {
+        UserTaskModel.findOne({ userId: userId, taskId: taskId }).then((userTask) => {
+            if (userTask) {
+                userTask.submissions.push({
+                    code: currentCode,
+                    submittedAt: new Date(),
+                    feedback: feedback,
+                    correctness: correctness,
+                });
+                userTask.save();
+            } else {
+                console.log("Error: Failed to save feedback to UserTask model.");
+            }
+        });
+    }
 
     console.log("Returning Feedback...")
     res.json({

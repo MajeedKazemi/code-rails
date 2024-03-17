@@ -317,7 +317,7 @@ export const apiGenerateFeedback = (
     samples: Array<Array<string>>,
     correctness: boolean,
     iteration: number,
-    taskId: string
+    taskId?: string
 ) =>
     fetch(env.API_URL + "/api/feedback/generate", {
         method: "POST",

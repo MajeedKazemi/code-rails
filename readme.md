@@ -24,3 +24,5 @@ Start the app
 ```bash
 yarn dev
 ```
+
+You can now collect to the client at `http://localhost:5173`

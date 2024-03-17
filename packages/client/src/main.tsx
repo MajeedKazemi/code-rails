@@ -1,7 +1,7 @@
 import "./index.css";
 import "./userWorker";
 
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
@@ -11,6 +11,7 @@ import { AuthContext, SocketContext } from "./context";
 import { HomePage } from "./routes/home-page";
 import { TasksPage } from "./routes/tasks-page";
 import { BenchmarkPage } from "./routes/benchmark-page";
+import { NextUIProvider } from "@nextui-org/react";
 
 const rootEl = document.getElementById("root");
 if (!rootEl) throw new Error("[index.html] missing root element");
@@ -106,4 +107,8 @@ function App() {
     );
 }
 
-root.render(<App />);
+root.render(
+    <NextUIProvider>
+        <App />
+    </NextUIProvider>
+);
