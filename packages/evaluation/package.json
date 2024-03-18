@@ -6,6 +6,7 @@
   "dependencies": {
     "@langchain/openai": "^0.0.21",
     "langchain": "^0.1.28",
+    "ts-tqdm": "^0.8.6",
     "typescript": "^5.4.2"
   },
   "scripts": {
