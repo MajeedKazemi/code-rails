@@ -12247,9 +12247,9 @@ open@^8.0.9, open@^8.4.0:
     is-wsl "^2.2.0"
 
 openai@^4.20.1:
-  version "4.20.1"
-  resolved "https://registry.npmjs.org/openai/-/openai-4.20.1.tgz"
-  integrity sha512-Dd3q8EvINfganZFtg6V36HjrMaihqRgIcKiHua4Nq9aw/PxOP48dhbsk8x5klrxajt5Lpnc1KTOG5i1S6BKAJA==
+  version "4.29.1"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.29.1.tgz#89d981f8ced9d1d0db2e09ca1b16b0d7775dcf36"
+  integrity sha512-vvKRIgB4/7w48PGVbeR8OceH/PT6fRo4sTIjRC7+y7WoK7by1R0cXs2SZRx4KsEh0ZB8J0eqdVIdRgs8XzeoEg==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
