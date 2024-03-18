@@ -9,6 +9,7 @@
     "typescript": "^5.4.2"
   },
   "scripts": {
-    "eval": "tsc && node dist/eval.js"
+    "eval": "tsc && node dist/eval.js",
+    "generate": "tsc && node dist/generate_dataset.js"
   }
 }
