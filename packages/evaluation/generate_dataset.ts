@@ -1,4 +1,4 @@
-import { Client } from "langsmith";
+import { Client, Dataset } from "langsmith";
 
 const main = async () => {
     // Inputs are provided to your model, so it know what to generate
@@ -19,9 +19,13 @@ const main = async () => {
 
     // Storing inputs in a dataset lets us
     // run chains and LLMs over a shared set of examples.
-    const dataset = await client.createDataset(datasetName, {
-        description: "Rap battle prompts.",
-    });
+    let dataset: Dataset;
+    try {
+        dataset = await client.createDataset(datasetName);
+    } catch (e) {
+        dataset = await client.readDataset({datasetName});
+    }
+
     await client.createExamples({
         inputs: datasetInputs,
         outputs: datasetOutputs,
