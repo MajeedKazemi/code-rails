@@ -1,0 +1,10 @@
+{
+  "name": "system-eval",
+  "version": "1.0.0",
+  "description": "Package for performing LangSmith evaluation on system results",
+  "license": "MIT",
+  "dependencies": {
+    "@langchain/openai": "^0.0.21",
+    "langchain": "^0.1.28"
+  }
+}
