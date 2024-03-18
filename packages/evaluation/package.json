@@ -5,6 +5,10 @@
   "license": "MIT",
   "dependencies": {
     "@langchain/openai": "^0.0.21",
-    "langchain": "^0.1.28"
+    "langchain": "^0.1.28",
+    "typescript": "^5.4.2"
+  },
+  "scripts": {
+    "test": "tsc && node dist/eval.js"
   }
 }
