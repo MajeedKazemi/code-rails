@@ -9,6 +9,6 @@
     "typescript": "^5.4.2"
   },
   "scripts": {
-    "test": "tsc && node dist/eval.js"
+    "eval": "tsc && node dist/eval.js"
   }
 }
