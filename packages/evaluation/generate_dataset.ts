@@ -13,19 +13,11 @@ const main = async () => {
         storyTitle: String,
         taskDescription: String
     }[] = [];
-    const storyTitlesInputs: {
-        storyTitle: String,
-        taskDescription: String,
-        character: String
-    }[] = [];
 
     // Character Names for Generating Story Titles
     const characterInputs = ["Mario", "Zeus", "Barbie", "Katniss Everdeen"];
     const generatedStories: {
         generatedTaskStory: String,
-        character: String,
-        storyTitle: String,
-        taskDescription: String
     }[] = [];
 
     const taskDescriptions = [
@@ -92,10 +84,7 @@ const main = async () => {
         const story = prompt.parser(rawStories.choices[0].message.content);
 
         generatedStories.push({
-            generatedTaskStory: `${story.set_up}\n${story.conflict}`,
-            character: title.character,
-            storyTitle: title.storyTitle,
-            taskDescription: title.taskDescription
+            generatedTaskStory: `${story.set_up}\n${story.conflict}`
         });
     }
 
@@ -110,7 +99,7 @@ const main = async () => {
     }
 
     await client.createExamples({
-        inputs: storyTitlesInputs,
+        inputs: storyTitles,
         outputs: generatedStories,
         datasetId: dataset.id,
     });
