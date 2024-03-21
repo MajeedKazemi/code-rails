@@ -1,8 +1,22 @@
 import sys
+import re
 
-import langsmith
-from langchain import chat_models, prompts, smith
+from langsmith import Client
+from langchain import prompts, smith
+from langchain_openai import ChatOpenAI
 from langchain.schema import output_parser
+from langchain_core.messages import AIMessage
+from langsmith.beta._evals import compute_test_metrics
+
+def extract_text_between_tags(txt, start_tag, end_tag):
+    # Compile a regular expression pattern to match the desired text blocks
+    pattern = re.compile(r'\[' + re.escape(start_tag) + r'\](.*?)\[' + re.escape(end_tag) + r'\]', re.DOTALL)
+    matches = pattern.findall(txt)
+    # Extract and process the match if it exists
+    if matches:
+        # Split the matched text by newline, remove the first and last elements, then join back with newline
+        return '\n'.join(matches[0].split('\n')[1:-1])
+    return ""
 
 def evalStories():
     prompt = prompts.ChatPromptTemplate.from_messages(
@@ -38,26 +52,35 @@ use the following format:
 {taskDescription}""")
         ]
     )
-    llm = chat_models.ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5)
-    chain = prompt | llm | output_parser.StrOutputParser()
+
+    def outputParser(ai_message: AIMessage):
+        txt = ai_message.content
+        set_up = extract_text_between_tags(txt, "set-up", "end-set-up")
+        conflict = extract_text_between_tags(txt, "conflict", "end-conflict")
+
+        return set_up + "\n" + conflict
+
+    llm = ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5)
+    chain = prompt | llm | outputParser
 
     # Define the evaluators to apply
     eval_config = smith.RunEvalConfig(
         evaluators=[
-            smith.RunEvalConfig.LabeledCriteria("coherence")
+            smith.RunEvalConfig.Criteria("coherence")
         ],
         custom_evaluators=[],
-        eval_llm=chat_models.ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5)
+        eval_llm=ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5),
+        input_key="taskDescription"
     )
 
-    client = langsmith.Client()
+    client = Client()
     chain_results = client.run_on_dataset(
         dataset_name="Code Rails - Story Titles and Generated Stories",
         evaluation=eval_config,
         llm_or_chain_factory=chain,
-        project_name="test-terrible-particle-14",
+        project_name="py-test-3-unlabelled",
         concurrency_level=5,
-        verbose=True,
+        verbose=True
     )
 
 # check for command line arg
