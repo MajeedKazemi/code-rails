@@ -79,17 +79,17 @@ use the following format:
 
     client = Client()
     chain_results = client.run_on_dataset(
-        dataset_name="small story titles", # "Code Rails - Story Titles",
+        dataset_name="Code Rails - Story Titles",
         evaluation=eval_config,
         llm_or_chain_factory=chain,
-        project_name="story-generation-eval-13",
+        project_name="eval-0",
         concurrency_level=5,
         verbose=True,
-        input_mapper=lambda x: {
-            "character": x["input_character"],
-            "storyTitle": x["input_storytitle"],
-            "taskDescription": x["input_taskdescription"]
-        },
+        # input_mapper=lambda x: {
+        #     "character": x["input_character"],
+        #     "storyTitle": x["input_storytitle"],
+        #     "taskDescription": x["input_taskdescription"]
+        # },
     )
 
 # check for command line arg
