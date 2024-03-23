@@ -66,7 +66,11 @@ use the following format:
     # Define the evaluators to apply
     eval_config = smith.RunEvalConfig(
         evaluators=[
-            smith.RunEvalConfig.Criteria("coherence")
+            # smith.RunEvalConfig.Criteria({"coherence": "Is the submission coherent, well-structured, and organized? Note that the reader already knows that they will be writing a program."}),
+            smith.RunEvalConfig.Criteria({"consistency": "Is the objective consistent between the [Input] and [Submission]? Note that task can be slightly different from that described in the [Input], but should embody the same coding knowledge requirements. ie strings can be different."}),
+            smith.RunEvalConfig.Criteria({"engagement": "Is the submission engaging, interesting, and fun to read?"}),
+            smith.RunEvalConfig.Criteria({"creativity": "Is this [Submission] creative, imaginative, or novel?"}),
+            smith.RunEvalConfig.Criteria({"clear_objective": "Is the coding task in [Submission] easy to identify? The reader expects the task to be embedded in a story."}),
         ],
         custom_evaluators=[],
         eval_llm=ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5),
@@ -75,12 +79,17 @@ use the following format:
 
     client = Client()
     chain_results = client.run_on_dataset(
-        dataset_name="Code Rails - Story Titles and Generated Stories",
+        dataset_name="small story titles", # "Code Rails - Story Titles",
         evaluation=eval_config,
         llm_or_chain_factory=chain,
-        project_name="py-test-3-unlabelled",
+        project_name="story-generation-eval-13",
         concurrency_level=5,
-        verbose=True
+        verbose=True,
+        input_mapper=lambda x: {
+            "character": x["input_character"],
+            "storyTitle": x["input_storytitle"],
+            "taskDescription": x["input_taskdescription"]
+        },
     )
 
 # check for command line arg
