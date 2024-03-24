@@ -1,5 +1,6 @@
 from langchain import prompts
 
+
 def l1_prompt():
     return prompts.ChatPromptTemplate.from_messages([
         (
@@ -12,11 +13,11 @@ def l1_prompt():
 
     # Template:
     [hints-to-fix-student-code]:
-    [[tag]] hint bullet point. write python keywords like this: \`keyword\`
+    [[tag]] hint bullet point. write python keywords like this: `keyword`
     [[tag]] text...
     [[tag]] text...
 
-    at the beginning of each hint's bullet points add one of the following tags: [[fix]], [[add]], [[remove]]"""
+    at the beginning of each hint's bullet points add one of the following tags: [[fix]], [[add]], [[remove]]""",
         ),
         (
             "user",
@@ -41,7 +42,7 @@ def l1_prompt():
     else:
         print("Invalid Option")
 
-    print("You entered " + comparison + " and the result is " + str(result))"""
+    print("You entered " + comparison + " and the result is " + str(result))""",
         ),
         (
             "assistant",
@@ -67,7 +68,7 @@ def l1_prompt():
     else:
         print("Invalid Option")
 
-    print("You entered " + comparison + " and the result is " + str(result)) 
+    print("You entered " + comparison + " and the result is " + str(result))
 
     [hints-to-fix-student-code]:
     [[add]] missing `import` statement for the `random` module.
@@ -77,10 +78,10 @@ def l1_prompt():
     [[remove]] you do not need `num 3` for this task.
     [[add]] you forgot to handle the case where the user enters `"smaller"` (you can use `elif` for that) and didn't check for invalid input cases (using `else`).
     [[add]] In the final print statement, you need to convert numbers to string using `str()` before concatenation with the `+` operator.
-    [end-hints-to-fix-student-code]"""
+    [end-hints-to-fix-student-code]""",
         ),
         (
             "user",
-            "[intended-behavior]: {taskDescription}\n[student-code]\n{solution}\n[end-student-code]"
-        )
+            "[intended-behavior]: {taskDescription}\n[student-code]\n{solution}\n[end-student-code]",
+        ),
     ])

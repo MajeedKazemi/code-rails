@@ -1,23 +1,23 @@
-import sys
 import re
-
-from langsmith import Client
-from langchain import prompts, smith
-from langchain_openai import ChatOpenAI
-from langchain.schema import output_parser
-from langchain_core.messages import AIMessage
-from tqdm import tqdm
+import sys
 
 from feedback_prompts import l1_prompt
+from langchain import prompts, smith
+from langchain.schema import output_parser
+from langchain_core.messages import AIMessage
+from langchain_openai import ChatOpenAI
+from langsmith import Client
+from tqdm import tqdm
+
 
 def extract_text_between_tags(txt, start_tag, end_tag):
     # Compile a regular expression pattern to match the desired text blocks
-    pattern = re.compile(r'\[' + re.escape(start_tag) + r'\](.*?)\[' + re.escape(end_tag) + r'\]', re.DOTALL)
+    pattern = re.compile(r"\[" + re.escape(start_tag) + r"\](.*?)\[" + re.escape(end_tag) + r"\]", re.DOTALL)
     matches = pattern.findall(txt)
     # Extract and process the match if it exists
     if matches:
         # Split the matched text by newline, remove the first and last elements, then join back with newline
-        return '\n'.join(matches[0].split('\n')[1:-1])
+        return "\n".join(matches[0].split("\n")[1:-1])
     return ""
 
 def evalStories():
@@ -51,8 +51,8 @@ use the following format:
 [story-title]: {storyTitle}
 
 [python-programming-task]:
-{taskDescription}""")
-        ]
+{taskDescription}"""),
+        ],
     )
 
     def outputParser(ai_message: AIMessage):
@@ -76,7 +76,7 @@ use the following format:
         ],
         custom_evaluators=[],
         eval_llm=ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5),
-        input_key="taskDescription"
+        input_key="taskDescription",
     )
 
     client = Client()
@@ -99,22 +99,22 @@ def getSolutionPrompt(id):
         return prompts.ChatPromptTemplate.from_messages(
             [
                 ("system", "Generate a solution to the provided [problem]. The solution should be written in Python. Only return the code with no other annotations including backticks."),
-                ("human", "[problem]: {problem}")
-            ]
+                ("human", "[problem]: {problem}"),
+            ],
         )
     elif id == 1:
         return prompts.ChatPromptTemplate.from_messages(
             [
                 ("system", "Generate an incorrect solution to the provided [problem]. The solution should be written in Python. Only return the code with no other annotations including backticks."),
-                ("human", "[problem]: {problem}")
-            ]
+                ("human", "[problem]: {problem}"),
+            ],
         )
     elif id == 2:
         return prompts.ChatPromptTemplate.from_messages(
             [
                 ("system", "Generate a mostly correct solution to the provided [problem], but ensure there are some mistakes. The solution should be written in Python. Only return the code with no other annotations including backticks."),
-                ("human", "[problem]: {problem}")
-            ]
+                ("human", "[problem]: {problem}"),
+            ],
         )
 
 def getSolutionDatasetName(id):
@@ -134,7 +134,7 @@ def generateTaskSolutions(prompt_id: int = 0):
     client = Client()
     project_name = "eval-0"
     df = client.get_test_results(project_name=project_name)
-    
+
     inputs = []
     for idx, row in tqdm(df.iterrows(), total=df.shape[0]):
         solution = chain.invoke({"problem": row["outputs.output"]})
@@ -143,17 +143,17 @@ def generateTaskSolutions(prompt_id: int = 0):
             "character": row["input.character"],
             "originalTaskDescription": row["input.taskDescription"],
             "taskDescription": row["outputs.output"],
-            "solution": solution
+            "solution": solution,
         })
 
-    
+
     dataset = client.create_dataset(
-        dataset_name=getSolutionDatasetName(prompt_id)
+        dataset_name=getSolutionDatasetName(prompt_id),
     )
 
     client.create_examples(
         inputs=inputs,
-        dataset_id=dataset.id
+        dataset_id=dataset.id,
     )
 
 def evalFeedback(prompt_id: int =1):
@@ -174,7 +174,7 @@ def evalFeedback(prompt_id: int =1):
         ],
         custom_evaluators=[],
         eval_llm=ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5),
-        input_key="inputs"
+        input_key="inputs",
     )
 
     client = Client()
@@ -187,7 +187,7 @@ def evalFeedback(prompt_id: int =1):
         input_mapper=lambda x: {
             "inputs": f"\n[input-solution]:\n{x['solution']}\n[input-task]:\n{x['taskDescription']}",
             "taskDescription": x["taskDescription"],
-            "solution": x["solution"]
+            "solution": x["solution"],
         },
     )
 
