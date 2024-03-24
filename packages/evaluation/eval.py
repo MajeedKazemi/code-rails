@@ -9,6 +9,8 @@ from langchain_core.messages import AIMessage
 from langsmith.beta._evals import compute_test_metrics
 from tqdm import tqdm
 
+from feedback_prompts import l1_prompt
+
 def extract_text_between_tags(txt, start_tag, end_tag):
     # Compile a regular expression pattern to match the desired text blocks
     pattern = re.compile(r'\[' + re.escape(start_tag) + r'\](.*?)\[' + re.escape(end_tag) + r'\]', re.DOTALL)
@@ -155,6 +157,41 @@ def generateTaskSolutions(prompt_id: int = 0):
         dataset_id=dataset.id
     )
 
+def evalFeedback(prompt_id: int =1):
+    prompt = l1_prompt()
+
+    def outputParser(ai_message: AIMessage):
+        txt = ai_message.content
+        hints = extract_text_between_tags(txt, "hints-to-fix-student-code", "end-hints-to-fix-student-code")
+        return hints
+
+    llm = ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5)
+    chain = prompt | llm | outputParser
+
+    # Define the evaluators to apply
+    eval_config = smith.RunEvalConfig(
+        evaluators=[
+            smith.RunEvalConfig.Criteria({"helpfulness": "Do the hints in [Submission] help resolve any issues in [input-solution]? [input-solution] is code written by a student attempting to solve [input-task]."}),
+        ],
+        custom_evaluators=[],
+        eval_llm=ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5),
+        input_key="inputs"
+    )
+
+    client = Client()
+    chain_results = client.run_on_dataset(
+        dataset_name="CR - Incorrect Subset",
+        evaluation=eval_config,
+        llm_or_chain_factory=chain,
+        project_name="CR - Subset Eval 2",
+        verbose=True,
+        input_mapper=lambda x: {
+            "inputs": f"\n[input-solution]:\n{x['solution']}\n[input-task]:\n{x['taskDescription']}",
+            "taskDescription": x["taskDescription"],
+            "solution": x["solution"]
+        },
+    )
+
 # check for command line arg
 arg = sys.argv[1] if len(sys.argv) > 1 else ""
 
@@ -167,6 +204,12 @@ elif ("solutions" in arg.lower()):
         generateTaskSolutions(1)
     elif arg == "solutions-approximate":
         generateTaskSolutions(2)
-
+elif (arg == "feedback"):
+    if arg == "feedback" or arg == "feedback-one":
+        evalFeedback(1)
+    elif arg == "feedback-two":
+        evalFeedback(2)
+    elif arg == "feedback-three":
+        evalFeedback(3)
 else:
     print("Error! Please provide a valid command line argument.")
