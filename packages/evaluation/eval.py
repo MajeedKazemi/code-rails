@@ -7,6 +7,7 @@ from langchain_openai import ChatOpenAI
 from langchain.schema import output_parser
 from langchain_core.messages import AIMessage
 from langsmith.beta._evals import compute_test_metrics
+from tqdm import tqdm
 
 def extract_text_between_tags(txt, start_tag, end_tag):
     # Compile a regular expression pattern to match the desired text blocks
@@ -92,10 +93,48 @@ use the following format:
         # },
     )
 
+def generateTaskSolutions():
+    prompt = prompts.ChatPromptTemplate.from_messages(
+        [
+            ("system", "Generate a solution to the provided [problem]. The solution should be written in Python. Only return the code with no other annotations including backticks."),
+            ("human", "[problem]: {problem}")
+        ]
+    )
+
+    llm = ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5)
+    chain = prompt | llm | output_parser.StrOutputParser()
+
+    client = Client()
+    project_name = "eval-0"
+    df = client.get_test_results(project_name=project_name)
+    
+    inputs = []
+    for idx, row in tqdm(df.iterrows(), total=df.shape[0]):
+        solution = chain.invoke({"problem": row["outputs.output"]})
+        inputs.append({
+            "storyTitle": row["input.storyTitle"],
+            "character": row["input.character"],
+            "originalTaskDescription": row["input.taskDescription"],
+            "taskDescription": row["outputs.output"],
+            "solution": solution
+        })
+
+    
+    dataset = client.create_dataset(
+        dataset_name="Code Rails - Correct Solutions",
+    )
+
+    client.create_examples(
+        inputs=inputs,
+        dataset_id=dataset.id
+    )
+
 # check for command line arg
 arg = sys.argv[1] if len(sys.argv) > 1 else ""
 
 if (arg == "stories"):
     evalStories()
+elif (arg == "solutions"):
+    generateTaskSolutions()
 else:
     print("Error! Please provide a valid command line argument.")
