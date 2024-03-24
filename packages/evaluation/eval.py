@@ -93,13 +93,39 @@ use the following format:
         # },
     )
 
-def generateTaskSolutions():
-    prompt = prompts.ChatPromptTemplate.from_messages(
-        [
-            ("system", "Generate a solution to the provided [problem]. The solution should be written in Python. Only return the code with no other annotations including backticks."),
-            ("human", "[problem]: {problem}")
-        ]
-    )
+def getSolutionPrompt(id):
+    if id ==0:
+        return prompts.ChatPromptTemplate.from_messages(
+            [
+                ("system", "Generate a solution to the provided [problem]. The solution should be written in Python. Only return the code with no other annotations including backticks."),
+                ("human", "[problem]: {problem}")
+            ]
+        )
+    elif id == 1:
+        return prompts.ChatPromptTemplate.from_messages(
+            [
+                ("system", "Generate an incorrect solution to the provided [problem]. The solution should be written in Python. Only return the code with no other annotations including backticks."),
+                ("human", "[problem]: {problem}")
+            ]
+        )
+    elif id == 2:
+        return prompts.ChatPromptTemplate.from_messages(
+            [
+                ("system", "Generate a mostly correct solution to the provided [problem], but ensure there are some mistakes. The solution should be written in Python. Only return the code with no other annotations including backticks."),
+                ("human", "[problem]: {problem}")
+            ]
+        )
+
+def getSolutionDatasetName(id):
+    if id == 0:
+        return "Code Rails - Correct Solutions"
+    elif id == 1:
+        return "Code Rails - Incorrect Solutions"
+    elif id == 2:
+        return "Code Rails - Approximate Solutions"
+
+def generateTaskSolutions(prompt_id: int = 0):
+    prompt = getSolutionPrompt(prompt_id)
 
     llm = ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5)
     chain = prompt | llm | output_parser.StrOutputParser()
@@ -121,7 +147,7 @@ def generateTaskSolutions():
 
     
     dataset = client.create_dataset(
-        dataset_name="Code Rails - Correct Solutions",
+        dataset_name=getSolutionDatasetName(prompt_id)
     )
 
     client.create_examples(
@@ -134,7 +160,13 @@ arg = sys.argv[1] if len(sys.argv) > 1 else ""
 
 if (arg == "stories"):
     evalStories()
-elif (arg == "solutions"):
-    generateTaskSolutions()
+elif ("solutions" in arg.lower()):
+    if arg == "solutions" or arg == "solutions-correct":
+        generateTaskSolutions(0)
+    elif arg == "solutions-incorrect":
+        generateTaskSolutions(1)
+    elif arg == "solutions-approximate":
+        generateTaskSolutions(2)
+
 else:
     print("Error! Please provide a valid command line argument.")
