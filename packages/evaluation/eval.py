@@ -6,7 +6,6 @@ from langchain import prompts, smith
 from langchain_openai import ChatOpenAI
 from langchain.schema import output_parser
 from langchain_core.messages import AIMessage
-from langsmith.beta._evals import compute_test_metrics
 from tqdm import tqdm
 
 from feedback_prompts import l1_prompt
@@ -81,7 +80,7 @@ use the following format:
     )
 
     client = Client()
-    chain_results = client.run_on_dataset(
+    client.run_on_dataset(
         dataset_name="Code Rails - Story Titles",
         evaluation=eval_config,
         llm_or_chain_factory=chain,
@@ -179,7 +178,7 @@ def evalFeedback(prompt_id: int =1):
     )
 
     client = Client()
-    chain_results = client.run_on_dataset(
+    client.run_on_dataset(
         dataset_name="CR - Incorrect Subset",
         evaluation=eval_config,
         llm_or_chain_factory=chain,
