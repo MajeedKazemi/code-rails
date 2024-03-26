@@ -20,6 +20,12 @@ def extract_text_between_tags(txt, start_tag, end_tag):
         return "\n".join(matches[0].split("\n")[1:-1])
     return ""
 
+def number_code(code: str) -> str:
+    lines = code.split('\n')
+    numbered_lines = [f"{i + 1}. {line}" for i, line in enumerate(lines)]
+    return '\n'.join(numbered_lines)
+
+
 def evalStories():
     prompt = prompts.ChatPromptTemplate.from_messages(
         [
@@ -95,35 +101,19 @@ use the following format:
     )
 
 def getSolutionPrompt(id):
-    if id ==0:
-        return prompts.ChatPromptTemplate.from_messages(
-            [
-                ("system", "Generate a solution to the provided [problem]. The solution should be written in Python. Only return the code with no other annotations including backticks."),
-                ("human", "[problem]: {problem}"),
-            ],
-        )
-    elif id == 1:
-        return prompts.ChatPromptTemplate.from_messages(
-            [
-                ("system", "Generate an incorrect solution to the provided [problem]. The solution should be written in Python. Only return the code with no other annotations including backticks."),
-                ("human", "[problem]: {problem}"),
-            ],
-        )
-    elif id == 2:
-        return prompts.ChatPromptTemplate.from_messages(
-            [
-                ("system", "Generate a mostly correct solution to the provided [problem], but ensure there are some mistakes. The solution should be written in Python. Only return the code with no other annotations including backticks."),
-                ("human", "[problem]: {problem}"),
-            ],
-        )
+    correctness = ["correct", "very incorrect", "approximate"]
+    return prompts.ChatPromptTemplate.from_messages(
+        [
+            ("system", f"""Generate a {correctness[id]} solution to the provided [problem].
+Three sets of solutions will be generated. One set will be correct, one set will be incorrect, and one set will be approximate. The approximate solution should be close to the correct solution but not exactly correct.
+Ensure that this solution falls within its respective category and is different from the other two sets of solutions.
+The solution should be written in Python. Only return the code with no other annotations including backticks."""),
+            ("human", "[problem]: {problem}"),
+        ],
+    )
 
 def getSolutionDatasetName(id):
-    if id == 0:
-        return "Code Rails - Correct Solutions"
-    elif id == 1:
-        return "Code Rails - Incorrect Solutions"
-    elif id == 2:
-        return "Code Rails - Approximate Solutions"
+    return ["Code Rails - Correct Solutions", "Code Rails - Incorrect Solutions", "Code Rails - Approximate Solutions"][id]
 
 def generateTaskSolutions(prompt_id: int = 0):
     prompt = getSolutionPrompt(prompt_id)
@@ -137,18 +127,19 @@ def generateTaskSolutions(prompt_id: int = 0):
 
     inputs = []
     for idx, row in tqdm(df.iterrows(), total=df.shape[0]):
-        solution = chain.invoke({"problem": row["outputs.output"]})
-        inputs.append({
-            "storyTitle": row["input.storyTitle"],
-            "character": row["input.character"],
-            "originalTaskDescription": row["input.taskDescription"],
-            "taskDescription": row["outputs.output"],
-            "solution": solution,
-        })
+        if row["input.character"] == "Mario":
+            solution = chain.invoke({"problem": row["outputs.output"]})
+            inputs.append({
+                "storyTitle": row["input.storyTitle"],
+                "character": row["input.character"],
+                "originalTaskDescription": row["input.taskDescription"],
+                "taskDescription": row["outputs.output"],
+                "solution": solution,
+            })
 
 
     dataset = client.create_dataset(
-        dataset_name=getSolutionDatasetName(prompt_id),
+        dataset_name=getSolutionDatasetName(prompt_id) + " 2",
     )
 
     client.create_examples(
@@ -156,7 +147,7 @@ def generateTaskSolutions(prompt_id: int = 0):
         dataset_id=dataset.id,
     )
 
-def evalFeedback(prompt_id: int =1):
+def evalFeedback(prompt_id: int = 1):
     prompt = l1_prompt()
 
     def outputParser(ai_message: AIMessage):
