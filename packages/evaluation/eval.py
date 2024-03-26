@@ -100,14 +100,29 @@ use the following format:
         # },
     )
 
-def getSolutionPrompt(id):
-    correctness = ["correct", "very incorrect", "approximate"]
+def getSolutionPrompt():
     return prompts.ChatPromptTemplate.from_messages(
         [
-            ("system", f"""Generate a {correctness[id]} solution to the provided [problem].
-Three sets of solutions will be generated. One set will be correct, one set will be incorrect, and one set will be approximate. The approximate solution should be close to the correct solution but not exactly correct.
-Ensure that this solution falls within its respective category and is different from the other two sets of solutions.
-The solution should be written in Python. Only return the code with no other annotations including backticks."""),
+            ("system", f"""Generate threes to the provided [problem]. One set will be correct, one set will be incorrect, and one set will be approximate. 
+- The [correct-solution] should be correct
+- The [approximate-solution] should be close to the correct solution but have some noticeable mistakes.
+- The [incorrect-solution] should be extremely wrong and barely resemble the problem.
+Ensure that this solution falls within its respective category and is differentiable from the other two sets of solutions.
+The solution should be written in Python. Only return the code with no other annotations including backticks.
+
+Please use the following template:
+
+[correct-solution]:
+Correct solution here
+[end-correct-solution]
+
+[approximate-solution]:
+Correct solution here
+[end-approximate-solution]
+
+[incorrect-solution]:
+Correct solution here
+[end-incorrect-solution]"""),
             ("human", "[problem]: {problem}"),
         ],
     )
@@ -116,36 +131,63 @@ def getSolutionDatasetName(id):
     return ["Code Rails - Correct Solutions", "Code Rails - Incorrect Solutions", "Code Rails - Approximate Solutions"][id]
 
 def generateTaskSolutions(prompt_id: int = 0):
-    prompt = getSolutionPrompt(prompt_id)
+    prompt = getSolutionPrompt()
+
+    def outputParser(ai_message: AIMessage):
+        txt = ai_message.content
+        correct = extract_text_between_tags(txt, "correct-solution", "end-correct-solution")
+        approx = extract_text_between_tags(txt, "approximate-solution", "end-approximate-solution")
+        incorrect = extract_text_between_tags(txt, "incorrect-solution", "end-incorrect-solution")
+
+        return {
+            "correct": correct,
+            "approximate": approx,
+            "incorrect": incorrect,
+        }
 
     llm = ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5)
-    chain = prompt | llm | output_parser.StrOutputParser()
+    chain = prompt | llm | outputParser
 
     client = Client()
     project_name = "eval-0"
     df = client.get_test_results(project_name=project_name)
 
-    inputs = []
+    correct_inputs, approximate_inputs, incorrect_inputs = [], [], []
     for idx, row in tqdm(df.iterrows(), total=df.shape[0]):
-        if row["input.character"] == "Mario":
-            solution = chain.invoke({"problem": row["outputs.output"]})
-            inputs.append({
-                "storyTitle": row["input.storyTitle"],
-                "character": row["input.character"],
-                "originalTaskDescription": row["input.taskDescription"],
-                "taskDescription": row["outputs.output"],
-                "solution": solution,
-            })
+        solutions = chain.invoke({"problem": row["outputs.output"]})
+
+        base_inputs = {
+            "storyTitle": row["input.storyTitle"],
+            "character": row["input.character"],
+            "originalTaskDescription": row["input.taskDescription"],
+            "taskDescription": row["outputs.output"],
+        }
+
+        incorrect_inputs.append({
+            **base_inputs,
+            "solution": solutions["incorrect"],
+        })
+
+        approximate_inputs.append({
+            **base_inputs,
+            "solution": solutions["approximate"],
+        })
+
+        correct_inputs.append({
+            **base_inputs,
+            "solution": solutions["correct"],
+        })
 
 
-    dataset = client.create_dataset(
-        dataset_name=getSolutionDatasetName(prompt_id) + " 2",
-    )
+    for i, inputs in enumerate([correct_inputs, incorrect_inputs, approximate_inputs]):
+        dataset = client.create_dataset(
+            dataset_name=getSolutionDatasetName(i),
+        )
 
-    client.create_examples(
-        inputs=inputs,
-        dataset_id=dataset.id,
-    )
+        client.create_examples(
+            inputs=inputs,
+            dataset_id=dataset.id,
+        )
 
 def evalFeedback(prompt_id: int = 1):
     prompt = l1_prompt()
