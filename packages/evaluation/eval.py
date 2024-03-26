@@ -139,6 +139,9 @@ def generateTaskSolutions(prompt_id: int = 0):
         approx = extract_text_between_tags(txt, "approximate-solution", "end-approximate-solution")
         incorrect = extract_text_between_tags(txt, "incorrect-solution", "end-incorrect-solution")
 
+        if not correct or not approx or not incorrect:
+            print("\n--- Error: Missing one of the solutions! ---\n")
+
         return {
             "correct": correct,
             "approximate": approx,
