@@ -17,10 +17,11 @@ def extract_text_between_tags(txt, start_tag, end_tag, keep_text=False):
     # Extract and process the match if it exists
     if matches:
         # Split the matched text by newline, remove the first and last elements, then join back with newline
+        return_list = matches[0].split("\n")[1:-1]
         if keep_text:
-            return matches[0]
-        else:
-            return "\n".join(matches[0].split("\n")[1:-1])
+            return_list = [f"[[{start_tag}]]"] + return_list + [f"[[{end_tag}]]"]
+            
+        return "\n".join(return_list)
     return ""
 
 def number_code(code: str) -> str:
@@ -206,7 +207,7 @@ def evalFeedback(dataset_id: int = 1, feedback_level: int = 0):
 
     def outputParser(ai_message: AIMessage):
         txt = ai_message.content
-        start_text = ["hints-to-fix-student-code", "numbered-fixed-student-code", "numbered-fixed-student-code"][feedback_level]
+        start_text = ["hints-to-fix-student-code", "suggested-fixes", "numbered-fixed-student-code"][feedback_level]
         end_text = ["end-hints-to-fix-student-code", "end-missing-parts", "end-suggested-fixes"][feedback_level]
         hints = extract_text_between_tags(txt, start_text, end_text, keep_text=feedback_level > 0)
         return hints
@@ -230,7 +231,7 @@ def evalFeedback(dataset_id: int = 1, feedback_level: int = 0):
         dataset_name=getSolutionDatasetName(dataset_id),
         evaluation=eval_config,
         llm_or_chain_factory=chain,
-        project_name=f"[L{feedback_level + 1}]: " + getSolutionProjectName(dataset_id) + " 0",
+        project_name=f"[L{feedback_level + 1}]: " + getSolutionProjectName(dataset_id) + " 2",
         # verbose=True,
         input_mapper=lambda x: {
             "inputs": f"\n[input-solution]:\n{x['solution']}\n[input-task]:\n{x['taskDescription']}",
