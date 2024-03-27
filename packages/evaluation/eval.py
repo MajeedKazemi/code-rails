@@ -19,7 +19,7 @@ def extract_text_between_tags(txt, start_tag, end_tag, keep_text=False):
         # Split the matched text by newline, remove the first and last elements, then join back with newline
         return_list = matches[0].split("\n")[1:-1]
         if keep_text:
-            return_list = [f"[[{start_tag}]]"] + return_list + [f"[[{end_tag}]]"]
+            return_list = [f"[[{start_tag}]]:"] + return_list + [f"[[{end_tag}]]"]
             
         return "\n".join(return_list)
     return ""
