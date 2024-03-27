@@ -276,4 +276,4 @@ elif ("feedback" in arg):
     print(f"Running Feedback Evalution with:\n\tCorrectness Level: {correctness_level}, Feedback Level: {feedback_level}")
     evalFeedback(correctness_level, feedback_level)
 else:
-    print("Error! Please provide a valid command line argument.")
+    print("Error! Please provide a valid command line argument. See the evaluation README for more information.")
