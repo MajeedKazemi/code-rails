@@ -243,8 +243,11 @@ def evalFeedback(dataset_id: int = 1, feedback_level: int = 0):
 # check for command line arg
 arg = sys.argv[1] if len(sys.argv) > 1 else ""
 
+# Evaluated Customized Stories
 if (arg == "stories"):
     evalStories()
+
+# Generate Task Solutions for Feedback Evaluation
 elif ("solutions" in arg.lower()):
     if arg == "solutions" or arg == "solutions-correct":
         generateTaskSolutions(0)
@@ -252,6 +255,8 @@ elif ("solutions" in arg.lower()):
         generateTaskSolutions(1)
     elif arg == "solutions-approximate":
         generateTaskSolutions(2)
+
+# Evaluate Feedback with additional parameters
 elif ("feedback" in arg):
     arg = arg.lower()
     if "incorrect" in arg:
