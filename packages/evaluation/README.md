@@ -5,10 +5,10 @@ This evaluation suite has a couple functionalities.
 ## Prerequisites
 
 1. `LANGCHAIN_API_KEY` environment variable must be set to the API key for the LangSmith API.
-2. `python3 -m venv venv` to create a virtual environment.
-3. `source venv/bin/activate` to activate the virtual environment.
-4. `pip install -r requirements.txt` to install the required Python packages.
-5. `yarn` to install the required Node packages.
+2. Run `python3 -m venv venv` to create a virtual environment.
+3. Run `source venv/bin/activate` to activate the virtual environment.
+4. Run `pip install -r requirements.txt` to install the required Python packages.
+5. Run `yarn` to install the required Node packages.
 
 ## LangSmith Dataset Generation
 
