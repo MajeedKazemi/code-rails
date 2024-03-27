@@ -16,6 +16,7 @@ def l1_prompt():
     [[tag]] hint bullet point. write python keywords like this: `keyword`
     [[tag]] text...
     [[tag]] text...
+    [end-hints-to-fix-student-code]
 
     at the beginning of each hint's bullet points add one of the following tags: [[fix]], [[add]], [[remove]]""",
         ),
