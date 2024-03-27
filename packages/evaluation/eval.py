@@ -96,7 +96,7 @@ use the following format:
         llm_or_chain_factory=chain,
         project_name="eval-0",
         concurrency_level=5,
-        verbose=True,
+        # verbose=True,
         # input_mapper=lambda x: {
         #     "character": x["input_character"],
         #     "storyTitle": x["input_storytitle"],
