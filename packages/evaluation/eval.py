@@ -1,7 +1,7 @@
 import re
 import sys
 
-from feedback_prompts import l1_prompt
+from feedback_prompts import l1_prompt, l2_prompt, l3_prompt
 from langchain import prompts, smith
 from langchain.schema import output_parser
 from langchain_core.messages import AIMessage
@@ -10,14 +10,17 @@ from langsmith import Client
 from tqdm import tqdm
 
 
-def extract_text_between_tags(txt, start_tag, end_tag):
+def extract_text_between_tags(txt, start_tag, end_tag, keep_text=False):
     # Compile a regular expression pattern to match the desired text blocks
     pattern = re.compile(r"\[" + re.escape(start_tag) + r"\](.*?)\[" + re.escape(end_tag) + r"\]", re.DOTALL)
     matches = pattern.findall(txt)
     # Extract and process the match if it exists
     if matches:
         # Split the matched text by newline, remove the first and last elements, then join back with newline
-        return "\n".join(matches[0].split("\n")[1:-1])
+        if keep_text:
+            return matches[0]
+        else:
+            return "\n".join(matches[0].split("\n")[1:-1])
     return ""
 
 def number_code(code: str) -> str:
@@ -130,6 +133,9 @@ Correct solution here
 def getSolutionDatasetName(id):
     return ["Code Rails - Correct Solutions", "Code Rails - Incorrect Solutions", "Code Rails - Approximate Solutions"][id]
 
+def getSolutionProjectName(id):
+    return ["Code Rails - Feedback Correct Evaluation", "Code Rails - Feedback Incorrect Evaluation", "Code Rails - Feedback Approximate Evaluation"][id]
+
 def generateTaskSolutions(prompt_id: int = 0):
     prompt = getSolutionPrompt()
 
@@ -192,12 +198,17 @@ def generateTaskSolutions(prompt_id: int = 0):
             dataset_id=dataset.id,
         )
 
-def evalFeedback(prompt_id: int = 1):
-    prompt = l1_prompt()
+def feedbackPrompt(level: int):
+    return [l1_prompt(), l2_prompt(), l3_prompt()][level]
+
+def evalFeedback(dataset_id: int = 1, feedback_level: int = 0):
+    prompt = feedbackPrompt(feedback_level)
 
     def outputParser(ai_message: AIMessage):
         txt = ai_message.content
-        hints = extract_text_between_tags(txt, "hints-to-fix-student-code", "end-hints-to-fix-student-code")
+        start_text = ["hints-to-fix-student-code", "numbered-fixed-student-code", "numbered-fixed-student-code"][feedback_level]
+        end_text = ["end-hints-to-fix-student-code", "end-missing-parts", "end-suggested-fixes"][feedback_level]
+        hints = extract_text_between_tags(txt, start_text, end_text, keep_text=feedback_level > 0)
         return hints
 
     llm = ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5)
@@ -207,6 +218,7 @@ def evalFeedback(prompt_id: int = 1):
     eval_config = smith.RunEvalConfig(
         evaluators=[
             smith.RunEvalConfig.Criteria({"helpfulness": "Do the hints in [Submission] help resolve any issues in [input-solution]? [input-solution] is code written by a student attempting to solve [input-task]."}),
+            smith.RunEvalConfig.Criteria({"correctness": "Are the hints in [Submission] correct? [input-solution] is code written by a student attempting to solve [input-task]."}),
         ],
         custom_evaluators=[],
         eval_llm=ChatOpenAI(model="gpt-4-turbo-preview", temperature=0.5),
@@ -215,15 +227,15 @@ def evalFeedback(prompt_id: int = 1):
 
     client = Client()
     client.run_on_dataset(
-        dataset_name="CR - Incorrect Subset",
+        dataset_name=getSolutionDatasetName(dataset_id),
         evaluation=eval_config,
         llm_or_chain_factory=chain,
-        project_name="CR - Subset Eval 2",
-        verbose=True,
+        project_name=f"[L{feedback_level + 1}]: " + getSolutionProjectName(dataset_id) + " 0",
+        # verbose=True,
         input_mapper=lambda x: {
             "inputs": f"\n[input-solution]:\n{x['solution']}\n[input-task]:\n{x['taskDescription']}",
             "taskDescription": x["taskDescription"],
-            "solution": x["solution"],
+            "solution": x["solution"] if feedback_level == 0 else number_code(x["solution"]),
         },
     )
 
@@ -239,12 +251,23 @@ elif ("solutions" in arg.lower()):
         generateTaskSolutions(1)
     elif arg == "solutions-approximate":
         generateTaskSolutions(2)
-elif (arg == "feedback"):
-    if arg == "feedback" or arg == "feedback-one":
-        evalFeedback(1)
-    elif arg == "feedback-two":
-        evalFeedback(2)
-    elif arg == "feedback-three":
-        evalFeedback(3)
+elif ("feedback" in arg):
+    arg = arg.lower()
+    if "incorrect" in arg:
+        correctness_level = 1
+    elif "approximate" in arg:
+        correctness_level = 2
+    else: # "correct" in arg:
+        correctness_level = 0
+    
+    if "l2" in arg:
+        feedback_level = 1
+    elif "l3" in arg:
+        feedback_level = 2
+    else: # "l1" in arg:
+        feedback_level = 0
+
+    print(f"Running Feedback Evalution with:\n\tCorrectness Level: {correctness_level}, Feedback Level: {feedback_level}")
+    evalFeedback(correctness_level, feedback_level)
 else:
     print("Error! Please provide a valid command line argument.")
