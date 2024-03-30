@@ -4,7 +4,8 @@
     "license": "MIT",
     "private": true,
     "workspaces": [
-        "packages/*"
+        "packages/client",
+        "packages/server"
     ],
     "scripts": {
         "dev": "lerna run --parallel dev",
