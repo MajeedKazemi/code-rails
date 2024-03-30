@@ -207,7 +207,7 @@ def evalFeedback(dataset_id: int = 1, feedback_level: int = 0):
 
     def outputParser(ai_message: AIMessage):
         txt = ai_message.content
-        start_text = ["hints-to-fix-student-code", "suggested-fixes", "numbered-fixed-student-code"][feedback_level]
+        start_text = ["hints-to-fix-student-code", "suggested-fixes", "suggested-fixes"][feedback_level]
         end_text = ["end-hints-to-fix-student-code", "end-missing-parts", "end-suggested-fixes"][feedback_level]
         hints = extract_text_between_tags(txt, start_text, end_text, keep_text=feedback_level > 0)
         return hints
@@ -218,7 +218,7 @@ def evalFeedback(dataset_id: int = 1, feedback_level: int = 0):
     # Define the evaluators to apply
     eval_config = smith.RunEvalConfig(
         evaluators=[
-            smith.RunEvalConfig.Criteria({"helpfulness": "Do the hints in [Submission] help resolve any issues in [input-solution]? [input-solution] is code written by a student attempting to solve [input-task]."}),
+            smith.RunEvalConfig.Criteria({"helpfulness": "Do the hints in [Submission] help resolve any issues in [input-solution]? [input-solution] is code written by a student attempting to solve [input-task]. If there are no issues, the hints should be not helpful in improving the code."}),
             smith.RunEvalConfig.Criteria({"correctness": "Are the hints in [Submission] correct? [input-solution] is code written by a student attempting to solve [input-task]."}),
         ],
         custom_evaluators=[],
@@ -231,7 +231,7 @@ def evalFeedback(dataset_id: int = 1, feedback_level: int = 0):
         dataset_name=getSolutionDatasetName(dataset_id),
         evaluation=eval_config,
         llm_or_chain_factory=chain,
-        project_name=f"[L{feedback_level + 1}]: " + getSolutionProjectName(dataset_id) + " 2",
+        project_name=f"[L{feedback_level + 1}]: " + getSolutionProjectName(dataset_id) + " 4",
         # verbose=True,
         input_mapper=lambda x: {
             "inputs": f"\n[input-solution]:\n{x['solution']}\n[input-task]:\n{x['taskDescription']}",
