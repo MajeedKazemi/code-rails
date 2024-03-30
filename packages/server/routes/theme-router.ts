@@ -17,8 +17,8 @@ themeRouter.put("/", verifyUser, async (req, res) => {
     // Update User Theme
     const userId = (req.user as IUser)._id;
     const user = await UserModel.findById(userId)
-    const theme: Array<string> = req.body.theme;
-    if (!theme || theme.length === 0) {
+    const themes: Array<string> = req.body.themes;
+    if (!themes || themes.length === 0) {
         res.statusCode = 400;
         res.send({
             success: false,
@@ -35,7 +35,7 @@ themeRouter.put("/", verifyUser, async (req, res) => {
         return;
     }
 
-    user.theme = theme;
+    user.themes = themes;
 
     user.save().then(
         (user: IUser) => {
@@ -52,13 +52,13 @@ themeRouter.put("/", verifyUser, async (req, res) => {
 
 themeRouter.get("/", verifyUser, async (req, res) => {
     // Get User Theme
-    const theme = getPrimaryTheme(req.user as IUser);
+    const themes = (req.user as IUser).themes;
 
-    if (theme !== undefined) {
+    if (themes !== undefined) {
         res.statusCode = 200;
         res.send({
             success: true,
-            theme,
+            themes,
         });
     } else {
         res.statusCode = 500;
