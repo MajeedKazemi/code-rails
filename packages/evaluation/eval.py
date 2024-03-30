@@ -231,7 +231,7 @@ def evalFeedback(dataset_id: int = 1, feedback_level: int = 0):
         dataset_name=getSolutionDatasetName(dataset_id),
         evaluation=eval_config,
         llm_or_chain_factory=chain,
-        project_name=f"[L{feedback_level + 1}]: " + getSolutionProjectName(dataset_id) + " 4",
+        project_name=f"[L{feedback_level + 1}]: " + getSolutionProjectName(dataset_id) + " 0",
         # verbose=True,
         input_mapper=lambda x: {
             "inputs": f"\n[input-solution]:\n{x['solution']}\n[input-task]:\n{x['taskDescription']}",
