@@ -276,7 +276,8 @@ export const apiGenerateCodex = (
 export const apiGetTitles = (
     token: string | null | undefined,
     taskId: string,
-    currentTitles: string[]
+    currentTitles: string[],
+    theme?: string
 ) =>
     fetch(env.API_URL + "/api/theme/titles/", {
         method: "POST",
@@ -287,7 +288,8 @@ export const apiGetTitles = (
         },
         body: JSON.stringify({
             taskId,
-            currentTitles
+            currentTitles,
+            theme
         }),
     });
 
