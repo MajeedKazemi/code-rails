@@ -85,7 +85,7 @@ export const SelectThemeTask = (props: Props) => {
         try {
             const resp = await apiUpdateTheme(
                 context?.token,
-                selectedTheme
+                [selectedTheme]
             )
             const success = await resp.json();
             return success.success;

@@ -2,7 +2,7 @@ import env from "../utils/env";
 
 export const apiUpdateTheme = (
     token: string | null | undefined,
-    theme: string
+    theme: string[]
 ) =>
     fetch(env.API_URL + "/api/theme/", {
         method: "PUT",
