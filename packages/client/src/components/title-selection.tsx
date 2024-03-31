@@ -9,6 +9,7 @@ interface Props {
     confirmTitle: () => void;
     generateTitles: () => void;
     setTheme: (themes: string) => void;
+    theme: string;
 }
 
 export const TitleSelection = (props: Props) => {
@@ -23,7 +24,7 @@ export const TitleSelection = (props: Props) => {
         const themes = ["Barbie", "Mario", "Indiana Jones"];
         props.setTheme(themes[0]);
         setThemes(themes);
-    });
+    }, []);
 
     return(
         <>
@@ -33,7 +34,9 @@ export const TitleSelection = (props: Props) => {
                         return(
                             <TitleChip
                                 key={`theme_chip_${index}`}
-                                title={theme}
+                                theme={theme}
+                                selected={props.theme === theme}
+                                setTheme={props.setTheme}
                             />
                         )
                     
