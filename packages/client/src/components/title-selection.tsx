@@ -3,6 +3,7 @@ import { TitleButton } from "./title-button";
 import { TitleChip } from "./title-chip";
 import { apiGetTheme } from "../api/theme_api";
 import { EmptyTitleChip } from "./empty-title-chip";
+import { SelectThemeTask } from "./select-theme-task";
 
 interface Props {
     titles: string[];
@@ -19,8 +20,17 @@ export const TitleSelection = (props: Props) => {
     const [generating, setGenerating] = useState(false);
     const [themes, setThemes] = useState<string[]>([]);
 
+    const [updatingThemes, setUpdatingThemes] = useState(false);
+    const [themeIndex, setThemeIndex] = useState(0);
+
     const updateSavedThemes = (index: number) => {
+        setThemeIndex(index);
+        setUpdatingThemes(true);
         console.log("Updating Themes...");
+    };
+
+    const themeUpdateCallback = () => {
+        setUpdatingThemes(false);
     };
 
     useEffect(() => {
@@ -34,6 +44,17 @@ export const TitleSelection = (props: Props) => {
             setThemes(data.themes);
         });
     }, []);
+
+    if (updatingThemes) {
+        return(
+            <SelectThemeTask 
+                taskId="update_themes"
+                onCompletion={themeUpdateCallback}
+                oldThemes={themes}
+                currentThemeIndex={themeIndex}
+            />
+        );
+    }
 
     return(
         <>
