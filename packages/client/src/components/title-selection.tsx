@@ -28,7 +28,7 @@ export const TitleSelection = (props: Props) => {
 
     return(
         <>
-            <div className="absolute inset-y-0 right-0 m-2">
+            <div className="absolute inset-y-0 right-0 m-6">
                 <div className="flex flex-col h-full w-full justify-center gap-2">
                     {themes.map((theme: string, index: number) => {
                         return(
