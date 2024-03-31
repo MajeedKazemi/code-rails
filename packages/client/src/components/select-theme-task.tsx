@@ -10,6 +10,8 @@ import { Accordion, AccordionItem, Selection } from "@nextui-org/react";
 interface Props {
     taskId: string;
     onCompletion: () => void;
+    oldThemes?: string[];
+    currentThemeIndex?: number;
 }
 
 export const SelectThemeTask = (props: Props) => {
@@ -83,9 +85,17 @@ export const SelectThemeTask = (props: Props) => {
 
     const submitTheme = async (): Promise<boolean> => {
         try {
+            let newThemes: string[] = [];
+            if (props.oldThemes !== undefined && props.currentThemeIndex !== undefined) {
+                newThemes = props.oldThemes;
+                newThemes[props.currentThemeIndex] = selectedTheme;
+            } else {
+                newThemes = [selectedTheme];
+            }
+
             const resp = await apiUpdateTheme(
                 context?.token,
-                selectedTheme
+                newThemes
             )
             const success = await resp.json();
             return success.success;
@@ -98,19 +108,23 @@ export const SelectThemeTask = (props: Props) => {
     const handleSubmitTask = () => {
         submitTheme().then((success) => {
             if (success) {
-                apiUserSubmitTask(
-                    context?.token,
-                    props.taskId,
-                    {},
-                    new Date()
-                )
-                .then(async (response) => {
-                    sendLog();
+                if (props.oldThemes !== undefined) {
                     props.onCompletion();
-                })
-                .catch((error: any) => {
-                    logError("handleSkipTask: " + error.toString());
-                });
+                } else {
+                    apiUserSubmitTask(
+                        context?.token,
+                        props.taskId,
+                        {},
+                        new Date()
+                    )
+                    .then(async (response) => {
+                        sendLog();
+                        props.onCompletion();
+                    })
+                    .catch((error: any) => {
+                        logError("handleSkipTask: " + error.toString());
+                    });
+                }
             } else {
                 logError("Theme selection failed");
 

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { IUser, UserModel } from "../models/user";
+import { IUser, UserModel, getPrimaryTheme } from "../models/user";
 
 import { verifyUser } from "../utils/strategy";
 import { openai } from "../utils/openai";
@@ -17,8 +17,8 @@ themeRouter.put("/", verifyUser, async (req, res) => {
     // Update User Theme
     const userId = (req.user as IUser)._id;
     const user = await UserModel.findById(userId)
-    const theme = req.body.theme;
-    if (!theme) {
+    const themes: Array<string> = req.body.themes;
+    if (!themes || themes.length === 0) {
         res.statusCode = 400;
         res.send({
             success: false,
@@ -35,7 +35,7 @@ themeRouter.put("/", verifyUser, async (req, res) => {
         return;
     }
 
-    user.theme = theme;
+    user.themes = themes;
 
     user.save().then(
         (user: IUser) => {
@@ -52,12 +52,13 @@ themeRouter.put("/", verifyUser, async (req, res) => {
 
 themeRouter.get("/", verifyUser, async (req, res) => {
     // Get User Theme
-    const theme = (req.user as IUser).theme;
-    if (theme !== undefined) {
+    const themes = (req.user as IUser).themes;
+
+    if (themes !== undefined) {
         res.statusCode = 200;
         res.send({
             success: true,
-            theme,
+            themes,
         });
     } else {
         res.statusCode = 500;
@@ -69,7 +70,7 @@ themeRouter.get("/", verifyUser, async (req, res) => {
 });
 
 themeRouter.post("/titles", verifyUser, async (req, res) => {
-    const { taskId, currentTitles } = req.body;
+    const { taskId, currentTitles, theme } = req.body;
     const task = getTaskFromTaskId(taskId);
     if (!task) {
         res.statusCode = 404;
@@ -82,9 +83,9 @@ themeRouter.post("/titles", verifyUser, async (req, res) => {
 
     const taskDescription = task.description;
     const userId = (req.user as IUser)._id;
-    const theme = (req.user as IUser).theme;
+    const final_theme = theme ? theme : getPrimaryTheme(req.user as IUser);
 
-    if (!theme) {
+    if (!final_theme) {
         res.statusCode = 500;
         res.send({
             success: false,
@@ -94,7 +95,7 @@ themeRouter.post("/titles", verifyUser, async (req, res) => {
     }
 
     const prompt = titleGenerationPrompt(
-        theme,
+        final_theme,
         taskDescription,
         currentTitles && currentTitles.length > 0 ? currentTitles.map((item: string) => `- ${item}`).join("\n") : ""
     );
@@ -139,7 +140,7 @@ themeRouter.post("/apply", verifyUser, async (req, res) => {
 
     const taskDescription = task.description;
     const userId = (req.user as IUser)._id;
-    const theme = (req.user as IUser).theme;
+    const theme = getPrimaryTheme(req.user as IUser);
 
     if (!theme) {
         res.statusCode = 500;

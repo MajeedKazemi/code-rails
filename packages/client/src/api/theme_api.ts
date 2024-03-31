@@ -2,7 +2,7 @@ import env from "../utils/env";
 
 export const apiUpdateTheme = (
     token: string | null | undefined,
-    theme: string
+    themes: string[]
 ) =>
     fetch(env.API_URL + "/api/theme/", {
         method: "PUT",
@@ -12,7 +12,7 @@ export const apiUpdateTheme = (
             Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            theme
+            themes
         })
     });
 

@@ -17,7 +17,7 @@ export interface IUser extends mongoose.Document {
     role: string;
     age: number;
     grade: number;
-    theme: string;
+    themes: Array<string>;
     editorType: "copilot" | "intellisense";
     gender: "male" | "female" | "other";
     ethnicity: string;
@@ -34,12 +34,16 @@ export const getUserData = (user: IUser) => {
         role: user.role,
         age: user.age,
         grade: user.grade,
-        theme: user.theme,
+        themes: user.themes,
         editorType: user.editorType,
         gender: user.gender,
         ethnicity: user.ethnicity,
         codingExperience: user.codingExperience,
     };
+};
+
+export const getPrimaryTheme = (user: IUser) => {
+    return user.themes && user.themes.length > 0 ? user.themes[0] : undefined;
 };
 
 const UserSchema = new Schema({
@@ -69,9 +73,9 @@ const UserSchema = new Schema({
         type: Number,
         default: 0,
     },
-    theme: {
-        type: String,
-        default: "",
+    themes: {
+        type: [String],
+        default: [],
     },
     editorType: {
         type: String,
