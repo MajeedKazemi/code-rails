@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TitleButton } from "./title-button";
 import { TitleChip } from "./title-chip";
 import { apiGetTheme } from "../api/theme_api";
+import { EmptyTitleChip } from "./empty-title-chip";
 
 interface Props {
     titles: string[];
@@ -45,6 +46,9 @@ export const TitleSelection = (props: Props) => {
                         )
                     
                     })}
+                    {themes.length < 3 &&
+                        <EmptyTitleChip />
+                    }
                 </div>
             </div>
             <div className="flex flex-col gap-2 w-[400px] h-full items-center justify-center m-auto">
