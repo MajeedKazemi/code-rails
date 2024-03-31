@@ -12,7 +12,7 @@ interface Props {
     generateTitles: () => void;
     setTheme: (themes: string) => void;
     theme: string;
-    token?: string;
+    token?: string | null | undefined;
 }
 
 export const TitleSelection = (props: Props) => {
