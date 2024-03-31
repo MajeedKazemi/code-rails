@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { TitleButton } from "./title-button";
-import { TitleChip } from "./title-chip";
+import { ThemeChip } from "./theme-chip";
 import { apiGetTheme } from "../api/theme_api";
-import { EmptyTitleChip } from "./empty-title-chip";
+import { EmptyThemeChip } from "./empty-theme-chip";
 import { SelectThemeTask } from "./select-theme-task";
 
 interface Props {
@@ -62,7 +62,7 @@ export const TitleSelection = (props: Props) => {
                 <div className="flex flex-col h-full w-full justify-center gap-2">
                     {themes.map((theme: string, index: number) => {
                         return(
-                            <TitleChip
+                            <ThemeChip
                                 key={`theme_chip_${index}`}
                                 theme={theme}
                                 selected={props.theme === theme}
@@ -74,7 +74,7 @@ export const TitleSelection = (props: Props) => {
                     
                     })}
                     {themes.length < 3 &&
-                        <EmptyTitleChip
+                        <EmptyThemeChip
                             index={themes.length}
                             addTitle={updateSavedThemes}
                         />
