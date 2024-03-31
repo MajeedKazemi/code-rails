@@ -19,6 +19,10 @@ export const TitleSelection = (props: Props) => {
     const [generating, setGenerating] = useState(false);
     const [themes, setThemes] = useState<string[]>([]);
 
+    const updateSavedThemes = (index: number) => {
+        console.log("Updating Themes...");
+    };
+
     useEffect(() => {
         setGenerating(false)
     }, [props.titles])
@@ -42,12 +46,17 @@ export const TitleSelection = (props: Props) => {
                                 theme={theme}
                                 selected={props.theme === theme}
                                 setTheme={props.setTheme}
+                                index={index}
+                                editTheme={updateSavedThemes}
                             />
                         )
                     
                     })}
                     {themes.length < 3 &&
-                        <EmptyTitleChip />
+                        <EmptyTitleChip
+                            index={themes.length}
+                            addTitle={updateSavedThemes}
+                        />
                     }
                 </div>
             </div>
