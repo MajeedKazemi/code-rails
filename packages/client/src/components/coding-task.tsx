@@ -259,6 +259,7 @@ export const CodingTask = (props: CodingTaskProps) => {
                 confirmTitle={confirmTitle}
                 setTheme={setTheme}
                 theme={theme}
+                token={context?.token}
             />
         );
     }

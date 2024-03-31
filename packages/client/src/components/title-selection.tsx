@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { TitleButton } from "./title-button";
 import { TitleChip } from "./title-chip";
+import { apiGetTheme } from "../api/theme_api";
 
 interface Props {
     titles: string[];
@@ -10,6 +11,7 @@ interface Props {
     generateTitles: () => void;
     setTheme: (themes: string) => void;
     theme: string;
+    token?: string;
 }
 
 export const TitleSelection = (props: Props) => {
@@ -21,9 +23,11 @@ export const TitleSelection = (props: Props) => {
     }, [props.titles])
 
     useEffect(() => {
-        const themes = ["Barbie", "Mario", "Indiana Jones"];
-        props.setTheme(themes[0]);
-        setThemes(themes);
+        apiGetTheme(props.token).then(async (res) => {
+            const data = await res.json();
+            props.setTheme(data.themes[0]);
+            setThemes(data.themes);
+        });
     }, []);
 
     return(
