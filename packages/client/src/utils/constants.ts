@@ -9,5 +9,6 @@ export enum TaskType {
     ShortAnswer = "shortAnswer",
     MultipleChoice = "multipleChoice",
     WatchVideo = "watchVideo",
-    SelectTheme = "selectTheme"
+    SelectTheme = "selectTheme",
+    Tutorial = "tutorial"
 }

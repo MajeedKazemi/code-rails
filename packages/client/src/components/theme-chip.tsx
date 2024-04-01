@@ -6,7 +6,7 @@ interface Props {
     editTheme: (index: number) => void;
 }
 
-export const TitleChip = ({ theme, selected, setTheme, index, editTheme }: Props) => {
+export const ThemeChip = ({ theme, selected, setTheme, index, editTheme }: Props) => {
     return(
         <div
             className={"flex items-center relative justify-center text-center w-24 aspect-square border-1.5 rounded-full " + (selected ? "bg-slate-300 border-green-600 cursor-not-allowed" : "bg-white border-black cursor-pointer hover:bg-slate-300")}

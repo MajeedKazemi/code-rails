@@ -1,10 +1,13 @@
+import { unit1 } from "./tutorials";
+
 export enum TaskType {
     Authoring = "authoring",
     Modifying = "modifying",
     ShortAnswer = "shortAnswer",
     MultipleChoice = "multipleChoice",
     WatchVideo = "watchVideo",
-    SelectTheme = "selectTheme"
+    SelectTheme = "selectTheme",
+    Tutorial = "tutorial"
 }
 
 export interface IUserTask {
@@ -53,6 +56,15 @@ export class WatchVideoTask extends Task {
 export class SelectThemeTask extends Task {
     constructor(id: string, description: string) {
         super(id, description, TaskType.SelectTheme);
+    }
+}
+
+export class TutorialTask extends Task {
+    content: string;
+
+    constructor(id: string, description: string, content: string) {
+        super(id, description, TaskType.Tutorial);
+        this.content = content;
     }
 }
 
@@ -189,6 +201,11 @@ export const CodingTasks = [
     new WatchVideoTask(
         "wv0",
         "Watch the following tutorial to learn how to properly use Coding Steps to learn about Python and write code."
+    ),
+    new TutorialTask(
+        "tut0",
+        "Unit 1: Inputs and Outputs",
+        unit1
     ),
     // TODO: Delete Fibonacci Task
     new AuthoringTask(

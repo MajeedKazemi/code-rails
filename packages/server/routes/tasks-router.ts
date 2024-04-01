@@ -13,6 +13,7 @@ import {
     MultipleChoiceTask,
     SelectThemeTask,
     ShortAnswerTask,
+    TutorialTask,
     WatchVideoTask,
 } from "../tasks/tasks";
 import { verifyUser } from "../utils/strategy";
@@ -260,6 +261,7 @@ tasksRouter.post("/submit", verifyUser, (req, res, next) => {
             task instanceof MultipleChoiceTask ||
             task instanceof ShortAnswerTask ||
             task instanceof WatchVideoTask ||
+            task instanceof TutorialTask ||
             task instanceof SelectThemeTask
         ) {
             const { startedAt } = req.body;

@@ -10,6 +10,7 @@ import { WatchTutorialTask } from "../components/watch-video-task";
 import { AuthContext } from "../context";
 import { TaskType } from "../utils/constants";
 import { SelectThemeTask } from "../components/select-theme-task";
+import { ReadTutorialTask } from "../components/tutorial-task";
 
 export const TasksPage = () => {
     const { context } = useContext(AuthContext);
@@ -95,6 +96,16 @@ export const TasksPage = () => {
                     <SelectThemeTask
                         key={task.id}
                         taskId={task.id}
+                        onCompletion={setNextTask}
+                    />
+                );
+            case TaskType.Tutorial:
+                return (
+                    <ReadTutorialTask
+                        key={task.id}
+                        id={task.id}
+                        description={task.description}
+                        content={task.content}
                         onCompletion={setNextTask}
                     />
                 );
