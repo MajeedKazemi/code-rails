@@ -60,8 +60,12 @@ tasksRouter.get("/next", verifyUser, (req, res, next) => {
 });
 
 tasksRouter.get("/tutorial", verifyUser, (req, res, next) => {
-    const { taskId } = req.body;
-    const task = getPreviousTutorialTaskFromTaskId(taskId)
+    if (!req.query.taskId) {
+        res.statusCode = 400;
+        res.send({ task: null });
+        return;
+    }
+    const task = getPreviousTutorialTaskFromTaskId(req.query.taskId as string)
 
     if(task) {
         res.send({ task: task });
