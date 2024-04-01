@@ -123,6 +123,15 @@ export const apiGetTask = (token: string | null | undefined, taskId: string) =>
         },
     });
 
+export const apiGetTutorialTask = (token: string | null | undefined, taskId: string) =>
+    fetch(env.API_URL + `/api/tasks/tutorial?taskId=${taskId}`, {
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
 export const apiGetTestTasks = (token: string | null | undefined) =>
     fetch(env.API_URL + "/api/tasks/tests", {
         credentials: "include",

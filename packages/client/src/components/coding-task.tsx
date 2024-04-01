@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 
-import { apiApplyTitle, apiGenerateFeedback, apiGetCorrectness, apiGetTitles, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
+import { apiApplyTitle, apiGenerateFeedback, apiGetCorrectness, apiGetTitles, apiGetTutorialTask, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
 import { AuthContext } from "../context";
 import { TaskType } from "../utils/constants";
 import { getLogObject } from "../utils/logger";
@@ -9,6 +9,7 @@ import { Button } from "./button";
 import { Editor } from "./editor";
 import { Feedback } from "./feedback";
 import { TitleSelection } from "./title-selection";
+import { TutorialModal } from "./tutorial-modal";
 
 interface CodingTaskProps {
     taskId: string;
@@ -60,6 +61,7 @@ export const CodingTask = (props: CodingTaskProps) => {
     const [userCode, setUserCode] = useState("");
 
     const [canSubmit, setCanSubmit] = useState(false);
+    const [tutorialTask, setTutorialTask] = useState<any>(null);
 
     const sendLog = () => {
         apiLogEvents(
@@ -245,8 +247,20 @@ export const CodingTask = (props: CodingTaskProps) => {
         }
     }, [userCode]);
 
+    const initializeTutorialTask = () => {
+        apiGetTutorialTask(context?.token, props.taskId)
+            .then(async (response) => {
+                const data = await response.json();
+                setTutorialTask(data.task);
+            })
+            .catch((error: any) => {
+                logError(error.toString());
+            });
+    };
+
     useEffect(() => {
         taskSetup();
+        initializeTutorialTask();
     }, []);
 
     if (!started) {
@@ -266,6 +280,7 @@ export const CodingTask = (props: CodingTaskProps) => {
 
     return (
         <div className="flex flex-col p-4 gap-4 min-h-full">
+            <TutorialModal task={tutorialTask} />
             <div className="flex gap-4 flex-grow">
                 <section className="flex-auto task-info max-w-lg">
                     <div className="task-description-container">
