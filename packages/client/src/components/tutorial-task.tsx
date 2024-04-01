@@ -57,7 +57,7 @@ export const ReadTutorialTask = (props: tutorialProps) => {
     }, []);
 
     return (
-        <div className="flex flex-col gap-4 p-4 mt-4 mx-auto rounded-3xl border-slate-300 border bg-white max-w-4xl">
+        <div className={"flex flex-col gap-4 p-4 mx-auto rounded-3xl border-slate-300 border bg-white max-w-4xl" + (props.modal ? "" : " mt-4")}>
             <p className="text-2xl font-semibold">{props.description}</p>
             <div id="content">{props.content}</div>
             <button

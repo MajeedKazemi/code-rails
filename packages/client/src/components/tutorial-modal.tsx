@@ -19,7 +19,7 @@ export const TutorialModal = ({ task }: tutorialProps) => {
                 </svg>
             </div>
             <Modal
-                size="full"
+                size="4xl"
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 classNames={{
