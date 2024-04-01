@@ -6268,6 +6268,21 @@ export const getTaskSequenceFromTaskId = (taskId: string): number =>
 export const getTaskFromTaskId = (taskId: string): Task | undefined =>
     CodingTasks.find((task) => task.id === taskId);
 
+export const getPreviousTutorialTaskFromTaskId = (taskId: string): Task | undefined => {
+    // Find the index of the current task
+    const currentIndex = CodingTasks.findIndex(task => task.id === taskId);
+
+    // Search backwards from the current index to find the previous tutorial task
+    for (let i = currentIndex - 1; i >= 0; i--) {
+        if (CodingTasks[i].id.includes("tut")) {
+            return CodingTasks[i];
+        }
+    }
+
+    // Return undefined if no previous tutorial task is found
+    return undefined;
+};
+
 (function checkUniqueIds() {
     const taskIds = CodingTasks.map((task) => task.id);
 

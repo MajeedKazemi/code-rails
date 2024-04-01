@@ -6,6 +6,7 @@ import {
     AuthoringTask,
     CodingTasks,
     getNextTask,
+    getPreviousTutorialTaskFromTaskId,
     getTask,
     getTaskFromTaskId,
     getTaskSequenceFromTaskId,
@@ -55,6 +56,22 @@ tasksRouter.get("/next", verifyUser, (req, res, next) => {
             .then((userTasks) => {
                 res.send({ task: getNextTask(userTasks) });
             });
+    }
+});
+
+tasksRouter.get("/tutorial", verifyUser, (req, res, next) => {
+    if (!req.query.taskId) {
+        res.statusCode = 400;
+        res.send({ task: null });
+        return;
+    }
+    const task = getPreviousTutorialTaskFromTaskId(req.query.taskId as string)
+
+    if(task) {
+        res.send({ task: task });
+    } else {
+        res.statusCode = 404;
+        res.send({ task: null });
     }
 });
 
