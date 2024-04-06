@@ -207,6 +207,11 @@ export const CodingTasks = [
         "Unit 1: Inputs and Outputs",
         unit1
     ),
+    new TutorialTask(
+        "tut1",
+        "Unit 2: Loops and Stuff",
+        unit1
+    ),
     // TODO: Delete Fibonacci Task
     new AuthoringTask(
         "Temp1",
@@ -6268,19 +6273,11 @@ export const getTaskSequenceFromTaskId = (taskId: string): number =>
 export const getTaskFromTaskId = (taskId: string): Task | undefined =>
     CodingTasks.find((task) => task.id === taskId);
 
-export const getPreviousTutorialTaskFromTaskId = (taskId: string): Task | undefined => {
+export const getPreviousTutorialTasksFromTaskId = (taskId: string): Task[] | undefined => {
     // Find the index of the current task
     const currentIndex = CodingTasks.findIndex(task => task.id === taskId);
 
-    // Search backwards from the current index to find the previous tutorial task
-    for (let i = currentIndex - 1; i >= 0; i--) {
-        if (CodingTasks[i].id.includes("tut")) {
-            return CodingTasks[i];
-        }
-    }
-
-    // Return undefined if no previous tutorial task is found
-    return undefined;
+    return CodingTasks.filter((task, index) => task.id.includes("tut") && index < currentIndex);
 };
 
 (function checkUniqueIds() {

@@ -1,12 +1,14 @@
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Pagination} from "@nextui-org/react";
 import { ReadTutorialTask } from "./tutorial-task";
+import { useState } from "react";
 
 interface tutorialProps {
-    task: any;
+    tasks: any[];
 }
 
-export const TutorialModal = ({ task }: tutorialProps) => {
+export const TutorialModal = ({ tasks }: tutorialProps) => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [currentPage, setCurrentPage] = useState(tasks.length - 1);
 
     return(
         <>
@@ -29,13 +31,21 @@ export const TutorialModal = ({ task }: tutorialProps) => {
                     
                 <ModalContent>
                     {(onClose) => (
-                        <ReadTutorialTask
-                            id={task.id}
-                            description={task.description}
-                            content={task.content}
-                            onCompletion={onClose}
-                            modal={true}
-                        />
+                        <div className="flex flex-col items-center gap-2">
+                            <ReadTutorialTask
+                                id={tasks[currentPage].id}
+                                description={tasks[currentPage].description}
+                                content={tasks[currentPage].content}
+                                onCompletion={onClose}
+                                modal={true}
+                            />
+                            <Pagination
+                                total={tasks.length}
+                                color="secondary"
+                                page={currentPage}
+                                onChange={(num) => setCurrentPage(num-1)}
+                            />
+                        </div>
                     )}
                 </ModalContent>
             </Modal>

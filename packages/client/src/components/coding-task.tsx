@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 
-import { apiApplyTitle, apiGenerateFeedback, apiGetCorrectness, apiGetTitles, apiGetTutorialTask, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
+import { apiApplyTitle, apiGenerateFeedback, apiGetCorrectness, apiGetTitles, apiGetTutorialTasks, apiLogEvents, apiUserStartTask, apiUserSubmitTask, logError } from "../api/api";
 import { AuthContext } from "../context";
 import { TaskType } from "../utils/constants";
 import { getLogObject } from "../utils/logger";
@@ -61,7 +61,7 @@ export const CodingTask = (props: CodingTaskProps) => {
     const [userCode, setUserCode] = useState("");
 
     const [canSubmit, setCanSubmit] = useState(false);
-    const [tutorialTask, setTutorialTask] = useState<any>(null);
+    const [tutorialTasks, setTutorialTasks] = useState<any>(null);
 
     const sendLog = () => {
         apiLogEvents(
@@ -247,11 +247,11 @@ export const CodingTask = (props: CodingTaskProps) => {
         }
     }, [userCode]);
 
-    const initializeTutorialTask = () => {
-        apiGetTutorialTask(context?.token, props.taskId)
+    const initializeTutorialTasks = () => {
+        apiGetTutorialTasks(context?.token, props.taskId)
             .then(async (response) => {
                 const data = await response.json();
-                setTutorialTask(data.task);
+                setTutorialTasks(data.task);
             })
             .catch((error: any) => {
                 logError(error.toString());
@@ -260,7 +260,7 @@ export const CodingTask = (props: CodingTaskProps) => {
 
     useEffect(() => {
         taskSetup();
-        initializeTutorialTask();
+        initializeTutorialTasks();
     }, []);
 
     if (!started) {
@@ -280,7 +280,7 @@ export const CodingTask = (props: CodingTaskProps) => {
 
     return (
         <div className="flex flex-col p-4 gap-4 min-h-full">
-            <TutorialModal task={tutorialTask} />
+            <TutorialModal tasks={tutorialTasks} />
             <div className="flex gap-4 flex-grow">
                 <section className="flex-auto task-info max-w-lg">
                     <div className="task-description-container">
