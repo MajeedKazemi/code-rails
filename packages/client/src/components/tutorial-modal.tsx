@@ -1,12 +1,14 @@
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Pagination} from "@nextui-org/react";
 import { ReadTutorialTask } from "./tutorial-task";
+import { useState } from "react";
 
 interface tutorialProps {
-    task: any;
+    tasks: any[];
 }
 
-export const TutorialModal = ({ task }: tutorialProps) => {
+export const TutorialModal = ({ tasks }: tutorialProps) => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [currentPage, setCurrentPage] = useState(tasks.length);
 
     return(
         <>
@@ -29,13 +31,21 @@ export const TutorialModal = ({ task }: tutorialProps) => {
                     
                 <ModalContent>
                     {(onClose) => (
-                        <ReadTutorialTask
-                            id={task.id}
-                            description={task.description}
-                            content={task.content}
-                            onCompletion={onClose}
-                            modal={true}
-                        />
+                        <div className="flex flex-col items-center gap-2">
+                            <ReadTutorialTask
+                                id={tasks[currentPage - 1].id}
+                                description={tasks[currentPage - 1].description}
+                                content={tasks[currentPage - 1].content}
+                                onCompletion={onClose}
+                                modal={true}
+                            />
+                            {tasks.length > 1 && <Pagination
+                                total={tasks.length}
+                                showControls={true}
+                                page={currentPage}
+                                onChange={setCurrentPage}
+                            />}
+                        </div>
                     )}
                 </ModalContent>
             </Modal>

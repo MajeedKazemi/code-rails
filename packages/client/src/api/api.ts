@@ -123,8 +123,8 @@ export const apiGetTask = (token: string | null | undefined, taskId: string) =>
         },
     });
 
-export const apiGetTutorialTask = (token: string | null | undefined, taskId: string) =>
-    fetch(env.API_URL + `/api/tasks/tutorial?taskId=${taskId}`, {
+export const apiGetTutorialTasks = (token: string | null | undefined, taskId: string) =>
+    fetch(env.API_URL + `/api/tasks/tutorials?taskId=${taskId}`, {
         credentials: "include",
         headers: {
             "Content-Type": "application/json",
