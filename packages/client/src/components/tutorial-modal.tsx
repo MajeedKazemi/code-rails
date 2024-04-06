@@ -42,7 +42,6 @@ export const TutorialModal = ({ tasks }: tutorialProps) => {
                             <Pagination
                                 total={tasks.length}
                                 showControls={true}
-                                // color="secondary"
                                 page={currentPage}
                                 onChange={setCurrentPage}
                             />
