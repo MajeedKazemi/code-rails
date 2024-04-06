@@ -8,7 +8,7 @@ interface tutorialProps {
 
 export const TutorialModal = ({ tasks }: tutorialProps) => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    const [currentPage, setCurrentPage] = useState(tasks.length - 1);
+    const [currentPage, setCurrentPage] = useState(tasks.length);
 
     return(
         <>
@@ -33,17 +33,18 @@ export const TutorialModal = ({ tasks }: tutorialProps) => {
                     {(onClose) => (
                         <div className="flex flex-col items-center gap-2">
                             <ReadTutorialTask
-                                id={tasks[currentPage].id}
-                                description={tasks[currentPage].description}
-                                content={tasks[currentPage].content}
+                                id={tasks[currentPage - 1].id}
+                                description={tasks[currentPage - 1].description}
+                                content={tasks[currentPage - 1].content}
                                 onCompletion={onClose}
                                 modal={true}
                             />
                             <Pagination
                                 total={tasks.length}
-                                color="secondary"
+                                showControls={true}
+                                // color="secondary"
                                 page={currentPage}
-                                onChange={(num) => setCurrentPage(num-1)}
+                                onChange={setCurrentPage}
                             />
                         </div>
                     )}
