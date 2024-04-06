@@ -207,11 +207,6 @@ export const CodingTasks = [
         "Unit 1: Inputs and Outputs",
         unit1
     ),
-    new TutorialTask(
-        "tut1",
-        "Unit 2: Loops and Stuff",
-        unit1
-    ),
     // TODO: Delete Fibonacci Task
     new AuthoringTask(
         "Temp1",
