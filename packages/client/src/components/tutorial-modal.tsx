@@ -39,12 +39,12 @@ export const TutorialModal = ({ tasks }: tutorialProps) => {
                                 onCompletion={onClose}
                                 modal={true}
                             />
-                            <Pagination
+                            {tasks.length > 1 && <Pagination
                                 total={tasks.length}
                                 showControls={true}
                                 page={currentPage}
                                 onChange={setCurrentPage}
-                            />
+                            />}
                         </div>
                     )}
                 </ModalContent>
